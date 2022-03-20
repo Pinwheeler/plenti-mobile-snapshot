@@ -26,7 +26,7 @@
         <key>CFBundleURLSchemes</key>
         <array>
           <string>plentimobile</string>
-          <string>com.plentimobile.plentimobile</string>
+          <string>dev.plenti.plenti</string>
         </array>
       </dict>
       <dict>

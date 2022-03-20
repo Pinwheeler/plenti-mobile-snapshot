@@ -1,4 +1,4 @@
-package com.plentimobile;
+package dev.plenti.plenti;
 import expo.modules.devmenu.react.DevMenuAwareReactActivity;
 import android.content.Intent;
 import expo.modules.devlauncher.DevLauncherController;

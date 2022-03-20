@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "701415788135",
+    "firebase_url": "https://plenti-8a8e6.firebaseio.com",
+    "project_id": "plenti-8a8e6",
+    "storage_bucket": "plenti-8a8e6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:701415788135:android:e0cf20b955bbe285",
+        "android_client_info": {
+          "package_name": "dev.plenti.plenti"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "701415788135-p8e0n2gm1hk9thrjgjcb2rgrs0m91m8r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCekklCetZH5tb194rJA6Fc2r5NX9eZzKo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "701415788135-p8e0n2gm1hk9thrjgjcb2rgrs0m91m8r.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "701415788135-vkndahgvuuev9l74nd9pn0qea378crg2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "dev.plenti.plenti"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

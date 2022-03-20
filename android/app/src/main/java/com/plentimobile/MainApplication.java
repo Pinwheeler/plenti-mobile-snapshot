@@ -1,4 +1,4 @@
-package com.plentimobile;
+package dev.plenti.plenti;
 import expo.modules.updates.UpdatesDevLauncherController;
 import expo.modules.devlauncher.DevLauncherController;
 
@@ -85,7 +85,7 @@ public class MainApplication extends Application implements ReactApplication {
          We use reflection here to pick up the class that initializes Flipper,
         since Flipper library is not available in release mode
         */
-        Class<?> aClass = Class.forName("com.plentimobile.ReactNativeFlipper");
+        Class<?> aClass = Class.forName("dev.plenti.plenti.ReactNativeFlipper");
         aClass
             .getMethod("initializeFlipper", Context.class, ReactInstanceManager.class)
             .invoke(null, context, reactInstanceManager);

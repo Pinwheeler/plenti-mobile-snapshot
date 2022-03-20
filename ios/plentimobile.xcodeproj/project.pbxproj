@@ -326,7 +326,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.plentimobile.plentimobile;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.plenti.plenti;
 				PRODUCT_NAME = plentimobile;
 				SWIFT_OBJC_BRIDGING_HEADER = "plentimobile/plentimobile-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -352,7 +352,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.plentimobile.plentimobile;
+				PRODUCT_BUNDLE_IDENTIFIER = dev.plenti.plenti;
 				PRODUCT_NAME = plentimobile;
 				SWIFT_OBJC_BRIDGING_HEADER = "plentimobile/plentimobile-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
