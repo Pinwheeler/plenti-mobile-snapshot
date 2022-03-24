@@ -1,18 +1,18 @@
+import { FontAwesome5 } from "@expo/vector-icons";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import { HardwareNotificationEntity } from "plenti-api";
 import React, { useContext, useMemo } from "react";
 import { View } from "react-native";
 import { Modal, Portal } from "react-native-paper";
-import ProfileScreen from "src/account/profile/ProfileScreen";
-import AdContext from "src/ads/AdContext";
-import ConnectScreen from "src/connect/ConnectScreen";
-import HomeScreen from "src/home/HomeScreen";
-import InventoryScreen from "src/inventory/InventoryScreen";
-import Theme from "src/lib/Theme";
-import NotificationContext from "src/notifications/NotificationContext";
-import { Icon, IconType } from "src/shared/icons/Icon";
-import AdBanner from "../ads/AdBanner";
-import { HardwareNotificationContent } from "./HardwareNotificationContent";
+import { AdBanner } from "../components/AdBanner";
+import { HardwareNotificationContent } from "../components/HardwareNotificationContent";
+import { AdContext } from "../contexts/AdContext";
+import { NotificationContext } from "../contexts/NotificationContext";
+import Theme from "../lib/Theme";
+import { ConnectScreen } from "../screens/ConnectScreen";
+import { HomeScreen } from "../screens/HomeScreen";
+import { InventoryScreen } from "../screens/InventoryScreen";
+import { ProfileScreen } from "../screens/ProfileScreen";
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -42,7 +42,7 @@ export const TabNav = () => {
           options={{
             tabBarIcon: ({ color }) => (
               <View>
-                <Icon color={color} size={24} type={IconType.seedling_solid} />
+                <FontAwesome5 name="seedling" size={24} color={color} />
               </View>
             ),
           }}
@@ -53,7 +53,7 @@ export const TabNav = () => {
           options={{
             tabBarIcon: ({ color }) => (
               <View>
-                <Icon color={color} size={24} type={IconType.envelope_solid} />
+                <FontAwesome5 name="envelope" size={24} color={color} />
               </View>
             ),
             tabBarBadge: hasUnreads,
@@ -65,7 +65,7 @@ export const TabNav = () => {
           options={{
             tabBarIcon: ({ color }) => (
               <View>
-                <Icon color={color} size={24} type={IconType.store_solid} />
+                <FontAwesome5 name="store" size={24} color={color} />
               </View>
             ),
           }}
@@ -76,7 +76,7 @@ export const TabNav = () => {
           options={{
             tabBarIcon: ({ color }) => (
               <View>
-                <Icon color={color} size={24} type={IconType.user_solid} />
+                <FontAwesome5 name="user-alt" size={24} color={color} />
               </View>
             ),
           }}
