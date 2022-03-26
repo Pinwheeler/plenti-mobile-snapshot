@@ -5,14 +5,14 @@ import React, { useContext, useMemo } from "react";
 import { View } from "react-native";
 import { Modal, Portal } from "react-native-paper";
 import { AdBanner } from "../components/AdBanner";
-import { HardwareNotificationContent } from "../components/HardwareNotificationContent";
+import { HardwareNotificationContent } from "../contexts/HardwareNotificationContent";
 import { AdContext } from "../contexts/AdContext";
 import { NotificationContext } from "../contexts/NotificationContext";
 import Theme from "../lib/Theme";
 import { ConnectScreen } from "../screens/ConnectScreen";
 import { HomeScreen } from "../screens/HomeScreen";
 import { InventoryScreen } from "../screens/InventoryScreen";
-import { ProfileScreen } from "../screens/ProfileScreen";
+import { ProfileScreen } from "../screens/profile/ProfileScreen";
 
 const Tab = createMaterialBottomTabNavigator();
 

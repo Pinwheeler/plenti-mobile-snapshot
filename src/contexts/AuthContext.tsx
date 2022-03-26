@@ -1,9 +1,12 @@
 import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
-import React, { useEffect, useState } from "react";
+import { LoggedInAccountEntity } from "plenti-api";
+import React, { useEffect, useMemo, useState } from "react";
 
 interface IAuthContext {
   user?: FirebaseAuthTypes.User;
+  account?: LoggedInAccountEntity;
   signedInAnonymously: boolean;
+  logout(): Promise<void>;
 }
 
 export const AuthContext = React.createContext({} as IAuthContext);
@@ -18,6 +21,17 @@ export const AuthProvider: React.FC = (props) => {
     );
     return subscriber; // unsubscribe on unmount
   }, []);
+
+  const account: LoggedInAccountEntity | undefined = useMemo(() => {
+    if (user) {
+      return {
+        id: user.uid,
+        email: user.email,
+        username: user.displayName,
+      };
+    }
+    return undefined;
+  }, [user]);
 
   useEffect(() => {
     auth()
@@ -35,7 +49,11 @@ export const AuthProvider: React.FC = (props) => {
       });
   });
 
-  const value = { user, signedInAnonymously };
+  const logout = () => {
+    return Promise.reject("not yet implemented");
+  };
+
+  const value = { user, signedInAnonymously, logout };
 
   return (
     <AuthContext.Provider value={value}>{props.children}</AuthContext.Provider>

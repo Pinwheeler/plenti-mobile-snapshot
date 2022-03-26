@@ -1,5 +1,5 @@
 import React from "react";
-import { LoggerService } from "../../lib/LoggerService";
+import { LoggerService } from "../lib/LoggerService";
 
 // logs any uncaught errors to LoggerService
 

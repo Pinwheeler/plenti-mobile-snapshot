@@ -1,7 +1,7 @@
 import { NavigationContainer } from "@react-navigation/native";
 import React from "react";
 import { Provider } from "react-native-paper";
-import { ErrorBoundary } from "./src/components/misc/ErrorBoundary";
+import { ErrorBoundary } from "./src/components/ErrorBoundary";
 import { ContextStack } from "./src/contexts/ContextStack";
 import RootNavigator from "./src/nav/RootNavigator";
 import { LoadingScreen } from "./src/screens/LoadingScreen";
