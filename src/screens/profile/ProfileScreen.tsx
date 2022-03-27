@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import { View } from "react-native";
 import { Text } from "react-native-paper";
 import { AuthContext } from "../../contexts/AuthContext";
+import { LoginSignupSelector } from "./LoginSignupSelector";
 import { ProfileInformation } from "./ProfileInformation";
 
 export const ProfileScreen: React.FC = () => {

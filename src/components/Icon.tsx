@@ -3,11 +3,14 @@ import React from "react";
 import { View, ViewStyle } from "react-native";
 
 export type IconType =
+  | "user-alt"
+  | "store"
+  | "envelope"
+  | "seedling"
   | "camera_solid"
   | "check_circle_solid"
   | "clock_regular"
   | "envelope_solid"
-  | "seedling_solid"
   | "store_solid"
   | "user_solid"
   | "cog"

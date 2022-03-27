@@ -1,12 +1,11 @@
-import { FontAwesome5 } from "@expo/vector-icons";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
-import { HardwareNotificationEntity } from "plenti-api";
 import React, { useContext, useMemo } from "react";
-import { View } from "react-native";
 import { Modal, Portal } from "react-native-paper";
+import { HardwareNotificationEntity } from "../api/models";
 import { AdBanner } from "../components/AdBanner";
-import { HardwareNotificationContent } from "../contexts/HardwareNotificationContent";
+import { Icon } from "../components/Icon";
 import { AdContext } from "../contexts/AdContext";
+import { HardwareNotificationContent } from "../contexts/HardwareNotificationContent";
 import { NotificationContext } from "../contexts/NotificationContext";
 import Theme from "../lib/Theme";
 import { ConnectScreen } from "../screens/ConnectScreen";
@@ -41,9 +40,7 @@ export const TabNav = () => {
           component={HomeScreen}
           options={{
             tabBarIcon: ({ color }) => (
-              <View>
-                <FontAwesome5 name="seedling" size={24} color={color} />
-              </View>
+              <Icon type="seedling" size={24} color={color} />
             ),
           }}
         />
@@ -52,9 +49,7 @@ export const TabNav = () => {
           component={ConnectScreen}
           options={{
             tabBarIcon: ({ color }) => (
-              <View>
-                <FontAwesome5 name="envelope" size={24} color={color} />
-              </View>
+              <Icon type="envelope" size={24} color={color} />
             ),
             tabBarBadge: hasUnreads,
           }}
@@ -64,9 +59,7 @@ export const TabNav = () => {
           component={InventoryScreen}
           options={{
             tabBarIcon: ({ color }) => (
-              <View>
-                <FontAwesome5 name="store" size={24} color={color} />
-              </View>
+              <Icon type="store" size={24} color={color} />
             ),
           }}
         />
@@ -75,9 +68,7 @@ export const TabNav = () => {
           component={ProfileScreen}
           options={{
             tabBarIcon: ({ color }) => (
-              <View>
-                <FontAwesome5 name="user-alt" size={24} color={color} />
-              </View>
+              <Icon type="user-alt" size={24} color={color} />
             ),
           }}
         />

@@ -1,6 +1,6 @@
-import { AccountEntity, LoggedInAccountEntity } from "plenti-api";
 import React, { useContext } from "react";
 import { StyleSheet, View } from "react-native";
+import { AccountEntity, LoggedInAccountEntity } from "../../api/models";
 import { ImageContext } from "../../contexts/ImageContext";
 import Theme from "../../lib/Theme";
 import { InnerProfilePicture } from "./InnerProfilePicture";
@@ -23,13 +23,13 @@ const styles = StyleSheet.create({
 
 export const ProfilePicture: React.FC<Props> = (props) => {
   const { updatable, account } = props;
-  const { imageUriForUser } = useContext(ImageContext);
+  const { imageUriForAccount } = useContext(ImageContext);
 
   return (
     <View style={styles.circle}>
       <InnerProfilePicture
         updatable={updatable}
-        pictureUriPromise={imageUriForUser("GET", account)}
+        pictureUriPromise={imageUriForAccount("GET", account)}
       />
     </View>
   );

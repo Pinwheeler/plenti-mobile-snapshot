@@ -1,4 +1,5 @@
 import React from "react";
+import { View } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
 import { H3 } from "./typography";
 
@@ -8,9 +9,9 @@ interface Props {
 
 export const LoadingIndicator: React.FC<Props> = (props) => {
   return (
-    <div style={{ flexDirection: "row" }}>
+    <View style={{ flexDirection: "row" }}>
       <ActivityIndicator />
       <H3>{`Loading ${props.thingThatIsLoading}`}</H3>
-    </div>
+    </View>
   );
 };

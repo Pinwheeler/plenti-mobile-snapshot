@@ -1,5 +1,5 @@
-import { AccountEntity } from "plenti-api";
 import React from "react";
+import { AccountEntity } from "../api/models/Account";
 
 interface IImageContext {
   imageUriForAccount(method: string, Account: AccountEntity): Promise<string>;

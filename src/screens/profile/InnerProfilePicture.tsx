@@ -1,15 +1,14 @@
-import React, { useContext, useEffect, useState } from "react"
-import { Image, StyleSheet } from "react-native"
-import { ActivityIndicator } from "react-native-paper"
-import { ImageContext } from "src/images/ImageContext"
-import Theme from "src/lib/Theme"
-import { Icon, IconType } from "src/shared/icons/Icon"
+import React, { useEffect, useState } from "react";
+import { Image, StyleSheet } from "react-native";
+import { ActivityIndicator } from "react-native-paper";
+import { Icon } from "../../components/Icon";
+import Theme from "../../lib/Theme";
 
-const ICON_SIZE = 70
+const ICON_SIZE = 70;
 
 interface Props {
-  pictureUriPromise?: Promise<string>
-  updatable?: boolean
+  pictureUriPromise?: Promise<string>;
+  updatable?: boolean;
 }
 
 const styles = StyleSheet.create({
@@ -21,36 +20,47 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-})
+});
 
 export const InnerProfilePicture: React.FC<Props> = (props) => {
-  const { pictureUriPromise, updatable } = props
-  const { isUploadingNewProfilePicture } = useContext(ImageContext)
-  const [userImageUri, setUserImageUri] = useState<string>()
-  const [loading, setLoading] = useState(!!pictureUriPromise)
+  const { pictureUriPromise, updatable } = props;
+  const [isUploadingNewProfilePicture, setIsUploadingNewProfilePicture] =
+    useState(false);
+  const [userImageUri, setUserImageUri] = useState<string>();
+  const [loading, setLoading] = useState(!!pictureUriPromise);
 
   useEffect(() => {
     if (pictureUriPromise) {
       pictureUriPromise.then((uri) => {
         Image.prefetch(uri).then(() => {
-          setUserImageUri(uri)
-          setLoading(false)
-        })
-      })
+          setUserImageUri(uri);
+          setLoading(false);
+        });
+      });
     }
-  }, [pictureUriPromise])
+  }, [pictureUriPromise]);
 
   if (loading || isUploadingNewProfilePicture) {
-    return <ActivityIndicator />
+    return <ActivityIndicator />;
   }
 
   if (userImageUri) {
-    return <Image source={{ uri: userImageUri }} style={styles.profilePicture} />
+    return (
+      <Image source={{ uri: userImageUri }} style={styles.profilePicture} />
+    );
   } else {
     if (updatable) {
-      return <Icon type={IconType.plus} size={ICON_SIZE} color={Theme.colors.background} />
+      return (
+        <Icon type={"plus"} size={ICON_SIZE} color={Theme.colors.background} />
+      );
     } else {
-      return <Icon type={IconType.user_solid} size={ICON_SIZE} color={Theme.colors.background} />
+      return (
+        <Icon
+          type={"user_solid"}
+          size={ICON_SIZE}
+          color={Theme.colors.background}
+        />
+      );
     }
   }
-}
+};

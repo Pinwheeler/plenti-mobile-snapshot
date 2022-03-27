@@ -1,5 +1,5 @@
-import { HardwareNotificationEntity } from "plenti-api";
 import React from "react";
+import { HardwareNotificationEntity } from "../api/models/HardwareNotification";
 
 interface INotificationContext {
   acknowledgeHN(arg: HardwareNotificationEntity): void;

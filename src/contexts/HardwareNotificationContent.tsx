@@ -1,6 +1,6 @@
-import { HardwareNotificationEntity } from "plenti-api";
 import React from "react";
 import { Text } from "react-native-paper";
+import { HardwareNotificationEntity } from "../api/models/HardwareNotification";
 
 interface Props {
   notification: HardwareNotificationEntity;
