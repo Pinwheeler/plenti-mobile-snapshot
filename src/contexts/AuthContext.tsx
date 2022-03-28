@@ -8,7 +8,7 @@ interface IAuthContext {
   user?: FirebaseAuthTypes.User;
   signedInAnonymously: boolean;
   logout(): Promise<void>;
-  login(value: AccountLoginForm): Promise<FirebaseAuthTypes.User>;
+  login(value: AccountLoginForm): Promise<FirebaseAuthTypes.UserCredential>;
   signup(value: AccountSignupForm): Promise<void | FirebaseAuthTypes.User>;
 }
 
@@ -18,6 +18,15 @@ export const AuthProvider: React.FC = (props) => {
   const { authenticateUser, createAccount } = useContext(AccountContext);
   const [user, setUser] = useState<FirebaseAuthTypes.User>();
   const [signedInAnonymously, setSignedInAnonymously] = useState(false);
+
+  useEffect(() => {
+    auth().onAuthStateChanged((u) => {
+      if (u) {
+        authenticateUser(u);
+        setUser(u);
+      }
+    });
+  });
 
   useEffect(() => {
     auth()
@@ -35,18 +44,10 @@ export const AuthProvider: React.FC = (props) => {
       });
   }, []);
 
-  const logout = () => {
-    return Promise.reject("not yet implemented");
-  };
+  const logout = () => auth().signOut();
 
   const login = (value: AccountLoginForm) =>
-    auth()
-      .signInWithEmailAndPassword(value.email, value.password)
-      .then(({ user: u }) => {
-        authenticateUser(u);
-        setUser(u);
-        return u;
-      });
+    auth().signInWithEmailAndPassword(value.email, value.password);
 
   const signup = (
     form: AccountSignupForm
@@ -54,8 +55,6 @@ export const AuthProvider: React.FC = (props) => {
     auth()
       .createUserWithEmailAndPassword(form.email, form.password)
       .then(({ user: u }) => {
-        authenticateUser(u);
-        setUser(u);
         createAccount(u, form);
         return u;
       });

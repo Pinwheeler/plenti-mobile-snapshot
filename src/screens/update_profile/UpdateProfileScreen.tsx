@@ -74,7 +74,7 @@ export const UpdateProfileScreen = () => {
         validationSchema={yup.object().shape({
           username: yup.string().required(),
           firstname: yup.string(),
-          address: yup.string().required(),
+          address: yup.string(),
           prefersMetric: yup.bool().required(),
           maxDistance: yup.number(),
         })}

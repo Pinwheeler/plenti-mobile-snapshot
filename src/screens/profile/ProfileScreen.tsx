@@ -1,15 +1,15 @@
 import React, { useContext } from "react";
 import { View } from "react-native";
 import { Text } from "react-native-paper";
-import { AuthContext } from "../../contexts/AuthContext";
+import { AccountContext } from "../../contexts/AccountContext";
 import { LoginSignupSelector } from "./LoginSignupSelector";
 import { ProfileInformation } from "./ProfileInformation";
 
 export const ProfileScreen: React.FC = () => {
-  const { user } = useContext(AuthContext);
+  const { loggedInAccount } = useContext(AccountContext);
 
   const InnerComponent = () => {
-    if (user) {
+    if (loggedInAccount) {
       return <ProfileInformation />;
     } else {
       return <LoginSignupSelector />;

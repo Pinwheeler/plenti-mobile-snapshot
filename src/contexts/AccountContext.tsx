@@ -2,7 +2,11 @@ import { FirebaseAuthTypes } from "@react-native-firebase/auth";
 import database from "@react-native-firebase/database";
 import React, { useEffect, useState } from "react";
 import { AccountSignupForm, AccountUpdateForm } from "../api/forms";
-import { AccountEntity, LoggedInAccountEntity } from "../api/models";
+import {
+  AccountEntity,
+  LoggedInAccountEntity,
+  LoggedInAccountModel,
+} from "../api/models";
 
 interface IAccountContext {
   loggedInAccount?: LoggedInAccountEntity;
@@ -63,10 +67,16 @@ export const AccountProvider: React.FC = (props) => {
       return undefined;
     }
     const path = `/secure/${user.uid}/account`;
+    console.log("path", path);
     const onUserChange = database()
       .ref(path)
       .on("value", (snapshot) => {
-        setLoggedInAccount(new LoggedInAccountEntity(snapshot.val()));
+        const model: LoggedInAccountModel | undefined = snapshot.val();
+        console.log("model", model);
+        console.log("user", user);
+        if (model) {
+          setLoggedInAccount(new LoggedInAccountEntity(model));
+        }
       });
 
     return () => database().ref(path).off("value", onUserChange);
