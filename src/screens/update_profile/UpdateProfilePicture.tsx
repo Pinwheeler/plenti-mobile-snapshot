@@ -1,5 +1,5 @@
 import * as ImagePicker from "expo-image-picker";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { TouchableRipple } from "react-native-paper";
 import { LoadingIndicator } from "../../components/LoadingIndicator";
 import { H2 } from "../../components/typography";
@@ -10,6 +10,7 @@ import { ProfilePicture } from "../profile/ProfilePicture";
 export const UpdateProfilePicture: React.FC = () => {
   const { loggedInAccount } = useContext(AccountContext);
   const { uploadNewProfilePicture } = useContext(ImageContext);
+  const [loading, setLoading] = useState(false);
 
   if (!loggedInAccount) {
     return <LoadingIndicator thingThatIsLoading="Account information" />;
@@ -20,12 +21,15 @@ export const UpdateProfilePicture: React.FC = () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
-      aspect: [4, 3],
+      aspect: [1, 1],
       quality: 1,
     });
 
     if (!result.cancelled) {
-      uploadNewProfilePicture(result, loggedInAccount);
+      setLoading(true);
+      uploadNewProfilePicture(result, loggedInAccount).finally(() =>
+        setLoading(false)
+      );
     }
   };
 
@@ -35,7 +39,7 @@ export const UpdateProfilePicture: React.FC = () => {
       onPress={selectImage}
     >
       <>
-        <ProfilePicture account={loggedInAccount} updatable />
+        <ProfilePicture account={loggedInAccount} updatable loading={loading} />
         <H2 style={{ marginLeft: 15 }}>Edit profile photo</H2>
       </>
     </TouchableRipple>

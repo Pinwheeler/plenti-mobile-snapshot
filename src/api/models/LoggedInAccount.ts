@@ -1,6 +1,11 @@
 import { DateTime } from "luxon";
-import { AccountEntity } from ".";
+import { AccountEntity } from "./Account";
 
+export function isLoggedInAccount(
+  account: AccountEntity | LoggedInAccountEntity
+): account is LoggedInAccountEntity {
+  return (account as LoggedInAccountEntity).prefersMetric !== undefined;
+}
 export class LoggedInAccountEntity extends AccountEntity {
   email: string;
   authToken: string;

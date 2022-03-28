@@ -1,19 +1,22 @@
 import { FirebaseAuthTypes } from "@react-native-firebase/auth";
 import database from "@react-native-firebase/database";
+import storage from "@react-native-firebase/storage";
 import React, { useEffect, useState } from "react";
 import { AccountSignupForm, AccountUpdateForm } from "../api/forms";
+import { AccountEntity } from "../api/models/Account";
 import {
-  AccountEntity,
   LoggedInAccountEntity,
   LoggedInAccountModel,
-} from "../api/models";
+} from "../api/models/LoggedInAccount";
 
 interface IAccountContext {
   loggedInAccount?: LoggedInAccountEntity;
+  profilePicture?: string;
   accountForUser(user: FirebaseAuthTypes.User): Promise<AccountEntity>;
   authenticateUser(user: FirebaseAuthTypes.User): void;
   createAccount(user: FirebaseAuthTypes.User, form: AccountSignupForm): void;
   updateAccount(form: AccountUpdateForm): Promise<void>;
+  refreshProfilePicture(): void;
 }
 
 export const AccountContext = React.createContext({} as IAccountContext);
@@ -22,6 +25,16 @@ export const AccountProvider: React.FC = (props) => {
   const [loggedInAccount, setLoggedInAccount] =
     useState<LoggedInAccountEntity>();
   const [user, setUser] = useState<FirebaseAuthTypes.User>();
+  const [profilePicture, setProfilePicture] = useState<string>();
+
+  const refreshProfilePicture = () => {
+    if (loggedInAccount) {
+      storage()
+        .ref(loggedInAccount.profilePictureUrl)
+        .getDownloadURL()
+        .then((value) => setProfilePicture(value));
+    }
+  };
 
   const accountForUser = (user: FirebaseAuthTypes.User) =>
     database()
@@ -81,10 +94,12 @@ export const AccountProvider: React.FC = (props) => {
 
   const value = {
     loggedInAccount,
+    profilePicture,
     accountForUser,
     authenticateUser: setUser,
     createAccount,
     updateAccount,
+    refreshProfilePicture,
   };
 
   return (

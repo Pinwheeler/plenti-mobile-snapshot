@@ -10,6 +10,7 @@ const ICON_SIZE = 45;
 interface Props {
   pictureUriPromise?: Promise<string>;
   updatable?: boolean;
+  loading?: boolean;
 }
 
 const styles = StyleSheet.create({
@@ -24,21 +25,21 @@ const styles = StyleSheet.create({
 });
 
 export const InnerProfilePicture: React.FC<Props> = (props) => {
-  const { pictureUriPromise, updatable } = props;
-  const [isUploadingNewProfilePicture, setIsUploadingNewProfilePicture] =
-    useState(false);
+  const { pictureUriPromise, updatable, loading } = props;
   const [userImageUri, setUserImageUri] = useState<string>();
-  const [loading, setLoading] = useState(!!pictureUriPromise);
+  const [fetching, setFetching] = useState(false);
 
   useEffect(() => {
     if (pictureUriPromise) {
+      setFetching(true);
+      setUserImageUri(undefined);
       pictureUriPromise
         .then((uri) => {
           Image.prefetch(uri)
             .then(() => {
               setUserImageUri(uri);
             })
-            .finally(() => setLoading(false));
+            .finally(() => setFetching(false));
         })
         .catch((error) => {
           switch (error.code) {
@@ -49,11 +50,11 @@ export const InnerProfilePicture: React.FC<Props> = (props) => {
               break;
           }
         })
-        .finally(() => setLoading(false));
+        .finally(() => setFetching(false));
     }
   }, [pictureUriPromise]);
 
-  if (loading || isUploadingNewProfilePicture) {
+  if (loading || fetching) {
     return <ActivityIndicator />;
   }
 

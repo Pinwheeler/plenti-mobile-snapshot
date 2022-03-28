@@ -1,7 +1,7 @@
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import React, { useContext, useMemo } from "react";
 import { Modal, Portal } from "react-native-paper";
-import { HardwareNotificationEntity } from "../api/models";
+import { HardwareNotificationEntity } from "../api/models/HardwareNotification";
 import { AdBanner } from "../components/AdBanner";
 import { Icon } from "../components/Icon";
 import { AdContext } from "../contexts/AdContext";

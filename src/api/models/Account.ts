@@ -12,7 +12,7 @@ export class AccountEntity {
   }
 
   get profilePictureUrl() {
-    return `users/${this.id}/profile-picture`;
+    return `users/${this.id}/profile-picture.png`;
   }
 
   static fromLoggedInAccount(
