@@ -1,14 +1,14 @@
 import React from "react";
+import { AccountProvider } from "./AccountContext";
 import { AdProvider } from "./AdContext";
 import { AuthProvider } from "./AuthContext";
-import { DataProvider } from "./DataContext";
 import { ImageProvider } from "./ImageContext";
 import { NotificationProvider } from "./NotificationContext";
 import { PremiumProvider } from "./PremiumContext";
 
 export const ContextStack: React.FC = (props) => {
   return (
-    <DataProvider>
+    <AccountProvider>
       <AuthProvider>
         <ImageProvider>
           <NotificationProvider>
@@ -18,6 +18,6 @@ export const ContextStack: React.FC = (props) => {
           </NotificationProvider>
         </ImageProvider>
       </AuthProvider>
-    </DataProvider>
+    </AccountProvider>
   );
 };

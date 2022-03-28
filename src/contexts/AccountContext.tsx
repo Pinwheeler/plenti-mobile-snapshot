@@ -1,23 +1,23 @@
 import { FirebaseAuthTypes } from "@react-native-firebase/auth";
 import database from "@react-native-firebase/database";
 import React, { useEffect, useState } from "react";
-import { AccountSignupForm } from "../api/forms";
+import { AccountSignupForm, AccountUpdateForm } from "../api/forms";
 import { AccountEntity, LoggedInAccountEntity } from "../api/models";
 
-interface IDataContext {
+interface IAccountContext {
   loggedInAccount?: LoggedInAccountEntity;
   accountForUser(user: FirebaseAuthTypes.User): Promise<AccountEntity>;
   authenticateUser(user: FirebaseAuthTypes.User): void;
   createAccount(user: FirebaseAuthTypes.User, form: AccountSignupForm): void;
+  updateAccount(form: AccountUpdateForm): Promise<void>;
 }
 
-export const DataContext = React.createContext({} as IDataContext);
+export const AccountContext = React.createContext({} as IAccountContext);
 
-export const DataProvider: React.FC = (props) => {
+export const AccountProvider: React.FC = (props) => {
   const [loggedInAccount, setLoggedInAccount] =
     useState<LoggedInAccountEntity>();
   const [user, setUser] = useState<FirebaseAuthTypes.User>();
-  const [userToken, setUserToken] = useState<string>();
 
   const accountForUser = (user: FirebaseAuthTypes.User) =>
     database()
@@ -30,7 +30,6 @@ export const DataProvider: React.FC = (props) => {
     form: AccountSignupForm
   ) => {
     user.getIdToken().then((token) => {
-      setUserToken(token);
       const account = new AccountEntity({
         id: 0,
         username: form.username,
@@ -49,8 +48,18 @@ export const DataProvider: React.FC = (props) => {
     });
   };
 
+  const updateAccount = (form: AccountUpdateForm) => {
+    if (loggedInAccount) {
+      return database().ref(`/accounts/${loggedInAccount.id}`).update({ form });
+    }
+
+    return Promise.reject(
+      "calling update account without being logged in. Something is fishy"
+    );
+  };
+
   useEffect(() => {
-    if (!user || !userToken) {
+    if (!user) {
       return undefined;
     }
     const path = `/secure/${user.uid}/account`;
@@ -62,16 +71,19 @@ export const DataProvider: React.FC = (props) => {
       });
 
     return () => database().ref(path).off("value", onUserChange);
-  }, [user, userToken]);
+  }, [user]);
 
   const value = {
     loggedInAccount,
     accountForUser,
     authenticateUser: setUser,
     createAccount,
+    updateAccount,
   };
 
   return (
-    <DataContext.Provider value={value}>{props.children}</DataContext.Provider>
+    <AccountContext.Provider value={value}>
+      {props.children}
+    </AccountContext.Provider>
   );
 };

@@ -1,7 +1,7 @@
 import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
 import React, { useContext, useEffect, useState } from "react";
 import { AccountLoginForm, AccountSignupForm } from "../api/forms";
-import { DataContext } from "./DataContext";
+import { AccountContext } from "./AccountContext";
 
 const CLIENT_SECRET = "231b0e38-ad3a-11ec-b909-0242ac120002";
 interface IAuthContext {
@@ -15,7 +15,7 @@ interface IAuthContext {
 export const AuthContext = React.createContext({} as IAuthContext);
 
 export const AuthProvider: React.FC = (props) => {
-  const { authenticateUser, createAccount } = useContext(DataContext);
+  const { authenticateUser, createAccount } = useContext(AccountContext);
   const [user, setUser] = useState<FirebaseAuthTypes.User>();
   const [signedInAnonymously, setSignedInAnonymously] = useState(false);
 

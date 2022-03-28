@@ -6,14 +6,14 @@ import { Button, Text } from "react-native-paper";
 import { IconButton } from "../../components/IconButton";
 import { LoadingIndicator } from "../../components/LoadingIndicator";
 import { H3 } from "../../components/typography";
+import { AccountContext } from "../../contexts/AccountContext";
 import { AuthContext } from "../../contexts/AuthContext";
-import { DataContext } from "../../contexts/DataContext";
 import Theme from "../../lib/Theme";
 import { ProfilePicture } from "./ProfilePicture";
 
 export const ProfileInformation: React.FC = () => {
   const { logout } = useContext(AuthContext);
-  const { loggedInAccount } = useContext(DataContext);
+  const { loggedInAccount } = useContext(AccountContext);
   const navigate = useContext(NavigationContext);
 
   if (!loggedInAccount) {

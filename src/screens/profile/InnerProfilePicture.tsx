@@ -32,10 +32,11 @@ export const InnerProfilePicture: React.FC<Props> = (props) => {
   useEffect(() => {
     if (pictureUriPromise) {
       pictureUriPromise.then((uri) => {
-        Image.prefetch(uri).then(() => {
-          setUserImageUri(uri);
-          setLoading(false);
-        });
+        Image.prefetch(uri)
+          .then(() => {
+            setUserImageUri(uri);
+          })
+          .finally(() => setLoading(false));
       });
     }
   }, [pictureUriPromise]);

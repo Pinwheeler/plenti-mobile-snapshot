@@ -29,7 +29,7 @@ export const ProfilePicture: React.FC<Props> = (props) => {
     <View style={styles.circle}>
       <InnerProfilePicture
         updatable={updatable}
-        pictureUriPromise={imageUriForAccount("GET", account)}
+        pictureUriPromise={imageUriForAccount(account)}
       />
     </View>
   );

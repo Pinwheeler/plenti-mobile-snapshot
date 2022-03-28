@@ -1,6 +1,15 @@
 {
   "expo": {
     "name": "Plenti",
+    "plugins": [
+      "@react-native-firebase/crashlytics",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Plenti lets you share pictures of your produce with your neighbors"
+        }
+      ]
+    ],
     "slug": "plentimobile",
     "scheme": "plentimobile",
     "version": "1.0.0",
