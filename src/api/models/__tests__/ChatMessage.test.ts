@@ -4,8 +4,8 @@ describe("ChatMessage", () => {
   it("can be sythesized from a model", () => {
     const model: ChatMessageModel = {
       id: 1,
-      toAccountId: 1,
-      fromAccountId: 2,
+      toAccountId: "1",
+      fromAccountId: "2",
       text: "Hello World",
       sentDate: "2019-10-17T03:06:15.916+0000",
       read: false,

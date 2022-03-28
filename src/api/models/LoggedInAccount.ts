@@ -1,12 +1,8 @@
 import { DateTime } from "luxon";
-import { AccountModel } from "./Account";
-import { ImageModel } from "./Image";
+import { AccountEntity } from ".";
 
-export class LoggedInAccountEntity implements AccountModel {
-  id: string;
+export class LoggedInAccountEntity extends AccountEntity {
   email: string;
-  username: string;
-  firstname?: string;
   authToken: string;
   latitude?: number;
   longitude?: number;
@@ -14,14 +10,11 @@ export class LoggedInAccountEntity implements AccountModel {
   prefersMetric: boolean;
   maxDistance: number;
   premiumUntil?: DateTime;
-  profilePicture?: ImageModel;
   iapId: string;
 
   constructor(model: LoggedInAccountModel) {
-    this.id = model.id;
+    super(model);
     this.email = model.email;
-    this.username = model.username;
-    this.firstname = model.firstname;
     this.authToken = model.authToken;
     this.latitude = model.latitude;
     this.longitude = model.longitude;
@@ -32,7 +25,6 @@ export class LoggedInAccountEntity implements AccountModel {
       ? DateTime.fromISO(model.premiumUntil)
       : undefined;
     this.iapId = model.iapId;
-    this.profilePicture = model.profilePicture;
   }
 
   toModel(): LoggedInAccountModel {
@@ -49,7 +41,6 @@ export class LoggedInAccountEntity implements AccountModel {
       maxDistance: this.maxDistance,
       premiumUntil: this.premiumUntil?.toISO(),
       iapId: this.iapId,
-      profilePicture: this.profilePicture,
     };
   }
 }
@@ -67,5 +58,4 @@ export interface LoggedInAccountModel {
   maxDistance: number;
   premiumUntil?: string;
   iapId: string;
-  profilePicture?: ImageModel;
 }

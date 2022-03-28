@@ -4,8 +4,8 @@ import { AccountEntity } from "./Account";
 
 export class ChatMessageEntity {
   id?: number;
-  toAccountId: number;
-  fromAccountId: number;
+  toAccountId: string;
+  fromAccountId: string;
   text: string;
   sentDate: DateTime;
   read: boolean;
@@ -16,8 +16,8 @@ export class ChatMessageEntity {
   }
 
   constructor(
-    toAccountId: number,
-    fromAccountId: number,
+    toAccountId: string,
+    fromAccountId: string,
     text: string,
     sentDate: DateTime,
     messageId?: number,
@@ -69,8 +69,8 @@ export class ChatMessageEntity {
       throw new Error("not a chat message");
     }
     const model: ChatMessageModel = {
-      fromAccountId: parseInt(result[1] ?? "0", 10),
-      toAccountId: parseInt(result[2] ?? "0", 10),
+      fromAccountId: result[1] ?? "0",
+      toAccountId: result[2] ?? "0",
       sentDate: result[3],
       text: result[4],
       read: false,
@@ -86,8 +86,8 @@ export class ChatMessageEntity {
 
 export interface ChatMessageModel {
   id?: number;
-  toAccountId: number;
-  fromAccountId: number;
+  toAccountId: string;
+  fromAccountId: string;
   text: string;
   sentDate: string;
   read: boolean;

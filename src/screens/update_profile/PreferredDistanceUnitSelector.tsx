@@ -1,6 +1,7 @@
 import { useField } from "formik";
 import React from "react";
-import { RadioGroup, RadioOption } from "../../components/radio/RadioGroup";
+import { RadioGroup } from "../../components/radio/RadioGroup";
+import { RadioOption } from "../../components/radio/RadioGroupContext";
 
 interface Props {
   onChange: () => void;

@@ -67,13 +67,10 @@ export const AccountProvider: React.FC = (props) => {
       return undefined;
     }
     const path = `/secure/${user.uid}/account`;
-    console.log("path", path);
     const onUserChange = database()
       .ref(path)
       .on("value", (snapshot) => {
         const model: LoggedInAccountModel | undefined = snapshot.val();
-        console.log("model", model);
-        console.log("user", user);
         if (model) {
           setLoggedInAccount(new LoggedInAccountEntity(model));
         }
