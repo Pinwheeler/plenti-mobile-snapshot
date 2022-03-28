@@ -31,11 +31,11 @@ export const AccountProvider: React.FC = (props) => {
   ) => {
     user.getIdToken().then((token) => {
       const account = new AccountEntity({
-        id: 0,
+        id: user.uid,
         username: form.username,
       });
       const loggedInAccount = new LoggedInAccountEntity({
-        id: 0,
+        id: user.uid,
         email: form.email,
         username: form.username,
         authToken: token,
@@ -66,7 +66,6 @@ export const AccountProvider: React.FC = (props) => {
     const onUserChange = database()
       .ref(path)
       .on("value", (snapshot) => {
-        console.log("User data: ", snapshot.val());
         setLoggedInAccount(new LoggedInAccountEntity(snapshot.val()));
       });
 

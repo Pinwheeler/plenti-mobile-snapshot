@@ -1,10 +1,6 @@
 import React, { useState } from "react";
 import { RadioButton } from "./RadioButton";
-
-export interface RadioOption<T> {
-  value: T;
-  label: string;
-}
+import { RadioGroupContext, RadioOption } from "./RadioGroupContext";
 
 interface Props<T> {
   onSelect: (value: T[]) => void;
@@ -12,14 +8,6 @@ interface Props<T> {
   multiSelect?: boolean;
   selectedIndices?: number[];
 }
-
-export interface IRadioGroupContext {
-  selectIndex: (index: number) => void;
-  isIndexSelected: (index: number) => boolean;
-  unselectIndex: (index: number) => void;
-}
-
-export const RadioGroupContext = React.createContext({} as IRadioGroupContext);
 
 export function RadioGroup<T>(props: Props<T>) {
   const { options, onSelect, multiSelect } = props;

@@ -2,7 +2,7 @@ import { ImageEntity, ImageModel } from "./Image";
 import { LoggedInAccountEntity } from "./LoggedInAccount";
 
 export class AccountEntity {
-  id: number;
+  id: string;
   username: string;
   firstname?: string;
   profilePicture?: ImageEntity;
@@ -38,7 +38,7 @@ export class AccountEntity {
 }
 
 export interface AccountModel {
-  id: number;
+  id: string;
   username: string;
   firstname?: string;
   profilePicture?: ImageModel;

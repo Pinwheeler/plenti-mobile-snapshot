@@ -1,3 +1,4 @@
+import crashlytics from "@react-native-firebase/crashlytics";
 import storage from "@react-native-firebase/storage";
 import * as ImagePicker from "expo-image-picker";
 import React from "react";
@@ -16,12 +17,19 @@ export const ImageContext = React.createContext({} as IImageContext);
 
 export const ImageProvider: React.FC = (props) => {
   const imageUriForAccount = (account: AccountEntity) =>
-    storage().ref(`/profile-pictures/${account.id}`).getDownloadURL();
+    storage().ref(`users/${account.id}/profile-picture.png`).getDownloadURL();
 
   const uploadNewProfilePicture = (
     image: ImagePicker.ImageInfo,
     account: LoggedInAccountEntity
-  ) => storage().ref(`/profile-pictures/${account.id}`).putFile(image.uri);
+  ) =>
+    storage()
+      .ref(`users/${account.id}/profile-picture.png`)
+      .putFile(image.uri)
+      .catch((error) => {
+        crashlytics().recordError(error);
+        console.warn(error);
+      });
 
   const value = { imageUriForAccount, uploadNewProfilePicture };
 

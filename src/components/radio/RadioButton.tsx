@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Pressable, Text, View } from "react-native";
 import Theme from "../../lib/Theme";
-import { RadioGroupContext, RadioOption } from "./RadioGroup";
+import { RadioGroupContext, RadioOption } from "./RadioGroupContext";
 
 interface Props<T> {
   index: number;

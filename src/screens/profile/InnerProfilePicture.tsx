@@ -1,10 +1,11 @@
+import crashlytics from "@react-native-firebase/crashlytics";
 import React, { useEffect, useState } from "react";
 import { Image, StyleSheet } from "react-native";
 import { ActivityIndicator } from "react-native-paper";
 import { Icon } from "../../components/Icon";
 import Theme from "../../lib/Theme";
 
-const ICON_SIZE = 70;
+const ICON_SIZE = 45;
 
 interface Props {
   pictureUriPromise?: Promise<string>;
@@ -31,13 +32,24 @@ export const InnerProfilePicture: React.FC<Props> = (props) => {
 
   useEffect(() => {
     if (pictureUriPromise) {
-      pictureUriPromise.then((uri) => {
-        Image.prefetch(uri)
-          .then(() => {
-            setUserImageUri(uri);
-          })
-          .finally(() => setLoading(false));
-      });
+      pictureUriPromise
+        .then((uri) => {
+          Image.prefetch(uri)
+            .then(() => {
+              setUserImageUri(uri);
+            })
+            .finally(() => setLoading(false));
+        })
+        .catch((error) => {
+          switch (error.code) {
+            case "storage/object-not-found":
+              break; //do nothing, this is not weird
+            default:
+              crashlytics().recordError(error);
+              break;
+          }
+        })
+        .finally(() => setLoading(false));
     }
   }, [pictureUriPromise]);
 
@@ -57,7 +69,7 @@ export const InnerProfilePicture: React.FC<Props> = (props) => {
     } else {
       return (
         <Icon
-          type={"user_solid"}
+          type={"user-alt"}
           size={ICON_SIZE}
           color={Theme.colors.background}
         />

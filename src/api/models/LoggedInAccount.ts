@@ -3,7 +3,7 @@ import { AccountModel } from "./Account";
 import { ImageModel } from "./Image";
 
 export class LoggedInAccountEntity implements AccountModel {
-  id: number;
+  id: string;
   email: string;
   username: string;
   firstname?: string;
@@ -55,7 +55,7 @@ export class LoggedInAccountEntity implements AccountModel {
 }
 
 export interface LoggedInAccountModel {
-  id: number;
+  id: string;
   email: string;
   username: string;
   firstname?: string;
