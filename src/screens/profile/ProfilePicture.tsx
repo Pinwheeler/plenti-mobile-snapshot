@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useMemo } from "react";
 import { StyleSheet, View } from "react-native";
 import { AccountEntity } from "../../api/models/Account";
 import { LoggedInAccountEntity } from "../../api/models/LoggedInAccount";
@@ -27,12 +27,14 @@ export const ProfilePicture: React.FC<Props> = (props) => {
   const { updatable, account, loading } = props;
   const { imageUriForAccount } = useContext(ImageContext);
 
+  const picturePromise = useMemo(() => imageUriForAccount(account), [account]);
+
   return (
     <View style={styles.circle}>
       <InnerProfilePicture
         loading={loading}
         updatable={updatable}
-        pictureUriPromise={imageUriForAccount(account)}
+        pictureUriPromise={picturePromise}
       />
     </View>
   );

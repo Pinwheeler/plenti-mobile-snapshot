@@ -32,7 +32,6 @@ export const InnerProfilePicture: React.FC<Props> = (props) => {
   useEffect(() => {
     if (pictureUriPromise) {
       setFetching(true);
-      setUserImageUri(undefined);
       pictureUriPromise
         .then((uri) => {
           Image.prefetch(uri)

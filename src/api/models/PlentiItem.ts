@@ -1,44 +1,39 @@
-export type PlentiType = "Fruit" | "Decorative" | "Herb" | "Poultry" | "Vegetable" | "Unknown"
+export type PlentiType =
+  | "Fruit"
+  | "Decorative"
+  | "Herb"
+  | "Poultry"
+  | "Vegetable"
+  | "Unknown";
 
 export class PlentiItemEntity {
-  id: number
-  title: string
-  type: PlentiType
-  displayName: string
-  filename: string
+  id: number;
+  title: string;
+  type: PlentiType;
+  displayName: string;
+  filename: string;
 
   constructor(model: PlentiItemModel) {
-    this.id = model.id
-    this.title = model.title
-    switch (model.hType) {
-      case 1:
-        this.type = "Fruit"
-        break
-      case 2:
-        this.type = "Decorative"
-        break
-      case 3:
-        this.type = "Herb"
-        break
-      case 4:
-        this.type = "Poultry"
-        break
-      case 5:
-        this.type = "Vegetable"
-        break
-      default:
-        this.type = "Unknown"
-        break
-    }
+    this.id = model.id;
+    this.title = model.title;
+    this.type = model.type;
+    this.displayName = this.title.charAt(0).toUpperCase() + this.title.slice(1);
+    this.filename = model.filename;
+  }
 
-    this.displayName = this.title.charAt(0).toUpperCase() + this.title.slice(1)
-    this.filename = model.filename
+  toModel(): PlentiItemModel {
+    return {
+      id: this.id,
+      type: this.type,
+      title: this.title,
+      filename: this.title,
+    };
   }
 }
 
 export interface PlentiItemModel {
-  id: number
-  hType: number
-  title: string
-  filename: string
+  id: number;
+  type: PlentiType;
+  title: string;
+  filename: string;
 }

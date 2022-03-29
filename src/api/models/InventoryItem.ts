@@ -1,38 +1,45 @@
-import { PlentiItemEntity, PlentiItemModel } from "./PlentiItem"
-import { QuantityEntity } from "./Quantity"
-import { AccountEntity, AccountModel } from "./Account"
+import { DateTime } from "luxon";
+import uuid from "react-native-uuid";
+import { PlentiItemEntity, PlentiItemModel } from "./PlentiItem";
+import { Quantity } from "./Quantity";
 
 export class InventoryItemEntity {
-  id: number
-  plentiItem: PlentiItemEntity
-  currentQuantity: QuantityEntity
-  initialQuantity: QuantityEntity
-  account: AccountEntity
-  createdAt: Date
-  updatedAt: Date
-  deletedAt?: Date
+  id: string;
+  plentiItem: PlentiItemEntity;
+  currentQuantity: Quantity;
+  initialQuantity: Quantity;
+  createdAt: DateTime;
+  updatedAt: DateTime;
+
+  static modelFromUI(
+    item: PlentiItemEntity,
+    quantity: Quantity
+  ): InventoryItemModel {
+    return {
+      id: uuid.v4().toString(),
+      plentiItem: item.toModel(),
+      currentQuantity: quantity,
+      initialQuantity: quantity,
+      createdAt: DateTime.now().toISO(),
+      updatedAt: DateTime.now().toISO(),
+    };
+  }
 
   constructor(model: InventoryItemModel) {
-    this.id = model.id
-    this.plentiItem = new PlentiItemEntity(model.plentiItem)
-    this.currentQuantity = QuantityEntity.fromValue(model.currentQuantity)
-    this.initialQuantity = QuantityEntity.fromValue(model.initialQuantity)
-    this.account = new AccountEntity(model.account)
-    this.createdAt = new Date(model.createdAt)
-    this.updatedAt = new Date(model.updatedAt)
-    if (model.deletedAt) {
-      this.deletedAt = new Date(model.deletedAt)
-    }
+    this.id = model.id;
+    this.plentiItem = new PlentiItemEntity(model.plentiItem);
+    this.currentQuantity = model.currentQuantity;
+    this.initialQuantity = model.initialQuantity;
+    this.createdAt = DateTime.fromISO(model.createdAt);
+    this.updatedAt = DateTime.fromISO(model.updatedAt);
   }
 }
 
 export interface InventoryItemModel {
-  id: number
-  plentiItem: PlentiItemModel
-  currentQuantity: number
-  initialQuantity: number
-  account: AccountModel
-  createdAt: string
-  updatedAt: string
-  deletedAt?: string
+  id: string;
+  plentiItem: PlentiItemModel;
+  currentQuantity: Quantity;
+  initialQuantity: Quantity;
+  createdAt: string;
+  updatedAt: string;
 }

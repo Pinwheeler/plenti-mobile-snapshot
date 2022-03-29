@@ -14,6 +14,7 @@ import { ProfilePicture } from "./ProfilePicture";
 export const ProfileInformation: React.FC = () => {
   const { logout } = useContext(AuthContext);
   const { loggedInAccount } = useContext(AccountContext);
+  console.log("ProfileInformation", loggedInAccount);
   const navigate = useContext(NavigationContext);
 
   if (!loggedInAccount) {

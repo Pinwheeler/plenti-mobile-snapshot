@@ -11,11 +11,11 @@ import {
 
 interface IAccountContext {
   loggedInAccount?: LoggedInAccountEntity;
-  profilePicture?: string;
+  profilePicture?: Promise<string>;
   accountForUser(user: FirebaseAuthTypes.User): Promise<AccountEntity>;
   authenticateUser(user: FirebaseAuthTypes.User): void;
   createAccount(user: FirebaseAuthTypes.User, form: AccountSignupForm): void;
-  updateAccount(form: AccountUpdateForm): Promise<void>;
+  updateAccount(form: AccountUpdateForm): Promise<[void, void]>;
   refreshProfilePicture(): void;
 }
 
@@ -25,14 +25,13 @@ export const AccountProvider: React.FC = (props) => {
   const [loggedInAccount, setLoggedInAccount] =
     useState<LoggedInAccountEntity>();
   const [user, setUser] = useState<FirebaseAuthTypes.User>();
-  const [profilePicture, setProfilePicture] = useState<string>();
+  const [profilePicture, setProfilePicture] = useState<Promise<string>>();
 
   const refreshProfilePicture = () => {
     if (loggedInAccount) {
-      storage()
-        .ref(loggedInAccount.profilePictureUrl)
-        .getDownloadURL()
-        .then((value) => setProfilePicture(value));
+      setProfilePicture(
+        storage().ref(loggedInAccount.profilePictureUrl).getDownloadURL()
+      );
     }
   };
 
@@ -67,7 +66,11 @@ export const AccountProvider: React.FC = (props) => {
 
   const updateAccount = (form: AccountUpdateForm) => {
     if (loggedInAccount) {
-      return database().ref(`/accounts/${loggedInAccount.id}`).update({ form });
+      console.log("updating with form", form);
+      return Promise.all([
+        database().ref(`/accounts/${loggedInAccount.id}`).update(form),
+        database().ref(`/secure/${loggedInAccount.id}/account`).update(form),
+      ]);
     }
 
     return Promise.reject(
@@ -77,7 +80,8 @@ export const AccountProvider: React.FC = (props) => {
 
   useEffect(() => {
     if (!user) {
-      return undefined;
+      setLoggedInAccount(undefined);
+      return;
     }
     const path = `/secure/${user.uid}/account`;
     const onUserChange = database()

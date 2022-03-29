@@ -40,18 +40,24 @@ export const UpdateProfileScreen = () => {
   const changeLocationDefault: AccountUpdateForm = {
     username: loggedInAccount.username,
     firstname: loggedInAccount.firstname || "",
-    address: loggedInAccount.pickupAddress || "",
+    pickupAddress: loggedInAccount.pickupAddress || "",
     latitude: loggedInAccount.latitude ? `${loggedInAccount.latitude}` : "",
     longitude: loggedInAccount.longitude ? `${loggedInAccount.longitude}` : "",
     prefersMetric: loggedInAccount.prefersMetric,
     maxDistance: loggedInAccount.maxDistance ?? -1,
   };
 
+  const handleDismiss = () => {
+    setSuccessModalVisible(false);
+    setGeocodeFailModalVisible(false);
+    setLoading(false);
+  };
+
   const submitUpdate = async (form: AccountUpdateForm) => {
     const localForm = { ...form };
     setLoading(true);
-    const geocoordinates = localForm.address
-      ? await geocode(localForm.address)
+    const geocoordinates = localForm.pickupAddress
+      ? await geocode(localForm.pickupAddress)
       : undefined;
     if (geocoordinates) {
       localForm.latitude = geocoordinates.position.coords.latitude.toString();
@@ -74,7 +80,7 @@ export const UpdateProfileScreen = () => {
         validationSchema={yup.object().shape({
           username: yup.string().required(),
           firstname: yup.string(),
-          address: yup.string(),
+          pickupAddress: yup.string(),
           prefersMetric: yup.bool().required(),
           maxDistance: yup.number(),
         })}
@@ -102,7 +108,7 @@ export const UpdateProfileScreen = () => {
             <TextField
               textContentType="familyName"
               onChange={() => setEditsMade(true)}
-              name="address"
+              name="pickupAddress"
               label="Pickup Address"
               style={{ marginBottom: 15 }}
               onFocus={() => setPickupAddressEntered(true)}
@@ -149,7 +155,7 @@ export const UpdateProfileScreen = () => {
       <Portal>
         <Modal
           visible={successModalVisible}
-          onDismiss={() => setSuccessModalVisible(false)}
+          onDismiss={handleDismiss}
           contentContainerStyle={{
             backgroundColor: Theme.colors.surface,
             padding: 15,
@@ -167,7 +173,7 @@ export const UpdateProfileScreen = () => {
           <Button
             mode="contained"
             onPress={() => {
-              setSuccessModalVisible(false);
+              handleDismiss();
               navigation.goBack();
             }}
           >
@@ -178,7 +184,7 @@ export const UpdateProfileScreen = () => {
       <Portal>
         <Modal
           visible={geocodeFailModalVisible}
-          onDismiss={() => setGeocodeFailModalVisible(false)}
+          onDismiss={handleDismiss}
           contentContainerStyle={{
             backgroundColor: Theme.colors.surface,
             padding: 15,
@@ -203,12 +209,7 @@ export const UpdateProfileScreen = () => {
             location. Please check your address and try again. You can also try
             being more generic. Just a city/state should do.
           </Text>
-          <Button
-            mode="contained"
-            onPress={() => {
-              setGeocodeFailModalVisible(false);
-            }}
-          >
+          <Button mode="contained" onPress={handleDismiss}>
             Okay
           </Button>
         </Modal>

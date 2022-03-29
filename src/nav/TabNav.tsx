@@ -10,7 +10,7 @@ import { NotificationContext } from "../contexts/NotificationContext";
 import Theme from "../lib/Theme";
 import { ConnectScreen } from "../screens/ConnectScreen";
 import { HomeScreen } from "../screens/HomeScreen";
-import { InventoryScreen } from "../screens/InventoryScreen";
+import { InventoryScreen } from "../screens/inventory/InventoryScreen";
 import { ProfileScreen } from "../screens/profile/ProfileScreen";
 
 const Tab = createMaterialBottomTabNavigator();
