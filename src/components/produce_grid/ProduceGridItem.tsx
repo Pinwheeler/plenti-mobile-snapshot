@@ -1,16 +1,15 @@
 import React from "react";
-import { View } from "react-native";
+import { Image, View } from "react-native";
 import { Card, Title } from "react-native-paper";
-import { usePlentItemURI } from "src/item_grid/NetworkImage";
+import { PlentiItem } from "../../assets/PlentiItemsIndex";
 
 interface Props {
-  plentiItem: PlentiItemEntity;
+  plentiItem: PlentiItem;
   onPress?: () => void;
 }
 
 export const ProduceGridItem: React.FC<Props> = (props) => {
   const { onPress, plentiItem } = props;
-  const imageURI = usePlentItemURI(plentiItem);
   return (
     <View
       style={{
@@ -22,9 +21,10 @@ export const ProduceGridItem: React.FC<Props> = (props) => {
       }}
     >
       <Card style={{ marginHorizontal: 10 }} onPress={onPress}>
-        <Card.Cover source={{ uri: imageURI }} style={{ height: 130 }} />
+        <Image source={require("../../assets/images/pumpkins.jpg")} style={{height: 130}} />
+        {/* <Card.Cover source={require("../../assets/images/pumpkins.jpg")} style={{ height: 130 }} /> */}
         <Card.Content>
-          <Title>{plentiItem.displayName}</Title>
+          <Title>{plentiItem.name}</Title>
           {props.children}
         </Card.Content>
       </Card>

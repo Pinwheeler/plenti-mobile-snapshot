@@ -7,12 +7,10 @@ export type IconType =
   | "store"
   | "envelope"
   | "seedling"
-  | "camera_solid"
-  | "check_circle_solid"
-  | "clock_regular"
-  | "envelope_solid"
-  | "store_solid"
-  | "user_solid"
+  | "camera"
+  | "check-circle"
+  | "clock"
+  | "envelope"
   | "cog"
   | "flag"
   | "gps"
@@ -20,8 +18,8 @@ export type IconType =
   | "close"
   | "plus"
   | "search"
-  | "chevron_up"
-  | "chevron_down"
+  | "chevron-up"
+  | "chevron-down"
   | "pencil";
 
 interface Props {

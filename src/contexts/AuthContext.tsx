@@ -1,6 +1,7 @@
 import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
 import React, { useContext, useEffect, useState } from "react";
-import { AccountLoginForm, AccountSignupForm } from "../api/forms";
+import { AccountLoginForm } from "../api/forms/AccountLoginForm";
+import { AccountSignupForm } from "../api/forms/AccountSignupForm";
 import { LoadingScreen } from "../screens/LoadingScreen";
 import { AccountContext } from "./AccountContext";
 interface IAuthContext {

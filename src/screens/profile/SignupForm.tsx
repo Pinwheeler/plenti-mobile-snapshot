@@ -3,7 +3,7 @@ import React, { useContext, useState } from "react";
 import { View } from "react-native";
 import { ActivityIndicator, Button } from "react-native-paper";
 import * as yup from "yup";
-import { AccountSignupForm } from "../../api/forms";
+import { AccountSignupForm } from "../../api/forms/AccountSignupForm";
 import { TextField } from "../../components/TextField";
 import { AuthContext } from "../../contexts/AuthContext";
 import Theme from "../../lib/Theme";

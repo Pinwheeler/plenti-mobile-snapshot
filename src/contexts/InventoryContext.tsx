@@ -5,13 +5,12 @@ import {
   InventoryItemEntity,
   InventoryItemModel,
 } from "../api/models/InventoryItem";
-import { PlentiItemEntity } from "../api/models/PlentiItem";
 import { Quantity } from "../api/models/Quantity";
 import { AccountContext } from "./AccountContext";
 
 interface IInventoryContext {
   myInventory: Map<string, InventoryItemEntity>;
-  addItem(item: PlentiItemEntity, quantity: Quantity): void;
+  addItem(itemId: number, quantity: Quantity): void;
   deleteItem(item: InventoryItemEntity): void;
 }
 
@@ -44,9 +43,9 @@ export const InventoryProvider: React.FC = (props) => {
     }
   }, [loggedInAccount]);
 
-  const addItem = (item: PlentiItemEntity, quantity: Quantity) => {
+  const addItem = (itemId: number, quantity: Quantity) => {
     if (loggedInAccount) {
-      const model = InventoryItemEntity.modelFromUI(item, quantity);
+      const model = InventoryItemEntity.modelFromUI(itemId, quantity);
       database()
         .ref(`/inventories/${loggedInAccount.id}/${model.id}`)
         .push(model);

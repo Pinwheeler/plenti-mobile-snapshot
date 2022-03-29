@@ -2,6 +2,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import React, { useContext } from "react";
 import { PremiumContext } from "../contexts/PremiumContext";
 import Theme from "../lib/Theme";
+import AddInventoryItemScreen from "../screens/add_inventory/AddInventoryItemScreen";
 import { UpdateProfileScreen } from "../screens/update_profile/UpdateProfileScreen";
 import { TabNav } from "./TabNav";
 
@@ -30,11 +31,11 @@ const HomeStack = () => {
         component={ChatScreen}
         options={{ title: "Chat", headerRight: () => <ConnectionStatus /> }}
       /> */}
-      {/* <Stack.Screen
+      <Stack.Screen
         name="AddInventoryItem"
         component={AddInventoryItemScreen}
         options={{ title: "Add to Inventory" }}
-      /> */}
+      />
       <Stack.Screen
         name="UpdateProfile"
         component={UpdateProfileScreen}

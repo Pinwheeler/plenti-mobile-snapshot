@@ -1,23 +1,22 @@
 import { DateTime } from "luxon";
 import uuid from "react-native-uuid";
-import { PlentiItemEntity, PlentiItemModel } from "./PlentiItem";
 import { Quantity } from "./Quantity";
 
 export class InventoryItemEntity {
   id: string;
-  plentiItem: PlentiItemEntity;
+  plentiItemId: number;
   currentQuantity: Quantity;
   initialQuantity: Quantity;
   createdAt: DateTime;
   updatedAt: DateTime;
 
   static modelFromUI(
-    item: PlentiItemEntity,
+    itemId: number,
     quantity: Quantity
   ): InventoryItemModel {
     return {
       id: uuid.v4().toString(),
-      plentiItem: item.toModel(),
+      plentiItemId: itemId,
       currentQuantity: quantity,
       initialQuantity: quantity,
       createdAt: DateTime.now().toISO(),
@@ -27,7 +26,7 @@ export class InventoryItemEntity {
 
   constructor(model: InventoryItemModel) {
     this.id = model.id;
-    this.plentiItem = new PlentiItemEntity(model.plentiItem);
+    this.plentiItemId = model.plentiItemId;
     this.currentQuantity = model.currentQuantity;
     this.initialQuantity = model.initialQuantity;
     this.createdAt = DateTime.fromISO(model.createdAt);
@@ -37,7 +36,7 @@ export class InventoryItemEntity {
 
 export interface InventoryItemModel {
   id: string;
-  plentiItem: PlentiItemModel;
+  plentiItemId: number;
   currentQuantity: Quantity;
   initialQuantity: Quantity;
   createdAt: string;

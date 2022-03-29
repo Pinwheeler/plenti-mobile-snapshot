@@ -2,7 +2,8 @@ import { FirebaseAuthTypes } from "@react-native-firebase/auth";
 import database from "@react-native-firebase/database";
 import storage from "@react-native-firebase/storage";
 import React, { useEffect, useState } from "react";
-import { AccountSignupForm, AccountUpdateForm } from "../api/forms";
+import { AccountSignupForm } from "../api/forms/AccountSignupForm";
+import { AccountUpdateForm } from "../api/forms/AccountUpdateForm";
 import { AccountEntity } from "../api/models/Account";
 import {
   LoggedInAccountEntity,

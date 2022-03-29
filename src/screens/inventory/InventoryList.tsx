@@ -1,10 +1,12 @@
-import { useNavigation } from "@react-navigation/native";
+import { CommonActions, useNavigation } from "@react-navigation/native";
 import React, { useContext, useState } from "react";
 import { RefreshControl, ScrollView, View } from "react-native";
 import { Button, FAB, Modal, Portal, Text, Title } from "react-native-paper";
+import { ProduceGrid } from "../../components/produce_grid/ProduceGrid";
 import { AccountContext } from "../../contexts/AccountContext";
 import { InventoryContext } from "../../contexts/InventoryContext";
 import Theme from "../../lib/Theme";
+import { InventoryItemGridItem } from "./InventoryItemGridItem";
 
 export const InventoryList = () => {
   const { loggedInAccount } = useContext(AccountContext);
@@ -14,7 +16,7 @@ export const InventoryList = () => {
   const navigation = useNavigation();
 
   const goToAccount = () => {
-    navigation.navigate({ key: "Profile" });
+    navigation.dispatch(CommonActions.navigate({name: "Profile"}))
     onClose();
   };
 
@@ -26,7 +28,7 @@ export const InventoryList = () => {
   const goToProfile = () => {
     setLocationGateVisible(false);
     setLoginGateVisible(false);
-    navigation.navigate({ key: "Profile" });
+    navigation.dispatch(CommonActions.navigate({ name: "Profile" }));
   };
 
   const onAdd = () => {
@@ -34,7 +36,7 @@ export const InventoryList = () => {
       setLoginGateVisible(true);
     } else {
       if (loggedInAccount.pickupAddress) {
-        navigation.navigate({ key: "AddInventoryItem" });
+        navigation.dispatch(CommonActions.navigate({ name: "AddInventoryItem" }));
       } else {
         setLocationGateVisible(true);
       }
@@ -44,25 +46,17 @@ export const InventoryList = () => {
   const Content = () => {
     if (myInventory && myInventory.size > 0) {
       return (
-        <ProduceGrid
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
-        >
-          {inventoryItems.map((item) => (
+        <ProduceGrid>
+          {Array.from(myInventory).map(([_key, item]) => (
             <InventoryItemGridItem inventoryItem={item} key={item.id} />
           ))}
         </ProduceGrid>
       );
     } else {
       return (
-        <ScrollView
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
-        >
+        <ScrollView>
           <Text style={{ textAlign: "center", color: Theme.colors.disabled }}>
-            ↓↓ No Inventory Items Found. Pull down to Refresh ↓↓
+            No Inventory Items Found
           </Text>
           <Text style={{ textAlign: "center", color: Theme.colors.disabled }}>
             Use the button on this page to add an Inventory Item
@@ -76,7 +70,7 @@ export const InventoryList = () => {
     <View style={{ flex: 1 }}>
       <Content />
       <FAB
-        icon={IconType.plus}
+        icon={"plus"}
         onPress={onAdd}
         style={{ position: "absolute", right: 15, bottom: 15 }}
       />
@@ -89,12 +83,18 @@ export const InventoryList = () => {
                 You must have a Pickup Location (latitude/longitude) set before
                 you can add to your inventory.
               </Text>
+              <Text style={{ marginTop: 15, textAlign: "center" }}>
+                You can set this up on the
+              </Text>
+              <Text style={{textAlign: "center" }}>
+                Profile Screen
+              </Text>
               <Button
                 onPress={goToProfile}
                 mode="contained"
                 style={{ marginTop: 15 }}
               >
-                Set One in the Profile Screen
+                Go To Profile Screen
               </Button>
               <Button
                 style={{ marginTop: 20 }}
