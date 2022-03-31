@@ -1,19 +1,19 @@
 import { LoggedInAccountEntity } from "./LoggedInAccount"
 
 export class AccountEntity {
-  id: string
+  uid: string
   username: string
   firstname?: string
 
   constructor(model: AccountModel) {
-    this.id = model.id
+    this.uid = model.uid
     this.username = model.username
     this.firstname = model.firstname
   }
 
   static fromLoggedInAccount(loggedInEntity: LoggedInAccountEntity): AccountEntity {
     return new AccountEntity({
-      id: loggedInEntity.id,
+      uid: loggedInEntity.uid,
       username: loggedInEntity.username,
       firstname: loggedInEntity.firstname,
     })
@@ -21,7 +21,7 @@ export class AccountEntity {
 
   toModel(): AccountModel {
     return {
-      id: this.id,
+      uid: this.uid,
       username: this.username,
       firstname: this.firstname,
     }
@@ -29,7 +29,7 @@ export class AccountEntity {
 }
 
 export interface AccountModel {
-  id: string
+  uid: string
   username: string
   firstname?: string
 }

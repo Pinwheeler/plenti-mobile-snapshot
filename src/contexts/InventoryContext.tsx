@@ -3,6 +3,7 @@ import database from "@react-native-firebase/database"
 import React, { useContext, useEffect, useState } from "react"
 import { InventoryItem, InventoryItemModel } from "../api/models/InventoryItem"
 import { Quantity } from "../api/models/Quantity"
+import { URLS } from "../lib/UrlHelper"
 import { AccountContext } from "./AccountContext"
 
 interface IInventoryContext {
@@ -19,7 +20,7 @@ export const InventoryProvider: React.FC = (props) => {
 
   useEffect(() => {
     if (loggedInAccount !== undefined) {
-      const path = `/inventories/${loggedInAccount.id}`
+      const path = `/inventories/${loggedInAccount.uid}`
       const onInventoryChange = database()
         .ref(path)
         .on("value", (snapshot) => {
@@ -38,8 +39,8 @@ export const InventoryProvider: React.FC = (props) => {
 
   const addItem = (itemName: string, quantity: Quantity) => {
     if (loggedInAccount) {
-      const model = InventoryItem.modelFromUI(itemName, quantity)
-      database().ref(`/inventories/${loggedInAccount.id}/${model.id}`).push(model)
+      const model = InventoryItem.modelFromUI(itemName, quantity, loggedInAccount)
+      database().ref(URLS.inventoryItem(model)).push(model)
     } else {
       crashlytics().log("Call to addItem made without a logged in account. Something is fishy")
     }
@@ -47,7 +48,7 @@ export const InventoryProvider: React.FC = (props) => {
 
   const deleteItem = (item: InventoryItem) => {
     if (loggedInAccount) {
-      database().ref(`/inventories/${loggedInAccount.id}/${item.id}`).remove()
+      database().ref(URLS.inventoryItem(item)).remove()
     } else {
       crashlytics().log("Call to deleteItem made without a logged in account. Something is fishy")
     }

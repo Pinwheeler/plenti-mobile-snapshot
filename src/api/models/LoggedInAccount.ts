@@ -1,40 +1,36 @@
-import { DateTime } from "luxon";
-import { AccountEntity } from "./Account";
+import { DateTime } from "luxon"
+import { AccountEntity } from "./Account"
 
-export function isLoggedInAccount(
-  account: AccountEntity | LoggedInAccountEntity
-): account is LoggedInAccountEntity {
-  return (account as LoggedInAccountEntity).prefersMetric !== undefined;
+export function isLoggedInAccount(account: AccountEntity | LoggedInAccountEntity): account is LoggedInAccountEntity {
+  return (account as LoggedInAccountEntity).prefersMetric !== undefined
 }
 export class LoggedInAccountEntity extends AccountEntity {
-  email: string;
-  authToken: string;
-  latitude?: number;
-  longitude?: number;
-  pickupAddress?: string;
-  prefersMetric: boolean;
-  maxDistance: number;
-  premiumUntil?: DateTime;
-  iapId: string;
+  email: string
+  authToken: string
+  latitude?: number
+  longitude?: number
+  pickupAddress?: string
+  prefersMetric: boolean
+  maxDistance: number
+  premiumUntil?: DateTime
+  iapId: string
 
   constructor(model: LoggedInAccountModel) {
-    super(model);
-    this.email = model.email;
-    this.authToken = model.authToken;
-    this.latitude = model.latitude;
-    this.longitude = model.longitude;
-    this.pickupAddress = model.pickupAddress;
-    this.prefersMetric = model.prefersMetric;
-    this.maxDistance = model.maxDistance;
-    this.premiumUntil = model.premiumUntil
-      ? DateTime.fromISO(model.premiumUntil)
-      : undefined;
-    this.iapId = model.iapId;
+    super(model)
+    this.email = model.email
+    this.authToken = model.authToken
+    this.latitude = model.latitude
+    this.longitude = model.longitude
+    this.pickupAddress = model.pickupAddress
+    this.prefersMetric = model.prefersMetric
+    this.maxDistance = model.maxDistance
+    this.premiumUntil = model.premiumUntil ? DateTime.fromISO(model.premiumUntil) : undefined
+    this.iapId = model.iapId
   }
 
   toModel(): LoggedInAccountModel {
     return {
-      id: this.id,
+      uid: this.uid,
       email: this.email,
       username: this.username,
       firstname: this.firstname,
@@ -46,21 +42,21 @@ export class LoggedInAccountEntity extends AccountEntity {
       maxDistance: this.maxDistance,
       premiumUntil: this.premiumUntil?.toISO(),
       iapId: this.iapId,
-    };
+    }
   }
 }
 
 export interface LoggedInAccountModel {
-  id: string;
-  email: string;
-  username: string;
-  firstname?: string;
-  authToken: string;
-  latitude?: number;
-  longitude?: number;
-  pickupAddress?: string;
-  prefersMetric: boolean;
-  maxDistance: number;
-  premiumUntil?: string;
-  iapId: string;
+  uid: string
+  email: string
+  username: string
+  firstname?: string
+  authToken: string
+  latitude?: number
+  longitude?: number
+  pickupAddress?: string
+  prefersMetric: boolean
+  maxDistance: number
+  premiumUntil?: string
+  iapId: string
 }

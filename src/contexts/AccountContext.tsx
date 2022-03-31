@@ -40,11 +40,11 @@ export const AccountProvider: React.FC = (props) => {
   const createAccount = (user: FirebaseAuthTypes.User, form: AccountSignupForm) => {
     user.getIdToken().then((token) => {
       const account = new AccountEntity({
-        id: user.uid,
+        uid: user.uid,
         username: form.username,
       })
       const loggedInAccount = new LoggedInAccountEntity({
-        id: user.uid,
+        uid: user.uid,
         email: form.email,
         username: form.username,
         authToken: token,
@@ -52,7 +52,7 @@ export const AccountProvider: React.FC = (props) => {
         maxDistance: -1,
         iapId: "NOT_YET_IMPLEMENTED",
       })
-      database().ref(`/accounts/${user.uid}`).set(account)
+      database().ref(URLS.account.public(account)).set(account)
       database().ref(`/secure/${user.uid}/account`).set(loggedInAccount)
     })
   }
@@ -61,8 +61,8 @@ export const AccountProvider: React.FC = (props) => {
     if (loggedInAccount) {
       console.log("updating with form", form)
       return Promise.all([
-        database().ref(`/accounts/${loggedInAccount.id}`).update(form),
-        database().ref(`/secure/${loggedInAccount.id}/account`).update(form),
+        database().ref(URLS.account.public(loggedInAccount)).update(form),
+        database().ref(URLS.account.secure(loggedInAccount)).update(form),
       ])
     }
 
@@ -74,7 +74,7 @@ export const AccountProvider: React.FC = (props) => {
       setLoggedInAccount(undefined)
       return
     }
-    const path = `/secure/${user.uid}/account`
+    const path = URLS.account.secure(user)
     const onUserChange = database()
       .ref(path)
       .on("value", (snapshot) => {
