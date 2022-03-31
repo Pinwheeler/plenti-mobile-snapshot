@@ -13,7 +13,6 @@ export const ProduceGridItem: React.FC<Props> = (props) => {
   return (
     <View
       style={{
-        maxWidth: 190,
         height: 200,
         marginBottom: 15,
         minWidth: 140,

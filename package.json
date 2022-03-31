@@ -45,6 +45,11 @@
     "@types/react": "^17.0.41",
     "@types/react-native": "^0.67.3",
     "@types/react-test-renderer": "^17.0.1",
+    "@typescript-eslint/eslint-plugin": "^5.17.0",
+    "@typescript-eslint/parser": "^5.17.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "prettier": "^2.6.1",
     "typescript": "^4.6.2"
   },
   "name": "plenti-mobile",

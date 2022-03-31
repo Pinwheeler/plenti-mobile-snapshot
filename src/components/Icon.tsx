@@ -1,6 +1,6 @@
-import { FontAwesome5 } from "@expo/vector-icons";
-import React from "react";
-import { View, ViewStyle } from "react-native";
+import { FontAwesome5 } from "@expo/vector-icons"
+import React from "react"
+import { View, ViewStyle } from "react-native"
 
 export type IconType =
   | "user-alt"
@@ -15,22 +15,23 @@ export type IconType =
   | "flag"
   | "gps"
   | "play"
-  | "close"
+  | "times"
+  | "times-circle"
   | "plus"
   | "search"
   | "chevron-up"
   | "chevron-down"
-  | "pencil";
+  | "pencil"
 
 interface Props {
-  type: IconType;
-  size?: number;
-  style?: ViewStyle;
-  color?: string;
+  type: IconType
+  size?: number
+  style?: ViewStyle
+  color?: string
 }
 
 export const Icon: React.FC<Props> = (props) => (
   <View>
     <FontAwesome5 name={props.type} size={props.size} color={props.color} />
   </View>
-);
+)

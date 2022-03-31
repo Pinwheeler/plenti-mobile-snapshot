@@ -10,7 +10,7 @@ import Theme from "../../lib/Theme"
 import LoggedInGate from "../LoggedInGate"
 import { ProduceGrid } from "../produce_grid/ProduceGrid"
 import { ProduceGridItem } from "../produce_grid/ProduceGridItem"
-import QuantitySelector from "../produce_grid/QuantitySelector"
+import { ProduceItemDetails } from "../produce_grid/ProduceItemDetails"
 import { ItemSelectorContext } from "./ItemSelectorContext"
 
 
@@ -40,7 +40,7 @@ const ItemSelector: React.FC<Props> = (props) => {
 
   const filteredItems = useMemo(() => {
     return plentiItems.filter((item) => {
-      return item.name.match(searchText)
+      return item.name.toLowerCase().match(searchText.toLowerCase())
     })
   }, [searchText, plentiItems])
 
@@ -75,7 +75,7 @@ const ItemSelector: React.FC<Props> = (props) => {
         <ScrollView>
           <List.Section>
             {categoryArray.map(([type, items]) =>
-              <List.Accordion title={type} >
+              <List.Accordion title={type} key={`list_accordion_${type}`} >
                 <ProduceGrid>
                   {items.map((item) => <ProduceGridItem onPress={() => setSelectedItem(item)} plentiItem={item} key={`selector-grid-item-${item.name}`} />)}  
                 </ProduceGrid>
@@ -91,7 +91,6 @@ const ItemSelector: React.FC<Props> = (props) => {
   return (
     <View>
       <Searchbar
-        icon={"search"}
         clearIcon={"close"}
         onChangeText={setSearchText}
         value={searchText}
@@ -102,7 +101,8 @@ const ItemSelector: React.FC<Props> = (props) => {
       <Portal>
         <Modal visible={!!selectedItem} onDismiss={() => setSelectedItem(undefined)}>
           <LoggedInGate onClose={() => setSelectedItem(undefined)} account={loggedInAccount} goToAccount={goToAccount}>
-            <QuantitySelector
+            <ProduceItemDetails
+              newListing
               quantitySelected={quantitySelected}
               selectedItem={selectedItem}
               onClose={() => setSelectedItem(undefined)}
