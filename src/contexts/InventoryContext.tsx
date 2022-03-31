@@ -1,8 +1,8 @@
-import crashlytics from "@react-native-firebase/crashlytics"
 import database from "@react-native-firebase/database"
 import React, { useContext, useEffect, useState } from "react"
 import { InventoryItem, InventoryItemModel } from "../api/models/InventoryItem"
 import { Quantity } from "../api/models/Quantity"
+import { Logger } from "../lib/Logger"
 import { URLS } from "../lib/UrlHelper"
 import { AccountContext } from "./AccountContext"
 
@@ -42,7 +42,7 @@ export const InventoryProvider: React.FC = (props) => {
       const model = InventoryItem.modelFromUI(itemName, quantity, loggedInAccount)
       database().ref(URLS.inventoryItem(model)).push(model)
     } else {
-      crashlytics().log("Call to addItem made without a logged in account. Something is fishy")
+      Logger.warn("Call to addItem made without a logged in account. Something is fishy")
     }
   }
 
@@ -50,7 +50,7 @@ export const InventoryProvider: React.FC = (props) => {
     if (loggedInAccount) {
       database().ref(URLS.inventoryItem(item)).remove()
     } else {
-      crashlytics().log("Call to deleteItem made without a logged in account. Something is fishy")
+      Logger.warn("Call to deleteItem made without a logged in account. Something is fishy")
     }
   }
 

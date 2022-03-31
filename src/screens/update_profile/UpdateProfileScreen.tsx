@@ -1,40 +1,34 @@
-import crashlytics from "@react-native-firebase/crashlytics";
-import { useNavigation } from "@react-navigation/native";
-import { Formik } from "formik";
-import React, { useContext, useState } from "react";
-import { ScrollView, View } from "react-native";
-import {
-  ActivityIndicator,
-  Button,
-  Modal,
-  Portal,
-  Text,
-} from "react-native-paper";
-import * as yup from "yup";
-import { AccountUpdateForm } from "../../api/forms/AccountUpdateForm";
-import { LoadingIndicator } from "../../components/LoadingIndicator";
-import { TextField } from "../../components/TextField";
-import { H2, H3 } from "../../components/typography";
-import { AccountContext } from "../../contexts/AccountContext";
-import { GeocodingContext } from "../../contexts/GeocodingContext";
-import Theme from "../../lib/Theme";
-import { MaxDistanceAdjustor } from "./MaxDistanceAdjustor";
-import { PreferredDistanceUnitSelector } from "./PreferredDistanceUnitSelector";
-import { UpdateProfilePicture } from "./UpdateProfilePicture";
+import { useNavigation } from "@react-navigation/native"
+import { Formik } from "formik"
+import React, { useContext, useState } from "react"
+import { ScrollView, View } from "react-native"
+import { ActivityIndicator, Button, Modal, Portal, Text } from "react-native-paper"
+import * as yup from "yup"
+import { AccountUpdateForm } from "../../api/forms/AccountUpdateForm"
+import { LoadingIndicator } from "../../components/LoadingIndicator"
+import { TextField } from "../../components/TextField"
+import { H2, H3 } from "../../components/typography"
+import { AccountContext } from "../../contexts/AccountContext"
+import { GeocodingContext } from "../../contexts/GeocodingContext"
+import { Logger } from "../../lib/Logger"
+import Theme from "../../lib/Theme"
+import { MaxDistanceAdjustor } from "./MaxDistanceAdjustor"
+import { PreferredDistanceUnitSelector } from "./PreferredDistanceUnitSelector"
+import { UpdateProfilePicture } from "./UpdateProfilePicture"
 
 export const UpdateProfileScreen = () => {
-  const { loggedInAccount, updateAccount } = useContext(AccountContext);
-  const [pickupAddressEntered, setPickupAddressEntered] = useState(false);
-  const [editsMade, setEditsMade] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [successModalVisible, setSuccessModalVisible] = useState(false);
-  const [geocodeFailModalVisible, setGeocodeFailModalVisible] = useState(false);
-  const navigation = useNavigation();
+  const { loggedInAccount, updateAccount } = useContext(AccountContext)
+  const [pickupAddressEntered, setPickupAddressEntered] = useState(false)
+  const [editsMade, setEditsMade] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [successModalVisible, setSuccessModalVisible] = useState(false)
+  const [geocodeFailModalVisible, setGeocodeFailModalVisible] = useState(false)
+  const navigation = useNavigation()
 
-  const { geocode } = useContext(GeocodingContext);
+  const { geocode } = useContext(GeocodingContext)
 
   if (!loggedInAccount) {
-    return <LoadingIndicator thingThatIsLoading="loggedInAccount" />;
+    return <LoadingIndicator thingThatIsLoading="loggedInAccount" />
   }
 
   const changeLocationDefault: AccountUpdateForm = {
@@ -45,32 +39,30 @@ export const UpdateProfileScreen = () => {
     longitude: loggedInAccount.longitude ? `${loggedInAccount.longitude}` : "",
     prefersMetric: loggedInAccount.prefersMetric,
     maxDistance: loggedInAccount.maxDistance ?? -1,
-  };
+  }
 
   const handleDismiss = () => {
-    setSuccessModalVisible(false);
-    setGeocodeFailModalVisible(false);
-    setLoading(false);
-  };
+    setSuccessModalVisible(false)
+    setGeocodeFailModalVisible(false)
+    setLoading(false)
+  }
 
   const submitUpdate = async (form: AccountUpdateForm) => {
-    const localForm = { ...form };
-    setLoading(true);
-    const geocoordinates = localForm.pickupAddress
-      ? await geocode(localForm.pickupAddress)
-      : undefined;
+    const localForm = { ...form }
+    setLoading(true)
+    const geocoordinates = localForm.pickupAddress ? await geocode(localForm.pickupAddress) : undefined
     if (geocoordinates) {
-      localForm.latitude = geocoordinates.position.coords.latitude.toString();
-      localForm.longitude = geocoordinates.position.coords.longitude.toString();
+      localForm.latitude = geocoordinates.position.coords.latitude.toString()
+      localForm.longitude = geocoordinates.position.coords.longitude.toString()
     }
     updateAccount(localForm)
       .then(() => setSuccessModalVisible(true))
       .catch((reason) => {
-        setGeocodeFailModalVisible(true);
-        crashlytics().recordError(new Error(reason));
+        setGeocodeFailModalVisible(true)
+        Logger.error(reason)
       })
-      .finally(() => setEditsMade(false));
-  };
+      .finally(() => setEditsMade(false))
+  }
 
   return (
     <>
@@ -117,8 +109,7 @@ export const UpdateProfileScreen = () => {
             {pickupAddressEntered && (
               <View>
                 <Text style={{ marginBottom: 15, fontWeight: "bold" }}>
-                  Plenti would like to remind you to be safe and not give out
-                  your home address.
+                  Plenti would like to remind you to be safe and not give out your home address.
                 </Text>
                 <Text style={{ fontWeight: "bold", marginBottom: 30 }}>
                   Consider instead using a nearby parking lot or public space.
@@ -128,23 +119,13 @@ export const UpdateProfileScreen = () => {
 
             <View style={{ marginBottom: 15 }}>
               <H3>Distance Unit</H3>
-              <PreferredDistanceUnitSelector
-                onChange={() => setEditsMade(true)}
-              />
+              <PreferredDistanceUnitSelector onChange={() => setEditsMade(true)} />
             </View>
-            <MaxDistanceAdjustor
-              prefersMetric={values.prefersMetric ?? true}
-              onChange={() => setEditsMade(true)}
-            />
+            <MaxDistanceAdjustor prefersMetric={values.prefersMetric ?? true} onChange={() => setEditsMade(true)} />
             {loading ? (
               <ActivityIndicator />
             ) : (
-              <Button
-                mode="contained"
-                disabled={!editsMade}
-                style={{ marginBottom: 20 }}
-                onPress={handleSubmit}
-              >
+              <Button mode="contained" disabled={!editsMade} style={{ marginBottom: 20 }} onPress={handleSubmit}>
                 Submit
               </Button>
             )}
@@ -173,8 +154,8 @@ export const UpdateProfileScreen = () => {
           <Button
             mode="contained"
             onPress={() => {
-              handleDismiss();
-              navigation.goBack();
+              handleDismiss()
+              navigation.goBack()
             }}
           >
             <Text>Okay</Text>
@@ -205,9 +186,8 @@ export const UpdateProfileScreen = () => {
               alignItems: "center",
             }}
           >
-            We couldn't validate that the input address resulted in a physical
-            location. Please check your address and try again. You can also try
-            being more generic. Just a city/state should do.
+            We couldn't validate that the input address resulted in a physical location. Please check your address and
+            try again. You can also try being more generic. Just a city/state should do.
           </Text>
           <Button mode="contained" onPress={handleDismiss}>
             Okay
@@ -215,9 +195,9 @@ export const UpdateProfileScreen = () => {
         </Modal>
       </Portal>
     </>
-  );
-};
+  )
+}
 
 UpdateProfileScreen.navigationOptions = {
   title: "Change Pickup Address",
-};
+}

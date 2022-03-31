@@ -4,12 +4,12 @@ import { Text, Button, Title, TouchableRipple } from "react-native-paper"
 import { Quantity } from "../../api/models/Quantity"
 import { PlentiItem } from "../../assets/PlentiItemsIndex"
 import Theme from "../../lib/Theme"
-import crashlytics from "@react-native-firebase/crashlytics"
 import { Icon } from "../Icon"
 import * as ImagePicker from "expo-image-picker"
 import { InventoryItem } from "../../api/models/InventoryItem"
 import { ImageContext } from "../../contexts/ImageContext"
 import { AccountContext } from "../../contexts/AccountContext"
+import { Logger } from "../../lib/Logger"
 
 interface Props {
   selectedItem?: PlentiItem
@@ -26,12 +26,12 @@ export const ProduceItemDetails: React.FC<Props> = (props) => {
   const [loading, setLoading] = useState(false)
 
   if (!selectedItem) {
-    crashlytics().recordError(new Error("Displaying produce item details without an item"))
+    Logger.error("Displaying produce item details without an item")
     return null
   }
 
   if (!loggedInAccount) {
-    crashlytics().recordError(new Error("Listing produce item without a logged in account"))
+    Logger.error("Listing produce item without a logged in account")
     return null
   }
 

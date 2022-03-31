@@ -1,23 +1,23 @@
-import React from "react";
-import { LoggerService } from "../lib/LoggerService";
+import React from "react"
+import { Logger } from "../lib/Logger"
 
 // logs any uncaught errors to LoggerService
 
 export class ErrorBoundary extends React.Component {
   constructor(props: any) {
-    super(props);
-    this.state = { hasError: false };
+    super(props)
+    this.state = { hasError: false }
   }
 
   static getDerivedStateFromError(error: any) {
-    return { hasError: true };
+    return { hasError: true }
   }
 
   componentDidCatch(error: any, errorInfo: any) {
-    LoggerService.instance().error(error);
+    Logger.error(error)
   }
 
   render() {
-    return this.props.children;
+    return this.props.children
   }
 }

@@ -1,49 +1,48 @@
-import { Formik } from "formik";
-import React, { useContext, useState } from "react";
-import { View } from "react-native";
-import { ActivityIndicator, Button } from "react-native-paper";
-import { AccountLoginForm } from "../../api/forms/AccountLoginForm";
-import { TextField } from "../../components/TextField";
-import { AuthContext } from "../../contexts/AuthContext";
-import Theme from "../../lib/Theme";
+import { ReactNativeFirebase } from "@react-native-firebase/app"
+import { Formik } from "formik"
+import React, { useContext, useState } from "react"
+import { View } from "react-native"
+import { ActivityIndicator, Button } from "react-native-paper"
+import { AccountLoginForm } from "../../api/forms/AccountLoginForm"
+import { TextField } from "../../components/TextField"
+import { AuthContext } from "../../contexts/AuthContext"
+import { Logger } from "../../lib/Logger"
+import Theme from "../../lib/Theme"
 
 const LoginForm: React.FC = () => {
-  const { login } = useContext(AuthContext);
-  const [loading, setLoading] = useState(false);
-  const [emailError, setEmailError] = useState<string | undefined>(undefined);
-  const [passwordError, setPasswordError] = useState<string | undefined>(
-    undefined
-  );
+  const { login } = useContext(AuthContext)
+  const [loading, setLoading] = useState(false)
+  const [emailError, setEmailError] = useState<string | undefined>(undefined)
+  const [passwordError, setPasswordError] = useState<string | undefined>(undefined)
   const loginFormDefaults: AccountLoginForm = {
     email: "",
     password: "",
-  };
+  }
 
   const clearErrors = () => {
-    setEmailError(undefined);
-    setPasswordError(undefined);
-  };
+    setEmailError(undefined)
+    setPasswordError(undefined)
+  }
 
   const loginFormSubmit = (value: AccountLoginForm) => {
-    clearErrors();
-    setLoading(true);
+    clearErrors()
+    setLoading(true)
     login(value).catch((error) => {
-      setNetworkErrors(error);
-      setLoading(false);
-    });
-  };
+      setNetworkErrors(error)
+      setLoading(false)
+    })
+  }
 
-  const setNetworkErrors = (error: any) => {
-    console.error("setNetworkErrors not yet implemented", error);
-    // switch (error.response.status) {
-    //   case 404:
-    //     setEmailError("Email not found");
-    //     break;
-    //   case 401:
-    //     setPasswordError("Incorrect password");
-    //     break;
-    // }
-  };
+  const setNetworkErrors = (error: ReactNativeFirebase.NativeFirebaseError) => {
+    switch (error.code) {
+      case "auth/user-not-found":
+        setEmailError("Email not found")
+        break
+      default:
+        Logger.warn("Login error not handled")
+        Logger.error(error)
+    }
+  }
 
   return (
     <Formik
@@ -79,7 +78,7 @@ const LoginForm: React.FC = () => {
               style={{ backgroundColor: Theme.colors.accent, marginTop: 15 }}
               mode="contained"
               onPress={() => {
-                handleSubmit();
+                handleSubmit()
               }}
             >
               Login
@@ -88,7 +87,7 @@ const LoginForm: React.FC = () => {
         </>
       )}
     </Formik>
-  );
-};
+  )
+}
 
-export default LoginForm;
+export default LoginForm

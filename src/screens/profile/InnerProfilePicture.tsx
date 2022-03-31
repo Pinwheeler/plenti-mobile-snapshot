@@ -1,16 +1,16 @@
-import crashlytics from "@react-native-firebase/crashlytics";
-import React, { useEffect, useState } from "react";
-import { Image, StyleSheet } from "react-native";
-import { ActivityIndicator } from "react-native-paper";
-import { Icon } from "../../components/Icon";
-import Theme from "../../lib/Theme";
+import React, { useEffect, useState } from "react"
+import { Image, StyleSheet } from "react-native"
+import { ActivityIndicator } from "react-native-paper"
+import { Icon } from "../../components/Icon"
+import { Logger } from "../../lib/Logger"
+import Theme from "../../lib/Theme"
 
-const ICON_SIZE = 45;
+const ICON_SIZE = 45
 
 interface Props {
-  pictureUriPromise?: Promise<string>;
-  updatable?: boolean;
-  loading?: boolean;
+  pictureUriPromise?: Promise<string>
+  updatable?: boolean
+  loading?: boolean
 }
 
 const styles = StyleSheet.create({
@@ -22,58 +22,48 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-});
+})
 
 export const InnerProfilePicture: React.FC<Props> = (props) => {
-  const { pictureUriPromise, updatable, loading } = props;
-  const [userImageUri, setUserImageUri] = useState<string>();
-  const [fetching, setFetching] = useState(false);
+  const { pictureUriPromise, updatable, loading } = props
+  const [userImageUri, setUserImageUri] = useState<string>()
+  const [fetching, setFetching] = useState(false)
 
   useEffect(() => {
     if (pictureUriPromise) {
-      setFetching(true);
+      setFetching(true)
       pictureUriPromise
         .then((uri) => {
           Image.prefetch(uri)
             .then(() => {
-              setUserImageUri(uri);
+              setUserImageUri(uri)
             })
-            .finally(() => setFetching(false));
+            .finally(() => setFetching(false))
         })
         .catch((error) => {
           switch (error.code) {
             case "storage/object-not-found":
-              break; //do nothing, this is not weird
+              break //do nothing, this is not weird
             default:
-              crashlytics().recordError(error);
-              break;
+              Logger.error(error)
+              break
           }
         })
-        .finally(() => setFetching(false));
+        .finally(() => setFetching(false))
     }
-  }, [pictureUriPromise]);
+  }, [pictureUriPromise])
 
   if (loading || fetching) {
-    return <ActivityIndicator />;
+    return <ActivityIndicator />
   }
 
   if (userImageUri) {
-    return (
-      <Image source={{ uri: userImageUri }} style={styles.profilePicture} />
-    );
+    return <Image source={{ uri: userImageUri }} style={styles.profilePicture} />
   } else {
     if (updatable) {
-      return (
-        <Icon type={"plus"} size={ICON_SIZE} color={Theme.colors.background} />
-      );
+      return <Icon type={"plus"} size={ICON_SIZE} color={Theme.colors.background} />
     } else {
-      return (
-        <Icon
-          type={"user-alt"}
-          size={ICON_SIZE}
-          color={Theme.colors.background}
-        />
-      );
+      return <Icon type={"user-alt"} size={ICON_SIZE} color={Theme.colors.background} />
     }
   }
-};
+}

@@ -1,73 +1,74 @@
-import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
-import React, { useContext, useEffect, useState } from "react";
-import { AccountLoginForm } from "../api/forms/AccountLoginForm";
-import { AccountSignupForm } from "../api/forms/AccountSignupForm";
-import { LoadingScreen } from "../screens/LoadingScreen";
-import { AccountContext } from "./AccountContext";
+import { ReactNativeFirebase } from "@react-native-firebase/app"
+import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth"
+import React, { useContext, useEffect, useState } from "react"
+import { AccountLoginForm } from "../api/forms/AccountLoginForm"
+import { AccountSignupForm } from "../api/forms/AccountSignupForm"
+import { Logger } from "../lib/Logger"
+import { LoadingScreen } from "../screens/LoadingScreen"
+import { AccountContext } from "./AccountContext"
 interface IAuthContext {
-  user?: FirebaseAuthTypes.User;
-  signedInAnonymously: boolean;
-  logout(): Promise<void>;
-  login(value: AccountLoginForm): Promise<FirebaseAuthTypes.UserCredential>;
-  signup(value: AccountSignupForm): Promise<void | FirebaseAuthTypes.User>;
+  user?: FirebaseAuthTypes.User
+  signedInAnonymously: boolean
+  logout(): Promise<void>
+  login(value: AccountLoginForm): Promise<FirebaseAuthTypes.UserCredential>
+  signup(value: AccountSignupForm): Promise<void | FirebaseAuthTypes.User>
 }
 
-export const AuthContext = React.createContext({} as IAuthContext);
+export const AuthContext = React.createContext({} as IAuthContext)
 
 export const AuthProvider: React.FC = (props) => {
-  const { authenticateUser, createAccount } = useContext(AccountContext);
-  const [user, setUser] = useState<FirebaseAuthTypes.User>();
-  const [initializing, setInitializing] = useState(false);
-  const [signedInAnonymously, setSignedInAnonymously] = useState(false);
+  const { authenticateUser, createAccount, logout: forgetUser } = useContext(AccountContext)
+  const [user, setUser] = useState<FirebaseAuthTypes.User>()
+  const [initializing, setInitializing] = useState(false)
+  const [signedInAnonymously, setSignedInAnonymously] = useState(false)
 
   useEffect(() => {
     const unsubscribe = auth().onAuthStateChanged((u) => {
       if (u) {
-        authenticateUser(u);
-        setUser(u);
-        setInitializing(false);
+        Logger.log(`Logged in with user: ${u}`)
+        authenticateUser(u)
+        setUser(u)
+        setInitializing(false)
       } else {
         auth()
           .signInAnonymously()
           .then(() => {
-            setSignedInAnonymously(true);
-            setInitializing(false);
-            console.log("User signed in anonymously");
+            setSignedInAnonymously(true)
+            setInitializing(false)
+            console.log("User signed in anonymously")
           })
           .catch((error) => {
             if (error.code === "auth/operation-not-allowed") {
-              console.log("Enable anonymous in your firebase console.");
+              console.log("Enable anonymous in your firebase console.")
             }
 
-            console.error(error);
-          });
+            Logger.error(error)
+          })
       }
-    });
-    return unsubscribe;
-  });
+    })
+    return unsubscribe
+  })
 
-  const logout = () => auth().signOut();
+  const logout = () =>
+    auth()
+      .signOut()
+      .then(() => forgetUser())
 
-  const login = (value: AccountLoginForm) =>
-    auth().signInWithEmailAndPassword(value.email, value.password);
+  const login = (value: AccountLoginForm) => auth().signInWithEmailAndPassword(value.email, value.password)
 
-  const signup = (
-    form: AccountSignupForm
-  ): Promise<void | FirebaseAuthTypes.User> =>
+  const signup = (form: AccountSignupForm): Promise<void | FirebaseAuthTypes.User> =>
     auth()
       .createUserWithEmailAndPassword(form.email, form.password)
       .then(({ user: u }) => {
-        createAccount(u, form);
-        return u;
-      });
+        createAccount(u, form)
+        return u
+      })
 
-  const value = { user, signedInAnonymously, logout, login, signup };
+  const value = { user, signedInAnonymously, logout, login, signup }
 
   if (initializing) {
-    return <LoadingScreen loading />;
+    return <LoadingScreen loading />
   }
 
-  return (
-    <AuthContext.Provider value={value}>{props.children}</AuthContext.Provider>
-  );
-};
+  return <AuthContext.Provider value={value}>{props.children}</AuthContext.Provider>
+}

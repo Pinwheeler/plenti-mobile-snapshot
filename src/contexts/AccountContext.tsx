@@ -16,6 +16,7 @@ interface IAccountContext {
   createAccount(user: FirebaseAuthTypes.User, form: AccountSignupForm): void
   updateAccount(form: AccountUpdateForm): Promise<[void, void]>
   refreshProfilePicture(): void
+  logout(): void
 }
 
 export const AccountContext = React.createContext({} as IAccountContext)
@@ -33,7 +34,7 @@ export const AccountProvider: React.FC = (props) => {
 
   const accountForUser = (user: FirebaseAuthTypes.User) =>
     database()
-      .ref(`/accounts/${user.uid}`)
+      .ref(URLS.account.public(user))
       .once("value")
       .then((snapshot) => new AccountEntity(snapshot.val()))
 
@@ -53,13 +54,12 @@ export const AccountProvider: React.FC = (props) => {
         iapId: "NOT_YET_IMPLEMENTED",
       })
       database().ref(URLS.account.public(account)).set(account)
-      database().ref(`/secure/${user.uid}/account`).set(loggedInAccount)
+      database().ref(URLS.account.secure(loggedInAccount)).set(loggedInAccount)
     })
   }
 
   const updateAccount = (form: AccountUpdateForm) => {
     if (loggedInAccount) {
-      console.log("updating with form", form)
       return Promise.all([
         database().ref(URLS.account.public(loggedInAccount)).update(form),
         database().ref(URLS.account.secure(loggedInAccount)).update(form),
@@ -69,15 +69,19 @@ export const AccountProvider: React.FC = (props) => {
     return Promise.reject("calling update account without being logged in. Something is fishy")
   }
 
+  const logout = () => setUser(undefined)
+
   useEffect(() => {
     if (!user) {
       setLoggedInAccount(undefined)
       return
     }
     const path = URLS.account.secure(user)
+    console.log("retrieving user from path", path)
     const onUserChange = database()
       .ref(path)
       .on("value", (snapshot) => {
+        console.log("snapshot:", snapshot.val())
         const model: LoggedInAccountModel | undefined = snapshot.val()
         if (model) {
           setLoggedInAccount(new LoggedInAccountEntity(model))
@@ -95,6 +99,7 @@ export const AccountProvider: React.FC = (props) => {
     createAccount,
     updateAccount,
     refreshProfilePicture,
+    logout,
   }
 
   return <AccountContext.Provider value={value}>{props.children}</AccountContext.Provider>

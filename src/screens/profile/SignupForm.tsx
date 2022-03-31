@@ -1,53 +1,52 @@
-import { Formik } from "formik";
-import React, { useContext, useState } from "react";
-import { View } from "react-native";
-import { ActivityIndicator, Button } from "react-native-paper";
-import * as yup from "yup";
-import { AccountSignupForm } from "../../api/forms/AccountSignupForm";
-import { TextField } from "../../components/TextField";
-import { AuthContext } from "../../contexts/AuthContext";
-import Theme from "../../lib/Theme";
+import { ReactNativeFirebase } from "@react-native-firebase/app"
+import { Formik } from "formik"
+import React, { useContext, useState } from "react"
+import { View } from "react-native"
+import { ActivityIndicator, Button } from "react-native-paper"
+import * as yup from "yup"
+import { AccountSignupForm } from "../../api/forms/AccountSignupForm"
+import { TextField } from "../../components/TextField"
+import { AuthContext } from "../../contexts/AuthContext"
+import { Logger } from "../../lib/Logger"
+import Theme from "../../lib/Theme"
 
 const SignupForm: React.FC = () => {
-  const { signup } = useContext(AuthContext);
-  const [loading, setLoading] = useState(false);
-  const [usernameError, setUsernameError] = useState<string | undefined>(
-    undefined
-  );
-  const [emailError, setEmailError] = useState<string | undefined>(undefined);
+  const { signup } = useContext(AuthContext)
+  const [loading, setLoading] = useState(false)
+  const [usernameError, setUsernameError] = useState<string | undefined>(undefined)
+  const [emailError, setEmailError] = useState<string | undefined>(undefined)
 
   const signupFormDefaults: AccountSignupForm = {
     username: "",
     email: "",
     password: "",
     confirm: "",
-  };
+  }
 
   const clearErrors = () => {
-    setUsernameError(undefined);
-    setEmailError(undefined);
-  };
+    setUsernameError(undefined)
+    setEmailError(undefined)
+  }
 
   const signupFormSubmit = (value: AccountSignupForm) => {
-    clearErrors();
-    setLoading(true);
+    clearErrors()
+    setLoading(true)
     signup(value)
       .catch((error) => {
-        setNetworkErrors(error);
+        setNetworkErrors(error)
       })
       .finally(() => {
-        setLoading(false);
-      });
-  };
+        setLoading(false)
+      })
+  }
 
-  const setNetworkErrors = (error: any) => {
-    console.error("setNetworkErrors not yet implemented", error);
-    // switch (error.response.status) {
-    //   case 409:
-    //     setEmailError("Email already in use");
-    //     break;
-    // }
-  };
+  const setNetworkErrors = (error: ReactNativeFirebase.NativeFirebaseError) => {
+    switch (error.code) {
+      default:
+        Logger.warn("Signup error not handled")
+        Logger.error(error)
+    }
+  }
 
   return (
     <Formik
@@ -68,12 +67,7 @@ const SignupForm: React.FC = () => {
     >
       {({ handleSubmit, isValid }) => (
         <>
-          <TextField
-            textContentType="username"
-            label="Username"
-            name="username"
-            error={usernameError}
-          />
+          <TextField textContentType="username" label="Username" name="username" error={usernameError} />
           <View style={{ height: 15 }} />
           <TextField
             textContentType="emailAddress"
@@ -92,12 +86,7 @@ const SignupForm: React.FC = () => {
             blurOnSubmit={false}
           />
           <View style={{ height: 15 }} />
-          <TextField
-            label="Confirm Password"
-            name="confirm"
-            secureTextEntry={true}
-            blurOnSubmit={false}
-          />
+          <TextField label="Confirm Password" name="confirm" secureTextEntry={true} blurOnSubmit={false} />
           <View style={{ height: 15 }} />
           {loading ? (
             <ActivityIndicator />
@@ -106,7 +95,7 @@ const SignupForm: React.FC = () => {
               style={{ backgroundColor: Theme.colors.accent, marginTop: 15 }}
               mode="contained"
               onPress={() => {
-                handleSubmit();
+                handleSubmit()
               }}
             >
               Sign Up
@@ -115,7 +104,7 @@ const SignupForm: React.FC = () => {
         </>
       )}
     </Formik>
-  );
-};
+  )
+}
 
-export default SignupForm;
+export default SignupForm
