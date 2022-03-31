@@ -7,20 +7,25 @@ import Theme from "../../lib/Theme"
 import { Icon } from "../Icon"
 import * as ImagePicker from "expo-image-picker"
 import { InventoryItem } from "../../api/models/InventoryItem"
-import { ImageContext } from "../../contexts/ImageContext"
-import { AccountContext } from "../../contexts/AccountContext"
+import storage from "@react-native-firebase/storage"
 import { Logger } from "../../lib/Logger"
+import { LoggedInAccountEntity } from "../../api/models/LoggedInAccount"
+import { URLS } from "../../lib/UrlHelper"
 
 interface Props {
   selectedItem?: PlentiItem
   onClose(): void
   listing?: InventoryItem
+  loggedInAccount?: LoggedInAccountEntity
+  uploadNewProduceImage(
+    image: ImagePicker.ImageInfo,
+    plentiItem: PlentiItem,
+    account: LoggedInAccountEntity,
+  ): Promise<any>
 }
 
 export const ProduceItemDetails: React.FC<Props> = (props) => {
-  const { loggedInAccount } = useContext(AccountContext)
-  const { uploadNewProduceImage } = useContext(ImageContext)
-  const { selectedItem, onClose } = props
+  const { selectedItem, onClose, loggedInAccount, uploadNewProduceImage } = props
   const [quantity, setQuantity] = useState<Quantity>()
   const [localImage, setLocalImage] = useState<ImagePicker.ImageInfo>()
   const [loading, setLoading] = useState(false)
@@ -57,6 +62,8 @@ export const ProduceItemDetails: React.FC<Props> = (props) => {
     let imageUrl: string | undefined
     if (localImage) {
       await uploadNewProduceImage(localImage, selectedItem, loggedInAccount)
+      const url = await storage().ref(URLS.images.produceItem(loggedInAccount, selectedItem)).getDownloadURL()
+      imageUrl = url
     }
   }
 

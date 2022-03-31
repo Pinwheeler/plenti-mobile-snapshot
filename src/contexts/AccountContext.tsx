@@ -28,7 +28,9 @@ export const AccountProvider: React.FC = (props) => {
 
   const refreshProfilePicture = () => {
     if (loggedInAccount) {
-      setProfilePicture(storage().ref(URLS.images.profilePicture(loggedInAccount)).getDownloadURL())
+      const path = URLS.images.profilePicture(loggedInAccount)
+      console.log("fetching", path)
+      setProfilePicture(storage().ref(path).getDownloadURL())
     }
   }
 
@@ -81,7 +83,6 @@ export const AccountProvider: React.FC = (props) => {
     const onUserChange = database()
       .ref(path)
       .on("value", (snapshot) => {
-        console.log("snapshot:", snapshot.val())
         const model: LoggedInAccountModel | undefined = snapshot.val()
         if (model) {
           setLoggedInAccount(new LoggedInAccountEntity(model))

@@ -5,6 +5,7 @@ import { List, Modal, Portal, Searchbar } from "react-native-paper"
 import { Quantity } from "../../api/models/Quantity"
 import { PlentiItem, ProduceType } from "../../assets/PlentiItemsIndex"
 import { AccountContext } from "../../contexts/AccountContext"
+import { ImageContext } from "../../contexts/ImageContext"
 import { PlentiItemContext } from "../../contexts/PlentiItemContext"
 import Theme from "../../lib/Theme"
 import LoggedInGate from "../LoggedInGate"
@@ -21,6 +22,7 @@ const ItemSelector: React.FC<Props> = (props) => {
   const { loggedInAccount } = useContext(AccountContext)
   const { plentiItems } = useContext(PlentiItemContext)
   const { selectedItem, setSelectedItem } = useContext(ItemSelectorContext)
+  const { uploadNewProduceImage } = useContext(ImageContext)
   const [searchText, setSearchText] = useState("")
   const navigation = useNavigation()
 
@@ -106,7 +108,12 @@ const ItemSelector: React.FC<Props> = (props) => {
       <Portal>
         <Modal visible={!!selectedItem} onDismiss={() => setSelectedItem(undefined)}>
           <LoggedInGate onClose={() => setSelectedItem(undefined)} account={loggedInAccount} goToAccount={goToAccount}>
-            <ProduceItemDetails selectedItem={selectedItem} onClose={() => setSelectedItem(undefined)} />
+            <ProduceItemDetails
+              uploadNewProduceImage={uploadNewProduceImage}
+              loggedInAccount={loggedInAccount!}
+              selectedItem={selectedItem}
+              onClose={() => setSelectedItem(undefined)}
+            />
           </LoggedInGate>
         </Modal>
       </Portal>
