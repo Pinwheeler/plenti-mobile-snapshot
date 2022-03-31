@@ -13,7 +13,6 @@ import { ProduceGridItem } from "../produce_grid/ProduceGridItem"
 import { ProduceItemDetails } from "../produce_grid/ProduceItemDetails"
 import { ItemSelectorContext } from "./ItemSelectorContext"
 
-
 interface Props {
   itemAndQuantitySelected: (itemName: string, quantity: Quantity) => void
 }
@@ -53,7 +52,7 @@ const ItemSelector: React.FC<Props> = (props) => {
 
   const goToAccount = () => {
     setSelectedItem(undefined)
-    navigation.dispatch(CommonActions.navigate({name:"Profile"}))
+    navigation.dispatch(CommonActions.navigate({ name: "Profile" }))
   }
 
   const InnerContent = () => {
@@ -74,13 +73,19 @@ const ItemSelector: React.FC<Props> = (props) => {
       return (
         <ScrollView>
           <List.Section>
-            {categoryArray.map(([type, items]) =>
-              <List.Accordion title={type} key={`list_accordion_${type}`} >
+            {categoryArray.map(([type, items]) => (
+              <List.Accordion title={type.charAt(0).toUpperCase() + type.slice(1)} key={`list_accordion_${type}`}>
                 <ProduceGrid>
-                  {items.map((item) => <ProduceGridItem onPress={() => setSelectedItem(item)} plentiItem={item} key={`selector-grid-item-${item.name}`} />)}  
+                  {items.map((item) => (
+                    <ProduceGridItem
+                      onPress={() => setSelectedItem(item)}
+                      plentiItem={item}
+                      key={`selector-grid-item-${item.name}`}
+                    />
+                  ))}
                 </ProduceGrid>
               </List.Accordion>
-            )}
+            ))}
             <View style={{ height: 300 }} />
           </List.Section>
         </ScrollView>
@@ -101,12 +106,7 @@ const ItemSelector: React.FC<Props> = (props) => {
       <Portal>
         <Modal visible={!!selectedItem} onDismiss={() => setSelectedItem(undefined)}>
           <LoggedInGate onClose={() => setSelectedItem(undefined)} account={loggedInAccount} goToAccount={goToAccount}>
-            <ProduceItemDetails
-              newListing
-              quantitySelected={quantitySelected}
-              selectedItem={selectedItem}
-              onClose={() => setSelectedItem(undefined)}
-            />
+            <ProduceItemDetails selectedItem={selectedItem} onClose={() => setSelectedItem(undefined)} />
           </LoggedInGate>
         </Modal>
       </Portal>

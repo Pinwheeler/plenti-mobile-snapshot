@@ -1,80 +1,63 @@
-import crashlytics from "@react-native-firebase/crashlytics";
-import database from "@react-native-firebase/database";
-import React, { useContext, useEffect, useState } from "react";
-import {
-  InventoryItemEntity,
-  InventoryItemModel,
-} from "../api/models/InventoryItem";
-import { Quantity } from "../api/models/Quantity";
-import { AccountContext } from "./AccountContext";
+import crashlytics from "@react-native-firebase/crashlytics"
+import database from "@react-native-firebase/database"
+import React, { useContext, useEffect, useState } from "react"
+import { InventoryItem, InventoryItemModel } from "../api/models/InventoryItem"
+import { Quantity } from "../api/models/Quantity"
+import { AccountContext } from "./AccountContext"
 
 interface IInventoryContext {
-  myInventory: Map<string, InventoryItemEntity>;
-  addItem(itemName: string, quantity: Quantity): void;
-  deleteItem(item: InventoryItemEntity): void;
+  myInventory: Map<string, InventoryItem>
+  addItem(itemName: string, quantity: Quantity): void
+  deleteItem(item: InventoryItem): void
 }
 
-export const InventoryContext = React.createContext<IInventoryContext>(
-  {} as IInventoryContext
-);
+export const InventoryContext = React.createContext<IInventoryContext>({} as IInventoryContext)
 
 export const InventoryProvider: React.FC = (props) => {
-  const { loggedInAccount } = useContext(AccountContext);
-  const [myInventory, setMyInventory] = useState(
-    new Map<string, InventoryItemEntity>()
-  );
+  const { loggedInAccount } = useContext(AccountContext)
+  const [myInventory, setMyInventory] = useState(new Map<string, InventoryItem>())
 
   useEffect(() => {
     if (loggedInAccount !== undefined) {
-      const path = `/inventories/${loggedInAccount.id}`;
+      const path = `/inventories/${loggedInAccount.id}`
       const onInventoryChange = database()
         .ref(path)
         .on("value", (snapshot) => {
-          const val = snapshot.val() as { [key: string]: InventoryItemModel };
-          const result: Map<string, InventoryItemEntity> = new Map();
+          const val = snapshot.val() as { [key: string]: InventoryItemModel }
+          const result: Map<string, InventoryItem> = new Map()
           for (const key in val) {
-            const model = val[key];
-            result.set(key, new InventoryItemEntity(model));
+            const model = val[key]
+            result.set(key, new InventoryItem(model))
           }
-          setMyInventory(result);
-        });
+          setMyInventory(result)
+        })
 
-      return () => database().ref(path).off("value", onInventoryChange);
+      return () => database().ref(path).off("value", onInventoryChange)
     }
-  }, [loggedInAccount]);
+  }, [loggedInAccount])
 
   const addItem = (itemName: string, quantity: Quantity) => {
     if (loggedInAccount) {
-      const model = InventoryItemEntity.modelFromUI(itemName, quantity);
-      database()
-        .ref(`/inventories/${loggedInAccount.id}/${model.id}`)
-        .push(model);
+      const model = InventoryItem.modelFromUI(itemName, quantity)
+      database().ref(`/inventories/${loggedInAccount.id}/${model.id}`).push(model)
     } else {
-      crashlytics().log(
-        "Call to addItem made without a logged in account. Something is fishy"
-      );
+      crashlytics().log("Call to addItem made without a logged in account. Something is fishy")
     }
-  };
+  }
 
-  const deleteItem = (item: InventoryItemEntity) => {
+  const deleteItem = (item: InventoryItem) => {
     if (loggedInAccount) {
-      database().ref(`/inventories/${loggedInAccount.id}/${item.id}`).remove();
+      database().ref(`/inventories/${loggedInAccount.id}/${item.id}`).remove()
     } else {
-      crashlytics().log(
-        "Call to deleteItem made without a logged in account. Something is fishy"
-      );
+      crashlytics().log("Call to deleteItem made without a logged in account. Something is fishy")
     }
-  };
+  }
 
   const value = {
     myInventory,
     addItem,
     deleteItem,
-  };
+  }
 
-  return (
-    <InventoryContext.Provider value={value}>
-      {props.children}
-    </InventoryContext.Provider>
-  );
-};
+  return <InventoryContext.Provider value={value}>{props.children}</InventoryContext.Provider>
+}

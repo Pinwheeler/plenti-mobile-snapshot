@@ -1,14 +1,14 @@
-import { InventoryItemModel, InventoryItemEntity } from "./InventoryItem"
+import { InventoryItemModel, InventoryItem } from "./InventoryItem"
 
 export class DistancedInventoryItemEntity {
   distance: number // distance in KM from the reference point
-  inventoryItem: InventoryItemEntity
+  inventoryItem: InventoryItem
   referenceLat: number
   referenceLng: number
 
   constructor(model: DistancedInventoryItemModel) {
     this.distance = model.distance
-    this.inventoryItem = new InventoryItemEntity(model.inventoryItem)
+    this.inventoryItem = new InventoryItem(model.inventoryItem)
     this.referenceLat = model.referenceLat
     this.referenceLng = model.referenceLng
   }

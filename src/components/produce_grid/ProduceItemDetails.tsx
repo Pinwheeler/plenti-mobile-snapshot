@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useContext, useState } from "react"
 import { Image, View, Dimensions, Pressable } from "react-native"
 import { Text, Button, Title, TouchableRipple } from "react-native-paper"
 import { Quantity } from "../../api/models/Quantity"
@@ -7,21 +7,31 @@ import Theme from "../../lib/Theme"
 import crashlytics from "@react-native-firebase/crashlytics"
 import { Icon } from "../Icon"
 import * as ImagePicker from "expo-image-picker"
+import { InventoryItem } from "../../api/models/InventoryItem"
+import { ImageContext } from "../../contexts/ImageContext"
+import { AccountContext } from "../../contexts/AccountContext"
 
 interface Props {
-  listItem(): void
   selectedItem?: PlentiItem
   onClose(): void
-  newListing?: boolean
+  listing?: InventoryItem
 }
 
 export const ProduceItemDetails: React.FC<Props> = (props) => {
-  const { listItem, newListing, selectedItem, onClose } = props
+  const { loggedInAccount } = useContext(AccountContext)
+  const { uploadNewProduceImage } = useContext(ImageContext)
+  const { selectedItem, onClose } = props
   const [quantity, setQuantity] = useState<Quantity>()
   const [localImage, setLocalImage] = useState<ImagePicker.ImageInfo>()
+  const [loading, setLoading] = useState(false)
 
   if (!selectedItem) {
     crashlytics().recordError(new Error("Displaying produce item details without an item"))
+    return null
+  }
+
+  if (!loggedInAccount) {
+    crashlytics().recordError(new Error("Listing produce item without a logged in account"))
     return null
   }
 
@@ -41,6 +51,16 @@ export const ProduceItemDetails: React.FC<Props> = (props) => {
       setLocalImage(result)
     }
   }
+
+  const listItem = async () => {
+    setLoading(true)
+    let imageUrl: string | undefined
+    if (localImage) {
+      await uploadNewProduceImage(localImage, selectedItem, loggedInAccount)
+    }
+  }
+
+  const submitDisabled: boolean = !quantity
 
   return (
     <View style={{ backgroundColor: "white", padding: 15, margin: 15 }}>
@@ -121,6 +141,10 @@ export const ProduceItemDetails: React.FC<Props> = (props) => {
           </TouchableRipple>
         </View>
       )}
+
+      <Button disabled={submitDisabled} mode="outlined">
+        List Item
+      </Button>
 
       <Button
         style={{ marginTop: 15 }}
