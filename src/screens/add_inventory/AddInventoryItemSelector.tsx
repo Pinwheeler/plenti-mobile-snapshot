@@ -6,16 +6,15 @@ import { TopInfoBar } from "../../components/TopInfoBar"
 import { InventoryContext } from "../../contexts/InventoryContext"
 import { ItemSelectorProvider } from "../../components/item_selector/ItemSelectorContext"
 import ItemSelector from "../../components/item_selector/ItemSelector"
-import { PlentiItem } from "../../assets/PlentiItemsIndex"
 
 const AddInventoryItemSelector: React.FC = () => {
   const [loading, setLoading] = useState(false)
   const { addItem } = useContext(InventoryContext)
   const navigation = useNavigation()
 
-  const addAndNavigate = (item: PlentiItem, quantity: Quantity) => {
+  const addAndNavigate = (itemName: string, quantity: Quantity) => {
     setLoading(true)
-    addItem(item, quantity)
+    addItem(itemName, quantity)
     navigation.dispatch(CommonActions.navigate({name:"Plenti"}))
   }
 

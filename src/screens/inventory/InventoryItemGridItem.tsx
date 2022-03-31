@@ -13,9 +13,9 @@ interface Props {
 
 export const InventoryItemGridItem: React.FC<Props> = (props) => {
   const { inventoryItem } = props
-  const {itemForId} = useContext(PlentiItemContext)
+  const {itemForName} = useContext(PlentiItemContext)
 
-  const item = itemForId(inventoryItem.plentiItemId)
+  const item = itemForName(inventoryItem.plentiItemName)
 
   if (!item) {
     return null

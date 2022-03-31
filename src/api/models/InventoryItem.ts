@@ -4,19 +4,19 @@ import { Quantity } from "./Quantity";
 
 export class InventoryItemEntity {
   id: string;
-  plentiItemId: number;
+  plentiItemName: string;
   currentQuantity: Quantity;
   initialQuantity: Quantity;
   createdAt: DateTime;
   updatedAt: DateTime;
 
   static modelFromUI(
-    itemId: number,
+    itemName: string,
     quantity: Quantity
   ): InventoryItemModel {
     return {
       id: uuid.v4().toString(),
-      plentiItemId: itemId,
+      plentiItemName: itemName,
       currentQuantity: quantity,
       initialQuantity: quantity,
       createdAt: DateTime.now().toISO(),
@@ -26,7 +26,7 @@ export class InventoryItemEntity {
 
   constructor(model: InventoryItemModel) {
     this.id = model.id;
-    this.plentiItemId = model.plentiItemId;
+    this.plentiItemName = model.plentiItemName;
     this.currentQuantity = model.currentQuantity;
     this.initialQuantity = model.initialQuantity;
     this.createdAt = DateTime.fromISO(model.createdAt);
@@ -36,7 +36,7 @@ export class InventoryItemEntity {
 
 export interface InventoryItemModel {
   id: string;
-  plentiItemId: number;
+  plentiItemName: string;
   currentQuantity: Quantity;
   initialQuantity: Quantity;
   createdAt: string;

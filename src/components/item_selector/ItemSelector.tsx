@@ -1,8 +1,7 @@
 import { CommonActions, useNavigation } from "@react-navigation/native"
 import React, { useContext, useMemo, useState } from "react"
 import { ScrollView, View } from "react-native"
-import { Modal, Portal, Searchbar } from "react-native-paper"
-import { Accordion } from "react-native-paper/lib/typescript/components/List/List"
+import { List, Modal, Portal, Searchbar } from "react-native-paper"
 import { Quantity } from "../../api/models/Quantity"
 import { PlentiItem, ProduceType } from "../../assets/PlentiItemsIndex"
 import { AccountContext } from "../../contexts/AccountContext"
@@ -16,7 +15,7 @@ import { ItemSelectorContext } from "./ItemSelectorContext"
 
 
 interface Props {
-  itemAndQuantitySelected: (item: PlentiItem, quantity: Quantity) => void
+  itemAndQuantitySelected: (itemName: string, quantity: Quantity) => void
 }
 
 const ItemSelector: React.FC<Props> = (props) => {
@@ -47,7 +46,7 @@ const ItemSelector: React.FC<Props> = (props) => {
 
   const quantitySelected = (quantity: Quantity) => {
     if (selectedItem) {
-      props.itemAndQuantitySelected(selectedItem, quantity)
+      props.itemAndQuantitySelected(selectedItem.name, quantity)
     }
     setSelectedItem(undefined)
   }
@@ -64,21 +63,26 @@ const ItemSelector: React.FC<Props> = (props) => {
           {filteredItems.map((item) => (
             <ProduceGridItem
               plentiItem={item}
-              key={`selector-grid-item-${item.id}`}
+              key={`selector-grid-item-${item.name}`}
               onPress={() => setSelectedItem(item)}
             />
           ))}
         </ProduceGrid>
       )
     } else {
+      const categoryArray = Array.from(categories)
       return (
         <ScrollView>
-          <>
-            {Array.from(categories, ([key]) => (
-              <Accordion type={key} items={categories.get(key)} key={key} />
-            ))}
+          <List.Section>
+            {categoryArray.map(([type, items]) =>
+              <List.Accordion title={type} >
+                <ProduceGrid>
+                  {items.map((item) => <ProduceGridItem onPress={() => setSelectedItem(item)} plentiItem={item} key={`selector-grid-item-${item.name}`} />)}  
+                </ProduceGrid>
+              </List.Accordion>
+            )}
             <View style={{ height: 300 }} />
-          </>
+          </List.Section>
         </ScrollView>
       )
     }

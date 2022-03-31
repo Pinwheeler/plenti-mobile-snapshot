@@ -5,6 +5,7 @@ import { AuthProvider } from "./AuthContext";
 import { GeocodingProvider } from "./GeocodingContext";
 import { ImageProvider } from "./ImageContext";
 import { NotificationProvider } from "./NotificationContext";
+import { PlentiItemProvider } from "./PlentiItemContext";
 import { PremiumProvider } from "./PremiumContext";
 import { SecretsProvider } from "./SecretsContext";
 
@@ -17,7 +18,11 @@ export const ContextStack: React.FC = (props) => {
             <NotificationProvider>
               <PremiumProvider>
                 <AdProvider>
-                  <GeocodingProvider>{props.children}</GeocodingProvider>
+                  <GeocodingProvider>
+                    <PlentiItemProvider>
+                      {props.children}
+                    </PlentiItemProvider>
+                  </GeocodingProvider>
                 </AdProvider>
               </PremiumProvider>
             </NotificationProvider>

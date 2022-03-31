@@ -10,7 +10,7 @@ import { AccountContext } from "./AccountContext";
 
 interface IInventoryContext {
   myInventory: Map<string, InventoryItemEntity>;
-  addItem(itemId: number, quantity: Quantity): void;
+  addItem(itemName: string, quantity: Quantity): void;
   deleteItem(item: InventoryItemEntity): void;
 }
 
@@ -43,9 +43,9 @@ export const InventoryProvider: React.FC = (props) => {
     }
   }, [loggedInAccount]);
 
-  const addItem = (itemId: number, quantity: Quantity) => {
+  const addItem = (itemName: string, quantity: Quantity) => {
     if (loggedInAccount) {
-      const model = InventoryItemEntity.modelFromUI(itemId, quantity);
+      const model = InventoryItemEntity.modelFromUI(itemName, quantity);
       database()
         .ref(`/inventories/${loggedInAccount.id}/${model.id}`)
         .push(model);

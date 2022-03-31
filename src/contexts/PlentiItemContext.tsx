@@ -3,7 +3,7 @@ import { AllPlentiItems, PlentiItem } from "../assets/PlentiItemsIndex"
 
 interface IPlentiItemContext {
   plentiItems: PlentiItem[]
-  itemForId(id: number): PlentiItem | undefined
+  itemForName(id: string): PlentiItem | undefined
 }
 
 export const PlentiItemContext = React.createContext<IPlentiItemContext>({} as IPlentiItemContext)
@@ -19,11 +19,11 @@ export const PlentiItemProvider: React.FC = (props) => {
     return 0
   })
 
-  const itemForId = (id: number) => plentiItems.find((item) => item.id === id)
+  const itemForName = (name: string) => plentiItems.find((item) => item.name === name)
 
   const value = {
     plentiItems,
-    itemForId
+    itemForName
   }
 
   return <PlentiItemContext.Provider value={value}>{props.children}</PlentiItemContext.Provider>

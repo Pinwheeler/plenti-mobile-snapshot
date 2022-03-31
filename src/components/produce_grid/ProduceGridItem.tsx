@@ -21,8 +21,7 @@ export const ProduceGridItem: React.FC<Props> = (props) => {
       }}
     >
       <Card style={{ marginHorizontal: 10 }} onPress={onPress}>
-        <Image source={require("../../assets/images/pumpkins.jpg")} style={{height: 130}} />
-        {/* <Card.Cover source={require("../../assets/images/pumpkins.jpg")} style={{ height: 130 }} /> */}
+        <Image source={plentiItem.localImage} style={{height: 130, width: "100%"}} resizeMode="cover" />
         <Card.Content>
           <Title>{plentiItem.name}</Title>
           {props.children}
