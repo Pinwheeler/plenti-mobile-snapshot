@@ -1,19 +1,18 @@
 import React, { useState, useContext } from "react"
-import { PlentiItemEntity, QuantityEntity, PlentiRequestCreateForm, PlentiRequestEntity } from "plenti-api"
-import ApiContext from "src/shared/ApiContext"
-import LocationContext from "../shared/LocationContext"
-import ConnectContext from "../connect/ConnectContext"
+import { PlentiRequestEntity } from "../../api/models/PlentiRequest"
+import { Quantity } from "../../api/models/Quantity"
+import { PlentiItem } from "../../assets/PlentiItemsIndex"
+import LocationContext from "../../contexts/LocationContext"
 
 interface IWantSelectorContext {
   makingRequestPromise?: Promise<PlentiRequestEntity>
-  makeRequest: (item: PlentiItemEntity, quantity: QuantityEntity) => void
-  clearRequest: VoidFunction
+  makeRequest: (item: PlentiItem, quantity: Quantity) => void
+  clearRequest(): void
 }
 
 const WantSelectorContext = React.createContext({} as IWantSelectorContext)
 
 const WantSelectorProvider: React.FC = (props) => {
-  const { plentiRequestService } = useContext(ApiContext)
   const { getCurrentPosition } = useContext(LocationContext)
   const { refresh: refreshWants } = useContext(ConnectContext)
   const [makingRequestPromise, setMakingRequestPromise] = useState<Promise<PlentiRequestEntity> | undefined>()
@@ -45,6 +44,3 @@ const WantSelectorProvider: React.FC = (props) => {
 
   return <WantSelectorContext.Provider value={value}>{props.children}</WantSelectorContext.Provider>
 }
-
-export default WantSelectorContext
-export { IWantSelectorContext, WantSelectorProvider }

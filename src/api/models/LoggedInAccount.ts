@@ -4,6 +4,7 @@ import { AccountEntity } from "./Account"
 export function isLoggedInAccount(account: AccountEntity | LoggedInAccountEntity): account is LoggedInAccountEntity {
   return (account as LoggedInAccountEntity).prefersMetric !== undefined
 }
+
 export class LoggedInAccountEntity extends AccountEntity {
   email: string
   authToken: string
@@ -14,6 +15,7 @@ export class LoggedInAccountEntity extends AccountEntity {
   maxDistance: number
   premiumUntil?: Date
   iapId: string
+  blockedUsers: { blockedUserId: string; reason?: string }[]
 
   constructor(model: LoggedInAccountModel) {
     super(model)
@@ -26,6 +28,7 @@ export class LoggedInAccountEntity extends AccountEntity {
     this.maxDistance = model.maxDistance
     this.premiumUntil = model.premiumUntil ? fromISOTime(model.premiumUntil) : undefined
     this.iapId = model.iapId
+    this.blockedUsers = model.blockedUsers
   }
 
   toModel(): LoggedInAccountModel {
@@ -42,6 +45,7 @@ export class LoggedInAccountEntity extends AccountEntity {
       maxDistance: this.maxDistance,
       premiumUntil: optoISOTime(this.premiumUntil),
       iapId: this.iapId,
+      blockedUsers: this.blockedUsers,
     }
   }
 }
@@ -59,4 +63,5 @@ export interface LoggedInAccountModel {
   maxDistance: number
   premiumUntil?: string
   iapId: string
+  blockedUsers: { uid: string; reason?: string }[]
 }

@@ -2,7 +2,7 @@ import { AccountEntity, AccountModel } from "./Account"
 import { ConversationEntity, ConversationModel } from "./Conversation"
 
 export class ConnectionEntity {
-  id: number
+  uid: number
   conversation?: ConversationEntity
   partnerA: AccountEntity
   partnerB: AccountEntity
@@ -10,7 +10,7 @@ export class ConnectionEntity {
   partnerBSharedLocation: boolean
 
   constructor(model: ConnectionModel) {
-    this.id = model.id
+    this.uid = model.uid
     if (model.conversation) {
       this.conversation = new ConversationEntity(model.conversation)
     }
@@ -22,7 +22,7 @@ export class ConnectionEntity {
 }
 
 export interface ConnectionModel {
-  id: number
+  uid: number
   conversation?: ConversationModel
   partnerA: AccountModel
   partnerB: AccountModel

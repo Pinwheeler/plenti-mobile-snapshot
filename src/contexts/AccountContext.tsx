@@ -6,6 +6,7 @@ import { AccountSignupForm } from "../api/forms/AccountSignupForm"
 import { AccountUpdateForm } from "../api/forms/AccountUpdateForm"
 import { AccountEntity } from "../api/models/Account"
 import { LoggedInAccountEntity, LoggedInAccountModel } from "../api/models/LoggedInAccount"
+import { Logger } from "../lib/Logger"
 import { URLS } from "../lib/UrlHelper"
 
 interface IAccountContext {
@@ -16,6 +17,7 @@ interface IAccountContext {
   createAccount(user: FirebaseAuthTypes.User, form: AccountSignupForm): void
   updateAccount(form: AccountUpdateForm): Promise<[void, void]>
   refreshProfilePicture(): void
+  blockUser(targetAccount: AccountEntity, reason?: string): Promise<[void, void]>
   logout(): void
 }
 
@@ -54,6 +56,7 @@ export const AccountProvider: React.FC = (props) => {
         prefersMetric: true,
         maxDistance: -1,
         iapId: "NOT_YET_IMPLEMENTED",
+        blockedUsers: [],
       })
       database().ref(URLS.account.public(account)).set(account)
       database().ref(URLS.account.secure(loggedInAccount)).set(loggedInAccount)
@@ -67,8 +70,23 @@ export const AccountProvider: React.FC = (props) => {
         database().ref(URLS.account.secure(loggedInAccount)).update(form),
       ])
     }
+    const reason = "calling update account without being logged in. Something is fishy"
+    Logger.error(reason)
+    return Promise.reject(reason)
+  }
 
-    return Promise.reject("calling update account without being logged in. Something is fishy")
+  const blockUser = (targetUser: AccountEntity, reason?: string) => {
+    if (loggedInAccount) {
+      const update = { ...loggedInAccount }
+      update.blockedUsers.push({ blockedUserId: targetUser.uid, reason })
+      return Promise.all([
+        database().ref(URLS.account.public(loggedInAccount)).update(update),
+        database().ref(URLS.reportsTargetingUser(targetUser)).set({ reportingUser: loggedInAccount.uid, reason }),
+      ])
+    }
+    const failure = "calling update account without being logged in. Something is fishy"
+    Logger.error(failure)
+    return Promise.reject(failure)
   }
 
   const logout = () => setUser(undefined)
@@ -100,6 +118,7 @@ export const AccountProvider: React.FC = (props) => {
     updateAccount,
     refreshProfilePicture,
     logout,
+    blockUser,
   }
 
   return <AccountContext.Provider value={value}>{props.children}</AccountContext.Provider>
