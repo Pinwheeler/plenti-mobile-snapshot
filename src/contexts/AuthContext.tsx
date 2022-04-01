@@ -1,4 +1,3 @@
-import { ReactNativeFirebase } from "@react-native-firebase/app"
 import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth"
 import React, { useContext, useEffect, useState } from "react"
 import { AccountLoginForm } from "../api/forms/AccountLoginForm"
@@ -25,7 +24,6 @@ export const AuthProvider: React.FC = (props) => {
   useEffect(() => {
     const unsubscribe = auth().onAuthStateChanged((u) => {
       if (u) {
-        Logger.log(`Logged in with user: ${u}`)
         authenticateUser(u)
         setUser(u)
         setInitializing(false)

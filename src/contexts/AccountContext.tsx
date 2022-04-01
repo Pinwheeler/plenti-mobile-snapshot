@@ -79,7 +79,6 @@ export const AccountProvider: React.FC = (props) => {
       return
     }
     const path = URLS.account.secure(user)
-    console.log("retrieving user from path", path)
     const onUserChange = database()
       .ref(path)
       .on("value", (snapshot) => {

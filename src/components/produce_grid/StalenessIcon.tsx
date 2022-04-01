@@ -1,4 +1,3 @@
-import { DateTime } from "luxon"
 import React, { useMemo } from "react"
 import Theme from "../../lib/Theme"
 import { Icon } from "../Icon"
@@ -6,13 +5,13 @@ import { Icon } from "../Icon"
 const DAYS_IN_MILLIS = 1000 * 60 * 60 * 24
 
 interface Props {
-  date: DateTime
+  date: Date
 }
 
 export const StalenessIcon: React.FC<Props> = (props) => {
   const { date } = props
   const stalenessColor = useMemo(() => {
-    const staleness = DateTime.now().toMillis() - date.toMillis()
+    const staleness = new Date().getTime() - date.getTime()
     if (staleness < 7 * DAYS_IN_MILLIS) {
       return Theme.colors.primary
     } else if (staleness < 30 * DAYS_IN_MILLIS) {

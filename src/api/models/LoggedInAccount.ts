@@ -1,4 +1,4 @@
-import { DateTime } from "luxon"
+import { fromISOTime, optoISOTime } from "../../lib/DateHelper"
 import { AccountEntity } from "./Account"
 
 export function isLoggedInAccount(account: AccountEntity | LoggedInAccountEntity): account is LoggedInAccountEntity {
@@ -12,7 +12,7 @@ export class LoggedInAccountEntity extends AccountEntity {
   pickupAddress?: string
   prefersMetric: boolean
   maxDistance: number
-  premiumUntil?: DateTime
+  premiumUntil?: Date
   iapId: string
 
   constructor(model: LoggedInAccountModel) {
@@ -24,7 +24,7 @@ export class LoggedInAccountEntity extends AccountEntity {
     this.pickupAddress = model.pickupAddress
     this.prefersMetric = model.prefersMetric
     this.maxDistance = model.maxDistance
-    this.premiumUntil = model.premiumUntil ? DateTime.fromISO(model.premiumUntil) : undefined
+    this.premiumUntil = model.premiumUntil ? fromISOTime(model.premiumUntil) : undefined
     this.iapId = model.iapId
   }
 
@@ -40,7 +40,7 @@ export class LoggedInAccountEntity extends AccountEntity {
       pickupAddress: this.pickupAddress,
       prefersMetric: this.prefersMetric,
       maxDistance: this.maxDistance,
-      premiumUntil: this.premiumUntil?.toISO(),
+      premiumUntil: optoISOTime(this.premiumUntil),
       iapId: this.iapId,
     }
   }

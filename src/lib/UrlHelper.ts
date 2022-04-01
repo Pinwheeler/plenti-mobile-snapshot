@@ -5,17 +5,25 @@ import { PlentiItem } from "../assets/PlentiItemsIndex"
 
 export const URLS = {
   images: {
-    profilePicture: (account: AccountEntity) => `users/${account.uid}/profile-picture.png`,
+    profilePicture: (account: AccountEntity) => logPath(`users/${account.uid}/profile-picture.png`),
 
     produceItem: (account: AccountEntity, plentiItem: PlentiItem) =>
-      `users/${account.uid}/produce-images/${plentiItem.name}.png`,
+      logPath(`users/${account.uid}/produce-images/${plentiItem.name}.png`),
   },
 
   inventory: (account: AccountEntity) => `/inventories/${account.uid}`,
-  inventoryItem: (item: InventoryItem | InventoryItemModel) => `/inventories/${item.accountUid}/${item.uid}`,
+  inventoryItem: (item: InventoryItem | InventoryItemModel) =>
+    logPath(`/inventories/${item.accountUid}/${item.plentiItemName}`),
 
   account: {
-    public: (account: FirebaseAuthTypes.User | AccountEntity) => `/accounts/${account.uid}`,
-    secure: (account: FirebaseAuthTypes.User | AccountEntity) => `/secure/${account.uid}/account`,
+    public: (account: FirebaseAuthTypes.User | AccountEntity) => logPath(`/accounts/${account.uid}`),
+    secure: (account: FirebaseAuthTypes.User | AccountEntity) => logPath(`/secure/${account.uid}/account`),
   },
+}
+
+const logPath = (path: string) => {
+  if (__DEV__) {
+    console.log(path)
+  }
+  return path
 }

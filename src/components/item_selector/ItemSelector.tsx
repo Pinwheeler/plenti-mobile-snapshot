@@ -6,23 +6,25 @@ import { Quantity } from "../../api/models/Quantity"
 import { PlentiItem, ProduceType } from "../../assets/PlentiItemsIndex"
 import { AccountContext } from "../../contexts/AccountContext"
 import { ImageContext } from "../../contexts/ImageContext"
+import { InventoryContext } from "../../contexts/InventoryContext"
 import { PlentiItemContext } from "../../contexts/PlentiItemContext"
 import Theme from "../../lib/Theme"
 import LoggedInGate from "../LoggedInGate"
 import { ProduceGrid } from "../produce_grid/ProduceGrid"
 import { ProduceGridItem } from "../produce_grid/ProduceGridItem"
 import { ProduceItemDetails } from "../produce_grid/ProduceItemDetails"
-import { ItemSelectorContext } from "./ItemSelectorContext"
 
 interface Props {
-  itemAndQuantitySelected: (itemName: string, quantity: Quantity) => void
+  onComplete(): void
 }
 
 const ItemSelector: React.FC<Props> = (props) => {
+  const { onComplete } = props
   const { loggedInAccount } = useContext(AccountContext)
   const { plentiItems } = useContext(PlentiItemContext)
-  const { selectedItem, setSelectedItem } = useContext(ItemSelectorContext)
   const { uploadNewProduceImage } = useContext(ImageContext)
+  const { addItem } = useContext(InventoryContext)
+  const [selectedItem, setSelectedItem] = useState<PlentiItem>()
   const [searchText, setSearchText] = useState("")
   const navigation = useNavigation()
 
@@ -44,13 +46,6 @@ const ItemSelector: React.FC<Props> = (props) => {
       return item.name.toLowerCase().match(searchText.toLowerCase())
     })
   }, [searchText, plentiItems])
-
-  const quantitySelected = (quantity: Quantity) => {
-    if (selectedItem) {
-      props.itemAndQuantitySelected(selectedItem.name, quantity)
-    }
-    setSelectedItem(undefined)
-  }
 
   const goToAccount = () => {
     setSelectedItem(undefined)
@@ -95,6 +90,12 @@ const ItemSelector: React.FC<Props> = (props) => {
     }
   }
 
+  const handleAddItem = (itemName: string, quantity: Quantity, imageUri?: string | undefined) => {
+    return addItem(itemName, quantity, imageUri)
+      .then(() => setSelectedItem(undefined))
+      .finally(() => onComplete())
+  }
+
   return (
     <View>
       <Searchbar
@@ -109,6 +110,7 @@ const ItemSelector: React.FC<Props> = (props) => {
         <Modal visible={!!selectedItem} onDismiss={() => setSelectedItem(undefined)}>
           <LoggedInGate onClose={() => setSelectedItem(undefined)} account={loggedInAccount} goToAccount={goToAccount}>
             <ProduceItemDetails
+              addItem={handleAddItem}
               uploadNewProduceImage={uploadNewProduceImage}
               loggedInAccount={loggedInAccount!}
               selectedItem={selectedItem}

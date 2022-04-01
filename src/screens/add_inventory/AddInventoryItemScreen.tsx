@@ -1,8 +1,16 @@
+import { useNavigation } from "@react-navigation/native"
 import React from "react"
-import AddInventoryItemSelector from "./AddInventoryItemSelector"
+import ItemSelector from "../../components/item_selector/ItemSelector"
+import { TopInfoBar } from "../../components/TopInfoBar"
 
 const AddInventoryItemScreen = () => {
-  return <AddInventoryItemSelector />
+  const navigation = useNavigation()
+  return (
+    <>
+      <TopInfoBar text="What kind of produce?" />
+      <ItemSelector onComplete={() => navigation.goBack()} />
+    </>
+  )
 }
 
 AddInventoryItemScreen.navigationOptions = {

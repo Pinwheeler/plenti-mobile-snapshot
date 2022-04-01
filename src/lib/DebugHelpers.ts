@@ -3,7 +3,7 @@
 // and should be owned by nobody- honestly it should be a part of React itself
 // full license at the bottom
 
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 
 export const usePrevious = (value: any, initialValue: any) => {
   const ref = useRef(initialValue);
@@ -83,42 +83,6 @@ export const useMemoDebugger = <T>(
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   return useMemo(factory, dependencies);
-};
-
-/**
- * usage: replace `useMemo` with `useMemoDebugger`. You may optionally provide the names of the dependencies
- *
- * `useMemo(() => {}, [dep])`
- * `useMemo(() => {}, [dep], ["dep"])`
- */
-export const useCallbackDebugger = <T>(
-  factory: (...args: any) => T,
-  dependencies: React.DependencyList,
-  dependencyNames: string[] = []
-) => {
-  const previousDeps = usePrevious(dependencies, []);
-
-  const changedDeps = dependencies.reduce((accum, dependency, index) => {
-    if (dependency !== previousDeps[index]) {
-      const keyName = dependencyNames[index] || index;
-      return {
-        ...accum,
-        [keyName]: {
-          before: previousDeps[index],
-          after: dependency,
-        },
-      };
-    }
-
-    return accum;
-  }, {});
-
-  if (Object.keys(changedDeps).length) {
-    console.log("[use-memo-debugger] ", changedDeps);
-  }
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  return useCallback(factory, dependencies);
 };
 
 // Copyright 2021 Anthony Dreessen

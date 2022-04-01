@@ -1,13 +1,14 @@
-import React from "react";
-import { AccountProvider } from "./AccountContext";
-import { AdProvider } from "./AdContext";
-import { AuthProvider } from "./AuthContext";
-import { GeocodingProvider } from "./GeocodingContext";
-import { ImageProvider } from "./ImageContext";
-import { NotificationProvider } from "./NotificationContext";
-import { PlentiItemProvider } from "./PlentiItemContext";
-import { PremiumProvider } from "./PremiumContext";
-import { SecretsProvider } from "./SecretsContext";
+import React from "react"
+import { AccountProvider } from "./AccountContext"
+import { AdProvider } from "./AdContext"
+import { AuthProvider } from "./AuthContext"
+import { GeocodingProvider } from "./GeocodingContext"
+import { ImageProvider } from "./ImageContext"
+import { InventoryProvider } from "./InventoryContext"
+import { NotificationProvider } from "./NotificationContext"
+import { PlentiItemProvider } from "./PlentiItemContext"
+import { PremiumProvider } from "./PremiumContext"
+import { SecretsProvider } from "./SecretsContext"
 
 export const ContextStack: React.FC = (props) => {
   return (
@@ -20,7 +21,7 @@ export const ContextStack: React.FC = (props) => {
                 <AdProvider>
                   <GeocodingProvider>
                     <PlentiItemProvider>
-                      {props.children}
+                      <InventoryProvider>{props.children}</InventoryProvider>
                     </PlentiItemProvider>
                   </GeocodingProvider>
                 </AdProvider>
@@ -30,5 +31,5 @@ export const ContextStack: React.FC = (props) => {
         </SecretsProvider>
       </AuthProvider>
     </AccountProvider>
-  );
-};
+  )
+}

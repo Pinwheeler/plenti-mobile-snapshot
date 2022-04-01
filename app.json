@@ -2,6 +2,7 @@
   "expo": {
     "name": "Plenti",
     "plugins": [
+      "@config-plugins/android-jsc-intl",
       "@react-native-firebase/crashlytics",
       [
         "expo-image-picker",

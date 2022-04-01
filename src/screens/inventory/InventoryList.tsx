@@ -1,6 +1,6 @@
 import { CommonActions, useNavigation } from "@react-navigation/native"
 import React, { useContext, useState } from "react"
-import { RefreshControl, ScrollView, View } from "react-native"
+import { ScrollView, View } from "react-native"
 import { Button, FAB, Modal, Portal, Text, Title } from "react-native-paper"
 import { ProduceGrid } from "../../components/produce_grid/ProduceGrid"
 import { AccountContext } from "../../contexts/AccountContext"
@@ -14,6 +14,8 @@ export const InventoryList = () => {
   const [locationGateVisible, setLocationGateVisible] = useState(false)
   const [loginGateVisible, setLoginGateVisible] = useState(false)
   const navigation = useNavigation()
+
+  console.log("myInventory", myInventory)
 
   const goToAccount = () => {
     navigation.dispatch(CommonActions.navigate({ name: "Profile" }))

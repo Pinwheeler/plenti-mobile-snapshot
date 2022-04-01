@@ -8,7 +8,7 @@ import { AccountContext } from "./AccountContext"
 
 interface IInventoryContext {
   myInventory: Map<string, InventoryItem>
-  addItem(itemName: string, quantity: Quantity): void
+  addItem(itemName: string, quantity: Quantity, imageUri?: string): Promise<void>
   deleteItem(item: InventoryItem): void
 }
 
@@ -37,12 +37,14 @@ export const InventoryProvider: React.FC = (props) => {
     }
   }, [loggedInAccount])
 
-  const addItem = (itemName: string, quantity: Quantity) => {
+  const addItem = (itemName: string, quantity: Quantity, imageUrl?: string) => {
     if (loggedInAccount) {
-      const model = InventoryItem.modelFromUI(itemName, quantity, loggedInAccount)
-      database().ref(URLS.inventoryItem(model)).push(model)
+      const model = InventoryItem.modelFromUI(itemName, quantity, loggedInAccount, imageUrl)
+      return database().ref(URLS.inventoryItem(model)).set(model)
     } else {
-      Logger.warn("Call to addItem made without a logged in account. Something is fishy")
+      const reason = "Call to addItem made without a logged in account. Something is fishy"
+      Logger.warn(reason)
+      return Promise.reject(reason)
     }
   }
 

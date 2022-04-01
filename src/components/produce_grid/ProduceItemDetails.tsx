@@ -1,22 +1,25 @@
-import React, { useContext, useState } from "react"
-import { Image, View, Dimensions, Pressable } from "react-native"
-import { Text, Button, Title, TouchableRipple } from "react-native-paper"
+import { ReactNativeFirebase } from "@react-native-firebase/app"
+import storage from "@react-native-firebase/storage"
+import * as ImagePicker from "expo-image-picker"
+import React, { useState } from "react"
+import { Dimensions, Image, Pressable, View } from "react-native"
+import { Button, Text, Title, TouchableRipple } from "react-native-paper"
+import { InventoryItem } from "../../api/models/InventoryItem"
+import { LoggedInAccountEntity } from "../../api/models/LoggedInAccount"
 import { Quantity } from "../../api/models/Quantity"
 import { PlentiItem } from "../../assets/PlentiItemsIndex"
-import Theme from "../../lib/Theme"
-import { Icon } from "../Icon"
-import * as ImagePicker from "expo-image-picker"
-import { InventoryItem } from "../../api/models/InventoryItem"
-import storage from "@react-native-firebase/storage"
 import { Logger } from "../../lib/Logger"
-import { LoggedInAccountEntity } from "../../api/models/LoggedInAccount"
+import Theme from "../../lib/Theme"
 import { URLS } from "../../lib/UrlHelper"
+import { ButtonWithStatus } from "../ButtonWithStatus"
+import { Icon } from "../Icon"
 
 interface Props {
   selectedItem?: PlentiItem
   onClose(): void
   listing?: InventoryItem
   loggedInAccount?: LoggedInAccountEntity
+  addItem(itemName: string, quantity: Quantity, imageUri?: string): Promise<void>
   uploadNewProduceImage(
     image: ImagePicker.ImageInfo,
     plentiItem: PlentiItem,
@@ -25,13 +28,14 @@ interface Props {
 }
 
 export const ProduceItemDetails: React.FC<Props> = (props) => {
-  const { selectedItem, onClose, loggedInAccount, uploadNewProduceImage } = props
+  const { selectedItem, onClose, loggedInAccount, uploadNewProduceImage, addItem } = props
   const [quantity, setQuantity] = useState<Quantity>()
   const [localImage, setLocalImage] = useState<ImagePicker.ImageInfo>()
   const [loading, setLoading] = useState(false)
+  const [success, setSuccess] = useState(false)
+  const [error, setError] = useState<ReactNativeFirebase.NativeFirebaseError>()
 
   if (!selectedItem) {
-    Logger.error("Displaying produce item details without an item")
     return null
   }
 
@@ -58,6 +62,11 @@ export const ProduceItemDetails: React.FC<Props> = (props) => {
   }
 
   const listItem = async () => {
+    setError(undefined)
+    if (!quantity) {
+      Logger.error("Attempting to list item without a quantity")
+      return
+    }
     setLoading(true)
     let imageUrl: string | undefined
     if (localImage) {
@@ -65,6 +74,10 @@ export const ProduceItemDetails: React.FC<Props> = (props) => {
       const url = await storage().ref(URLS.images.produceItem(loggedInAccount, selectedItem)).getDownloadURL()
       imageUrl = url
     }
+    addItem(selectedItem.name, quantity, imageUrl)
+      .then(() => setSuccess(true))
+      .catch((error: ReactNativeFirebase.NativeFirebaseError) => setError(error))
+      .finally(() => setLoading(false))
   }
 
   const submitDisabled: boolean = !quantity
@@ -72,6 +85,7 @@ export const ProduceItemDetails: React.FC<Props> = (props) => {
   return (
     <View style={{ backgroundColor: "white", padding: 15, margin: 15 }}>
       <Title style={{ marginBottom: 15, textDecorationLine: "underline" }}>{`Listing: ${displayName}`}</Title>
+      {error && <Text style={{ color: Theme.colors.error }}>{error.message}</Text>}
       <QuantitySelectorItem currentQuantity={quantity} quantity={"A Little"} quantitySelected={setQuantity} />
       <QuantitySelectorItem currentQuantity={quantity} quantity={"Some"} quantitySelected={setQuantity} />
       <QuantitySelectorItem currentQuantity={quantity} quantity={"A Lot"} quantitySelected={setQuantity} />
@@ -149,9 +163,15 @@ export const ProduceItemDetails: React.FC<Props> = (props) => {
         </View>
       )}
 
-      <Button disabled={submitDisabled} mode="outlined">
+      <ButtonWithStatus
+        success={success}
+        loading={loading}
+        onPress={listItem}
+        disabled={submitDisabled}
+        mode="contained"
+      >
         List Item
-      </Button>
+      </ButtonWithStatus>
 
       <Button
         style={{ marginTop: 15 }}
