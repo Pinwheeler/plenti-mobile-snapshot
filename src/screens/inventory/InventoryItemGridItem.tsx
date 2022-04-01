@@ -1,19 +1,19 @@
-import React, { useContext } from "react"
+import React from "react"
 import { View } from "react-native"
 import { Paragraph } from "react-native-paper"
 import { InventoryItem } from "../../api/models/InventoryItem"
+import { itemForName } from "../../assets/PlentiItemsIndex"
 import { ProduceGridItem } from "../../components/produce_grid/ProduceGridItem"
 import { StalenessIcon } from "../../components/produce_grid/StalenessIcon"
-import { PlentiItemContext } from "../../contexts/PlentiItemContext"
 import Theme from "../../lib/Theme"
 
 interface Props {
   inventoryItem: InventoryItem
+  onPress?: () => void
 }
 
 export const InventoryItemGridItem: React.FC<Props> = (props) => {
-  const { inventoryItem } = props
-  const { itemForName } = useContext(PlentiItemContext)
+  const { inventoryItem, onPress } = props
 
   const item = itemForName(inventoryItem.plentiItemName)
 
@@ -22,7 +22,7 @@ export const InventoryItemGridItem: React.FC<Props> = (props) => {
   }
 
   return (
-    <ProduceGridItem plentiItem={item}>
+    <ProduceGridItem onPress={onPress} plentiItem={item} imageURL={inventoryItem.imageUrl}>
       <View style={{ flexDirection: "row" }}>
         <Paragraph style={{ color: Theme.colors.secondaryText }}>{inventoryItem.quantity}</Paragraph>
         <Paragraph style={{ marginLeft: "auto" }}>

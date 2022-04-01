@@ -3,16 +3,15 @@ import React, { useContext, useMemo, useState } from "react"
 import { ScrollView, View } from "react-native"
 import { List, Modal, Portal, Searchbar } from "react-native-paper"
 import { Quantity } from "../../api/models/Quantity"
-import { PlentiItem, ProduceType } from "../../assets/PlentiItemsIndex"
+import { PlentiItem, plentiItems, ProduceType } from "../../assets/PlentiItemsIndex"
 import { AccountContext } from "../../contexts/AccountContext"
 import { ImageContext } from "../../contexts/ImageContext"
 import { InventoryContext } from "../../contexts/InventoryContext"
-import { PlentiItemContext } from "../../contexts/PlentiItemContext"
 import Theme from "../../lib/Theme"
 import LoggedInGate from "../LoggedInGate"
+import { ProduceItemDetails } from "../produce_grid/modify_inventory/ProduceItemDetails"
 import { ProduceGrid } from "../produce_grid/ProduceGrid"
 import { ProduceGridItem } from "../produce_grid/ProduceGridItem"
-import { ProduceItemDetails } from "../produce_grid/ProduceItemDetails"
 
 interface Props {
   onComplete(): void
@@ -21,7 +20,6 @@ interface Props {
 const ItemSelector: React.FC<Props> = (props) => {
   const { onComplete } = props
   const { loggedInAccount } = useContext(AccountContext)
-  const { plentiItems } = useContext(PlentiItemContext)
   const { uploadNewProduceImage } = useContext(ImageContext)
   const { addItem } = useContext(InventoryContext)
   const [selectedItem, setSelectedItem] = useState<PlentiItem>()
@@ -110,7 +108,7 @@ const ItemSelector: React.FC<Props> = (props) => {
         <Modal visible={!!selectedItem} onDismiss={() => setSelectedItem(undefined)}>
           <LoggedInGate onClose={() => setSelectedItem(undefined)} account={loggedInAccount} goToAccount={goToAccount}>
             <ProduceItemDetails
-              addItem={handleAddItem}
+              upcertItem={handleAddItem}
               uploadNewProduceImage={uploadNewProduceImage}
               loggedInAccount={loggedInAccount!}
               selectedItem={selectedItem}

@@ -2,20 +2,24 @@ import { CommonActions, useNavigation } from "@react-navigation/native"
 import React, { useContext, useState } from "react"
 import { ScrollView, View } from "react-native"
 import { Button, FAB, Modal, Portal, Text, Title } from "react-native-paper"
+import { InventoryItem } from "../../api/models/InventoryItem"
+import { Quantity } from "../../api/models/Quantity"
+import { ProduceItemDetails } from "../../components/produce_grid/modify_inventory/ProduceItemDetails"
 import { ProduceGrid } from "../../components/produce_grid/ProduceGrid"
 import { AccountContext } from "../../contexts/AccountContext"
+import { ImageContext } from "../../contexts/ImageContext"
 import { InventoryContext } from "../../contexts/InventoryContext"
 import Theme from "../../lib/Theme"
 import { InventoryItemGridItem } from "./InventoryItemGridItem"
 
 export const InventoryList = () => {
   const { loggedInAccount } = useContext(AccountContext)
-  const { myInventory } = useContext(InventoryContext)
+  const { myInventory, addItem } = useContext(InventoryContext)
+  const { uploadNewProduceImage } = useContext(ImageContext)
   const [locationGateVisible, setLocationGateVisible] = useState(false)
   const [loginGateVisible, setLoginGateVisible] = useState(false)
+  const [selectedItem, setSelectedItem] = useState<InventoryItem>()
   const navigation = useNavigation()
-
-  console.log("myInventory", myInventory)
 
   const goToAccount = () => {
     navigation.dispatch(CommonActions.navigate({ name: "Profile" }))
@@ -45,12 +49,22 @@ export const InventoryList = () => {
     }
   }
 
+  const onEdit = (item: InventoryItem) => {
+    setSelectedItem(item)
+  }
+
+  const handleUpcertItem = (itemName: string, quantity: Quantity, imageUri?: string | undefined) => {
+    return addItem(itemName, quantity, imageUri)
+      .then(() => setSelectedItem(undefined))
+      .finally(() => setSelectedItem(undefined))
+  }
+
   const Content = () => {
     if (myInventory && myInventory.size > 0) {
       return (
         <ProduceGrid>
           {Array.from(myInventory).map(([_key, item]) => (
-            <InventoryItemGridItem inventoryItem={item} key={item.uid} />
+            <InventoryItemGridItem onPress={() => onEdit(item)} inventoryItem={item} key={item.uid} />
           ))}
         </ProduceGrid>
       )
@@ -70,6 +84,17 @@ export const InventoryList = () => {
     <View style={{ flex: 1 }}>
       <Content />
       <FAB icon={"plus"} onPress={onAdd} style={{ position: "absolute", right: 15, bottom: 15 }} />
+      <Portal>
+        <Modal visible={!!selectedItem} onDismiss={() => setSelectedItem(undefined)}>
+          <ProduceItemDetails
+            upcertItem={handleUpcertItem}
+            uploadNewProduceImage={uploadNewProduceImage}
+            loggedInAccount={loggedInAccount!}
+            selectedItem={selectedItem}
+            onClose={() => setSelectedItem(undefined)}
+          />
+        </Modal>
+      </Portal>
       <Portal>
         <>
           <Modal visible={locationGateVisible} onDismiss={onClose}>
