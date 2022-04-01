@@ -1,5 +1,4 @@
 import storage from "@react-native-firebase/storage"
-import * as ImagePicker from "expo-image-picker"
 import React, { useCallback, useContext } from "react"
 import { AccountEntity } from "../api/models/Account"
 import { isLoggedInAccount, LoggedInAccountEntity } from "../api/models/LoggedInAccount"
@@ -10,12 +9,8 @@ import { AccountContext } from "./AccountContext"
 
 interface IImageContext {
   imageUriForAccount(Account: AccountEntity): Promise<string>
-  uploadNewProfilePicture(image: ImagePicker.ImageInfo, account: LoggedInAccountEntity): Promise<any>
-  uploadNewProduceImage(
-    image: ImagePicker.ImageInfo,
-    plentiItem: PlentiItem,
-    account: LoggedInAccountEntity,
-  ): Promise<any>
+  uploadNewProfilePicture(imageUri: string, account: LoggedInAccountEntity): Promise<any>
+  uploadNewProduceImage(imageUri: string, plentiItem: PlentiItem, account: LoggedInAccountEntity): Promise<any>
 }
 
 export const ImageContext = React.createContext({} as IImageContext)
@@ -33,23 +28,19 @@ export const ImageProvider: React.FC = (props) => {
     [profilePicture],
   )
 
-  const uploadNewProfilePicture = (image: ImagePicker.ImageInfo, account: LoggedInAccountEntity) =>
+  const uploadNewProfilePicture = (imageUri: string, account: LoggedInAccountEntity) =>
     storage()
       .ref(URLS.images.profilePicture(account))
-      .putFile(image.uri)
+      .putFile(imageUri)
       .catch((error) => {
         Logger.error(error)
       })
       .finally(() => refreshProfilePicture())
 
-  const uploadNewProduceImage = (
-    image: ImagePicker.ImageInfo,
-    plentiItem: PlentiItem,
-    account: LoggedInAccountEntity,
-  ) =>
+  const uploadNewProduceImage = (imageUri: string, plentiItem: PlentiItem, account: LoggedInAccountEntity) =>
     storage()
       .ref(URLS.images.produceItem(account, plentiItem))
-      .putFile(image.uri)
+      .putFile(imageUri)
       .catch((error) => Logger.error(error))
 
   const value = { imageUriForAccount, uploadNewProfilePicture, uploadNewProduceImage }
