@@ -9,12 +9,13 @@ import { ProduceGrid } from "../../components/produce_grid/ProduceGrid"
 import { AccountContext } from "../../contexts/AccountContext"
 import { ImageContext } from "../../contexts/ImageContext"
 import { InventoryContext } from "../../contexts/InventoryContext"
+import { Logger } from "../../lib/Logger"
 import Theme from "../../lib/Theme"
 import { InventoryItemGridItem } from "./InventoryItemGridItem"
 
 export const InventoryList = () => {
   const { loggedInAccount } = useContext(AccountContext)
-  const { myInventory, addItem } = useContext(InventoryContext)
+  const { myInventory, addItem, deleteItem } = useContext(InventoryContext)
   const { uploadNewProduceImage } = useContext(ImageContext)
   const [locationGateVisible, setLocationGateVisible] = useState(false)
   const [loginGateVisible, setLoginGateVisible] = useState(false)
@@ -59,6 +60,9 @@ export const InventoryList = () => {
       .finally(() => setSelectedItem(undefined))
   }
 
+  const handleDeleteItem = (item?: InventoryItem) =>
+    item ? deleteItem(item) : Logger.warn("attempted to delete undefined item")
+
   const Content = () => {
     if (myInventory && myInventory.size > 0) {
       return (
@@ -92,6 +96,7 @@ export const InventoryList = () => {
             loggedInAccount={loggedInAccount!}
             selectedItem={selectedItem}
             onClose={() => setSelectedItem(undefined)}
+            onDelete={() => handleDeleteItem(selectedItem)}
           />
         </Modal>
       </Portal>

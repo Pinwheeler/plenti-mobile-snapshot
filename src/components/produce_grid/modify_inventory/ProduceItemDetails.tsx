@@ -32,10 +32,11 @@ interface Props {
     plentiItem: PlentiItem,
     account: LoggedInAccountEntity,
   ): Promise<any>
+  onDelete?(): void
 }
 
 export const ProduceItemDetails: React.FC<Props> = (props) => {
-  const { selectedItem, onClose, loggedInAccount, uploadNewProduceImage, upcertItem } = props
+  const { selectedItem, onClose, loggedInAccount, uploadNewProduceImage, upcertItem, onDelete } = props
   const [localImage, setLocalImage] = useState<ImagePicker.ImageInfo>()
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
@@ -115,6 +116,11 @@ export const ProduceItemDetails: React.FC<Props> = (props) => {
       >
         Close
       </Button>
+      {itsAnInventoryItem && (
+        <Button onPress={onDelete} mode="text" color={Theme.colors.error} style={{ marginTop: 10 }}>
+          Delete Listing
+        </Button>
+      )}
     </View>
   )
 }
