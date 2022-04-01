@@ -1,6 +1,5 @@
 import { ReactNativeFirebase } from "@react-native-firebase/app"
 import storage from "@react-native-firebase/storage"
-import * as ImagePicker from "expo-image-picker"
 import React, { useState } from "react"
 import { Dimensions, View } from "react-native"
 import { Button, Text, Title } from "react-native-paper"
@@ -27,22 +26,21 @@ interface Props {
   listing?: InventoryItem
   loggedInAccount?: LoggedInAccountEntity
   upcertItem(itemName: string, quantity: Quantity, imageUri?: string): Promise<void>
-  uploadNewProduceImage(
-    image: ImagePicker.ImageInfo,
-    plentiItem: PlentiItem,
-    account: LoggedInAccountEntity,
-  ): Promise<any>
+  uploadNewProduceImage(uri: string, plentiItem: PlentiItem, account: LoggedInAccountEntity): Promise<any>
   onDelete?(): void
 }
 
 export const ProduceItemDetails: React.FC<Props> = (props) => {
   const { selectedItem, onClose, loggedInAccount, uploadNewProduceImage, upcertItem, onDelete } = props
-  const [localImage, setLocalImage] = useState<ImagePicker.ImageInfo>()
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState<ReactNativeFirebase.NativeFirebaseError>()
   const itsAnInventoryItem = isInventoryItem(selectedItem)
   const [quantity, setQuantity] = useState<Quantity | undefined>(itsAnInventoryItem ? selectedItem.quantity : undefined)
+  const [userImageUri, setUserImageUri] = useState<string | undefined>(
+    itsAnInventoryItem ? selectedItem.imageUrl : undefined,
+  )
+  const [confirmingDelete, setConfirmingDelete] = useState(false)
 
   if (!selectedItem) {
     return null
@@ -71,8 +69,8 @@ export const ProduceItemDetails: React.FC<Props> = (props) => {
     }
     setLoading(true)
     let imageUrl: string | undefined
-    if (localImage) {
-      await uploadNewProduceImage(localImage, plentiItem, loggedInAccount)
+    if (userImageUri) {
+      await uploadNewProduceImage(userImageUri, plentiItem, loggedInAccount)
       const url = await storage().ref(URLS.images.produceItem(loggedInAccount, plentiItem)).getDownloadURL()
       imageUrl = url
     }
@@ -84,6 +82,15 @@ export const ProduceItemDetails: React.FC<Props> = (props) => {
 
   const submitDisabled: boolean = !quantity
 
+  const handleDeletePressed = () => {
+    if (confirmingDelete && onDelete) {
+      onDelete()
+      setConfirmingDelete(false)
+    } else {
+      setConfirmingDelete(true)
+    }
+  }
+
   return (
     <View style={{ backgroundColor: "white", padding: 15, margin: 15 }}>
       <Title style={{ marginBottom: 15, textDecorationLine: "underline" }}>{`Listing: ${displayName}`}</Title>
@@ -92,33 +99,40 @@ export const ProduceItemDetails: React.FC<Props> = (props) => {
       <QuantitySelectorItem currentQuantity={quantity} quantity={"Some"} quantitySelected={setQuantity} />
       <QuantitySelectorItem currentQuantity={quantity} quantity={"A Lot"} quantitySelected={setQuantity} />
       <ProduceImageSelector
-        localImage={localImage}
+        userImageUri={userImageUri}
         imageSize={imageSize}
         plentiItem={plentiItem}
-        onLocalImageSelect={setLocalImage}
+        onLocalImageSelect={setUserImageUri}
       />
-      <ButtonWithStatus
-        success={success}
-        loading={loading}
-        onPress={listItem}
-        disabled={submitDisabled}
-        mode="contained"
-      >
-        {itsAnInventoryItem ? "Update Listing" : "List Item"}
-      </ButtonWithStatus>
-
-      <Button
-        style={{ marginTop: 15 }}
-        onPress={() => {
-          onClose()
-        }}
-        mode="outlined"
-      >
-        Close
-      </Button>
+      <View style={{ flexDirection: "row", alignItems: "baseline", justifyContent: "space-evenly" }}>
+        <Button
+          style={{ flex: 1, marginRight: 5 }}
+          onPress={() => {
+            onClose()
+          }}
+          mode="outlined"
+        >
+          Close
+        </Button>
+        <ButtonWithStatus
+          style={{ flex: 1, marginLeft: 5 }}
+          success={success}
+          loading={loading}
+          onPress={listItem}
+          disabled={submitDisabled}
+          mode="contained"
+        >
+          {itsAnInventoryItem ? "Update Listing" : "List Item"}
+        </ButtonWithStatus>
+      </View>
       {itsAnInventoryItem && (
-        <Button onPress={onDelete} mode="text" color={Theme.colors.error} style={{ marginTop: 10 }}>
-          Delete Listing
+        <Button
+          onPress={handleDeletePressed}
+          mode={confirmingDelete ? "contained" : "outlined"}
+          color={Theme.colors.error}
+          style={{ marginTop: 15 }}
+        >
+          {confirmingDelete ? "Confirm" : "Delete Listing"}
         </Button>
       )}
     </View>

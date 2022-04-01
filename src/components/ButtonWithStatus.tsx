@@ -1,4 +1,5 @@
 import React from "react"
+import { ViewStyle } from "react-native"
 import { ActivityIndicator, Button, Text } from "react-native-paper"
 
 interface Props {
@@ -7,6 +8,7 @@ interface Props {
   onPress: () => void
   disabled?: boolean
   mode?: "text" | "outlined" | "contained" | undefined
+  style?: ViewStyle
 }
 
 export const ButtonWithStatus: React.FC<Props> = (props) => {

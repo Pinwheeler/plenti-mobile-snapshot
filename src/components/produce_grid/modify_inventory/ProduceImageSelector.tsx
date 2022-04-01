@@ -7,14 +7,14 @@ import Theme from "../../../lib/Theme"
 import { Icon } from "../../Icon"
 
 interface Props {
-  localImage?: ImagePicker.ImageInfo
+  userImageUri?: string
   imageSize: number
   plentiItem: PlentiItem
-  onLocalImageSelect(image?: ImagePicker.ImageInfo): void
+  onLocalImageSelect(imageUri?: string): void
 }
 
 export const ProduceImageSelector: React.FC<Props> = (props) => {
-  const { localImage, imageSize, plentiItem, onLocalImageSelect } = props
+  const { userImageUri, imageSize, plentiItem, onLocalImageSelect } = props
 
   const selectImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -26,11 +26,11 @@ export const ProduceImageSelector: React.FC<Props> = (props) => {
     })
 
     if (!result.cancelled) {
-      onLocalImageSelect(result)
+      onLocalImageSelect(result.uri)
     }
   }
 
-  if (localImage) {
+  if (userImageUri) {
     return (
       <View style={{ width: "100%", alignItems: "center" }}>
         <View
@@ -45,7 +45,7 @@ export const ProduceImageSelector: React.FC<Props> = (props) => {
           }}
         >
           <Image
-            source={localImage}
+            source={{ uri: userImageUri }}
             style={{
               width: imageSize,
               height: imageSize,
