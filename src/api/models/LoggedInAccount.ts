@@ -63,5 +63,5 @@ export interface LoggedInAccountModel {
   maxDistance: number
   premiumUntil?: string
   iapId: string
-  blockedUsers: { uid: string; reason?: string }[]
+  blockedUsers: { blockedUserId: string; reason?: string }[]
 }

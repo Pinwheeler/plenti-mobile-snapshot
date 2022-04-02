@@ -4,7 +4,7 @@ import { AccountEntity } from "../api/models/Account"
 import { isLoggedInAccount, LoggedInAccountEntity } from "../api/models/LoggedInAccount"
 import { PlentiItem } from "../assets/PlentiItemsIndex"
 import { Logger } from "../lib/Logger"
-import { URLS } from "../lib/UrlHelper"
+import { URLS } from "../lib/DatabaseHelpers"
 import { AccountContext } from "./AccountContext"
 
 interface IImageContext {

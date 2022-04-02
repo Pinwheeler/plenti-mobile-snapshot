@@ -1,25 +1,25 @@
+import { CommonActions, useNavigation } from "@react-navigation/native"
 import React, { useContext } from "react"
-import { ItemSelectorProvider } from "src/item_grid/ItemSelectorContext"
-import ItemSelector from "src/item_grid/ItemSelector"
-import WantSelectorContext from "src/want/WantSelectorContext"
 import { Modal, Portal } from "react-native-paper"
-import WantStatusModal from "./WantStatusModal"
-import CatalogRequestButton from "../catalog_request/CatalogRequestButton"
-import { useNavigation } from "@react-navigation/native"
+import { PlentiItem } from "../../assets/PlentiItemsIndex"
+import ItemSelector from "../../components/item_selector/ItemSelector"
+import { ItemSelectorProvider } from "../../components/item_selector/ItemSelectorContext"
+import { InventoryContext } from "../../contexts/InventoryContext"
 
 const WantSelector: React.FC = () => {
-  const { makeRequest, makingRequestPromise, clearRequest } = useContext(WantSelectorContext)
+  const { addWatcher, removeWatcher } = useContext(InventoryContext)
   const navigator = useNavigation()
 
   const goToWants = () => {
-    clearRequest()
-    navigator.navigate("Connect")
+    navigator.dispatch(CommonActions.navigate({ key: "Connect" }))
   }
+
+  const handleItemSelected = (item: PlentiItem) => {}
 
   return (
     <>
       <ItemSelectorProvider>
-        <ItemSelector itemAndQuantitySelected={makeRequest} />
+        <ItemSelector onItemSelect={handleItemSelected} />
         <Portal>
           <Modal visible={makingRequestPromise !== undefined}>
             <WantStatusModal promise={makingRequestPromise} clearRequest={clearRequest} goToWants={goToWants} />

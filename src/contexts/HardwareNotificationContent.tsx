@@ -1,11 +1,11 @@
-import React from "react";
-import { Text } from "react-native-paper";
-import { HardwareNotificationEntity } from "../api/models/HardwareNotification";
+import React from "react"
+import { Text } from "react-native-paper"
+import { HardwareNotification } from "../api/models/HardwareNotification"
 
 interface Props {
-  notification: HardwareNotificationEntity;
+  notification: HardwareNotification
 }
 
 export const HardwareNotificationContent: React.FC<Props> = (props) => {
-  return <Text>Hardware Notification Content</Text>;
-};
+  return <Text>Hardware Notification Content</Text>
+}

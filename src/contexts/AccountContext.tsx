@@ -6,8 +6,7 @@ import { AccountSignupForm } from "../api/forms/AccountSignupForm"
 import { AccountUpdateForm } from "../api/forms/AccountUpdateForm"
 import { AccountEntity } from "../api/models/Account"
 import { LoggedInAccountEntity, LoggedInAccountModel } from "../api/models/LoggedInAccount"
-import { Logger } from "../lib/Logger"
-import { URLS } from "../lib/UrlHelper"
+import { handleUnauthenticatedRequest, URLS } from "../lib/DatabaseHelpers"
 
 interface IAccountContext {
   loggedInAccount?: LoggedInAccountEntity
@@ -70,9 +69,7 @@ export const AccountProvider: React.FC = (props) => {
         database().ref(URLS.account.secure(loggedInAccount)).update(form),
       ])
     }
-    const reason = "calling update account without being logged in. Something is fishy"
-    Logger.error(reason)
-    return Promise.reject(reason)
+    return handleUnauthenticatedRequest("updateAccount")
   }
 
   const blockUser = (targetUser: AccountEntity, reason?: string) => {
@@ -84,9 +81,7 @@ export const AccountProvider: React.FC = (props) => {
         database().ref(URLS.reportsTargetingUser(targetUser)).set({ reportingUser: loggedInAccount.uid, reason }),
       ])
     }
-    const failure = "calling update account without being logged in. Something is fishy"
-    Logger.error(failure)
-    return Promise.reject(failure)
+    return handleUnauthenticatedRequest("blockUser")
   }
 
   const logout = () => setUser(undefined)

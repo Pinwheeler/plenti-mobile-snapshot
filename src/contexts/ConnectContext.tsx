@@ -6,7 +6,7 @@ import { IPageable } from "../api/models/Pageable"
 import { ReportModel } from "../api/models/Report"
 import { AccountContext } from "./AccountContext"
 import database from "@react-native-firebase/database"
-import { URLS } from "../lib/UrlHelper"
+import { URLS } from "../lib/DatabaseHelpers"
 
 interface IConnectContext {
   connections: Map<string, ConnectionEntity>

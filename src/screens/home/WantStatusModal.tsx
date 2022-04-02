@@ -1,23 +1,12 @@
-import React, { useState } from "react"
+import React, { useContext, useState } from "react"
 import { Text, View } from "react-native"
 import { Button, Title } from "react-native-paper"
-import { PlentiRequestEntity } from "../../api/models/PlentiRequest"
+import { InventoryContext } from "../../contexts/InventoryContext"
 
-interface Props {
-  promise: Promise<PlentiRequestEntity>
-  clearRequest: () => void
-  goToWants: () => void
-}
-
-const WantStatusModal: React.FC<Props> = (props) => {
-  const { promise, clearRequest, goToWants } = props
-  const [titleText, setTitleText] = useState("Searching...")
+const WantStatusModal: React.FC = () => {
+  const { addWatcher, removeWatcher } = useContext(InventoryContext)
   const [detailText, setDetailText] = useState("")
   const [isSuccessful, setIsSuccessful] = useState(false)
-
-  if (promise === undefined) {
-    return null // this should only happen when the modal isn't rendered
-  }
 
   promise.then((request) => {
     if (request.matches.length > 0) {
@@ -27,7 +16,7 @@ const WantStatusModal: React.FC<Props> = (props) => {
       setTitleText("Sorry")
     }
 
-    setDetailText(`${request.matches.length} users have the ${request.plentiItemName} you want.`)
+    setDetailText(`${request.matches.length} users have the ${request.plentiItem.displayName} you want.`)
   })
 
   return (

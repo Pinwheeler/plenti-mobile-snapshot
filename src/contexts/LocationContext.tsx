@@ -26,11 +26,11 @@ const LocationProvider: React.FC = (props) => {
   const [isCurrentlyCheckingPermissions, setIsCurrentlyCHeckingPermissions] = useState(false)
   const { loggedInAccount } = useContext(AccountContext)
   const { deviceType } = useContext(DeviceContext)
-  const { hasSlugBeenAck } = useContext(NotificationContext)
+  // const { hasSlugBeenAck } = useContext(NotificationContext)
 
-  const acceptedLocationCheck = useMemo(() => {
-    return hasSlugBeenAck(LOCATION_SLUG)
-  }, [hasSlugBeenAck])
+  // const acceptedLocationCheck = useMemo(() => {
+  //   return hasSlugBeenAck(LOCATION_SLUG)
+  // }, [hasSlugBeenAck])
 
   useEffect(() => {
     if (acceptedLocationCheck) {

@@ -9,7 +9,7 @@ import { Quantity } from "../../../api/models/Quantity"
 import { itemForName, PlentiItem } from "../../../assets/PlentiItemsIndex"
 import { Logger } from "../../../lib/Logger"
 import Theme from "../../../lib/Theme"
-import { URLS } from "../../../lib/UrlHelper"
+import { URLS } from "../../../lib/DatabaseHelpers"
 import { ButtonWithStatus } from "../../ButtonWithStatus"
 import { ProduceImageSelector } from "./ProduceImageSelector"
 
