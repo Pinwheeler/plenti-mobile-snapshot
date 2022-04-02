@@ -1,39 +1,48 @@
 import React, { useContext, useState } from "react"
 import { Text, View } from "react-native"
-import { Button, Title } from "react-native-paper"
+import { Title } from "react-native-paper"
+import { Quantity } from "../../api/models/Quantity"
+import { PlentiItem } from "../../assets/PlentiItemsIndex"
+import { ButtonWithStatus } from "../../components/ButtonWithStatus"
+import { QuantitySelector } from "../../components/produce_grid/QuantitySelector"
 import { InventoryContext } from "../../contexts/InventoryContext"
 
-const WantStatusModal: React.FC = () => {
-  const { addWatcher, removeWatcher } = useContext(InventoryContext)
-  const [detailText, setDetailText] = useState("")
-  const [isSuccessful, setIsSuccessful] = useState(false)
+interface Props {
+  item: PlentiItem
+  onClose(): void
+}
 
-  promise.then((request) => {
-    if (request.matches.length > 0) {
-      setTitleText("Success!")
-      setIsSuccessful(true)
-    } else {
-      setTitleText("Sorry")
+export const WantStatusModal: React.FC<Props> = (props) => {
+  const { item, onClose } = props
+  const { addWatcher, removeWatcher, myWatchers } = useContext(InventoryContext)
+  const currentWatcher = Array.from(myWatchers.values()).find((entry) => entry.plentiItemName === item.name)
+  const [quantity, setQuantity] = useState<Quantity | undefined>(currentWatcher?.quantity)
+  const [loading, setLoading] = useState(false)
+
+  const handleButtonPress = () => {
+    if (quantity) {
+      setLoading(true)
+      if (!currentWatcher) {
+        addWatcher(item, quantity).finally(() => setLoading(false))
+      } else {
+        removeWatcher(item).finally(() => setLoading(false))
+      }
     }
+  }
 
-    setDetailText(`${request.matches.length} users have the ${request.plentiItem.displayName} you want.`)
-  })
+  const titleText = !currentWatcher ? "Add Watcher" : "Remove Watcher"
+  const detailText = !currentWatcher
+    ? `Get notified whenever someone in your pickup radius adds ${item.name}`
+    : `Stop getting notified for ${item.name}`
 
   return (
     <View style={{ backgroundColor: "white", padding: 15, margin: 15 }}>
       <Title style={{ marginBottom: 15, textDecorationLine: "underline" }}>{titleText}</Title>
+      <QuantitySelector quantitySelected={setQuantity} selectedItem={item} />
       <Text style={{ paddingBottom: 30 }}>{detailText}</Text>
-      {isSuccessful ? (
-        <Button mode="contained" onPress={goToWants}>
-          Take Me There
-        </Button>
-      ) : (
-        <Button style={{ marginTop: 20 }} mode="outlined" onPress={clearRequest}>
-          Close
-        </Button>
-      )}
+      <ButtonWithStatus disabled={!quantity} loading={loading} onPress={handleButtonPress}>
+        {!currentWatcher ? "Add Watcher" : "Remove Watcher"}
+      </ButtonWithStatus>
     </View>
   )
 }
-
-export default WantStatusModal

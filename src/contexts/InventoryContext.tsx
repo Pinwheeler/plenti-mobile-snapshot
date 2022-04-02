@@ -81,6 +81,7 @@ export const InventoryProvider: React.FC = (props) => {
 
   const value = {
     myInventory,
+    myWatchers,
     addItem,
     deleteItem,
     addWatcher,

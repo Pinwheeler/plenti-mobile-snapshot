@@ -1,19 +1,18 @@
 import React from "react"
 import { View } from "react-native"
-import { Text, Button, Title } from "react-native-paper"
+import { Button, Text, Title } from "react-native-paper"
 import { Quantity } from "../../api/models/Quantity"
 import { PlentiItem } from "../../assets/PlentiItemsIndex"
 
 interface Props {
   quantitySelected: (quantity: Quantity) => void
-  selectedItem?: PlentiItem
-  onClose(): void
+  selectedItem: PlentiItem
 }
 
-const QuantitySelector: React.FC<Props> = (props) => {
-  const { quantitySelected, selectedItem, onClose } = props
+export const QuantitySelector: React.FC<Props> = (props) => {
+  const { quantitySelected, selectedItem } = props
 
-  const displayName = selectedItem ? selectedItem.name : ""
+  const displayName = selectedItem.name
 
   return (
     <View style={{ backgroundColor: "white", padding: 15, margin: 15 }}>
@@ -21,15 +20,6 @@ const QuantitySelector: React.FC<Props> = (props) => {
       <QuantitySelectorItem quantity={"A Little"} quantitySelected={quantitySelected} />
       <QuantitySelectorItem quantity={"Some"} quantitySelected={quantitySelected} />
       <QuantitySelectorItem quantity={"A Lot"} quantitySelected={quantitySelected} />
-      <Button
-        style={{ marginTop: 15 }}
-        onPress={() => {
-          onClose()
-        }}
-        mode="outlined"
-      >
-        Close
-      </Button>
     </View>
   )
 }
@@ -47,5 +37,3 @@ const QuantitySelectorItem: React.FC<ItemProps> = (props) => {
     </Button>
   )
 }
-
-export default QuantitySelector
