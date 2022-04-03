@@ -5,14 +5,18 @@ export function isLoggedInAccount(account: AccountEntity | LoggedInAccountEntity
   return (account as LoggedInAccountEntity).prefersMetric !== undefined
 }
 
+export interface PickupLocation {
+  address: string
+  latitude: number
+  longitude: number
+}
+
 export class LoggedInAccountEntity extends AccountEntity {
   email: string
   authToken: string
-  latitude?: number
-  longitude?: number
-  pickupAddress?: string
+  pickupLocation?: PickupLocation
   prefersMetric: boolean
-  maxDistance: number
+  maxDistance: number // in KM
   premiumUntil?: Date
   iapId: string
   blockedUsers: { blockedUserId: string; reason?: string }[]
@@ -21,9 +25,7 @@ export class LoggedInAccountEntity extends AccountEntity {
     super(model)
     this.email = model.email
     this.authToken = model.authToken
-    this.latitude = model.latitude
-    this.longitude = model.longitude
-    this.pickupAddress = model.pickupAddress
+    this.pickupLocation = model.pickupLocation
     this.prefersMetric = model.prefersMetric
     this.maxDistance = model.maxDistance
     this.premiumUntil = model.premiumUntil ? fromISOTime(model.premiumUntil) : undefined
@@ -38,9 +40,7 @@ export class LoggedInAccountEntity extends AccountEntity {
       username: this.username,
       firstname: this.firstname,
       authToken: this.authToken,
-      latitude: this.latitude,
-      longitude: this.longitude,
-      pickupAddress: this.pickupAddress,
+      pickupLocation: this.pickupLocation,
       prefersMetric: this.prefersMetric,
       maxDistance: this.maxDistance,
       premiumUntil: optoISOTime(this.premiumUntil),
@@ -56,9 +56,7 @@ export interface LoggedInAccountModel {
   username: string
   firstname?: string
   authToken: string
-  latitude?: number
-  longitude?: number
-  pickupAddress?: string
+  pickupLocation?: PickupLocation
   prefersMetric: boolean
   maxDistance: number
   premiumUntil?: string

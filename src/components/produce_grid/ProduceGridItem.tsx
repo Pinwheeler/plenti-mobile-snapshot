@@ -1,7 +1,8 @@
 import React from "react"
-import { Image, View } from "react-native"
+import { View } from "react-native"
 import { Card, Title } from "react-native-paper"
 import { PlentiItem } from "../../assets/PlentiItemsIndex"
+import { ProduceItemImage } from "../ProduceItemImage"
 
 interface Props {
   plentiItem: PlentiItem
@@ -21,12 +22,12 @@ export const ProduceGridItem: React.FC<Props> = (props) => {
       }}
     >
       <Card style={{ marginHorizontal: 10 }} onPress={onPress}>
-        {imageURL ? (
-          <Image source={{ uri: imageURL }} style={{ height: 130, width: "100%" }} resizeMode="cover" />
-        ) : (
-          <Image source={plentiItem.localImage} style={{ height: 130, width: "100%" }} resizeMode="cover" />
-        )}
-
+        <ProduceItemImage
+          imageOverride={imageURL}
+          item={plentiItem}
+          style={{ height: 130, width: "100%" }}
+          resizeMode="cover"
+        />
         <Card.Content>
           <Title>{plentiItem.name}</Title>
           {props.children}

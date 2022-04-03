@@ -42,7 +42,7 @@ export const InventoryList = () => {
     if (loggedInAccount === undefined) {
       setLoginGateVisible(true)
     } else {
-      if (loggedInAccount.pickupAddress) {
+      if (loggedInAccount.pickupLocation?.address) {
         navigation.dispatch(CommonActions.navigate({ name: "AddInventoryItem" }))
       } else {
         setLocationGateVisible(true)

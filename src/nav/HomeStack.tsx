@@ -1,16 +1,16 @@
-import { createStackNavigator } from "@react-navigation/stack";
-import React, { useContext } from "react";
-import { PremiumContext } from "../contexts/PremiumContext";
-import Theme from "../lib/Theme";
-import AddInventoryItemScreen from "../screens/add_inventory/AddInventoryItemScreen";
-import { UpdateProfileScreen } from "../screens/update_profile/UpdateProfileScreen";
-import { TabNav } from "./TabNav";
+import { createStackNavigator } from "@react-navigation/stack"
+import React, { useContext } from "react"
+import { PremiumContext } from "../contexts/PremiumContext"
+import Theme from "../lib/Theme"
+import { AddInventoryItemScreen } from "../screens/add_inventory/AddInventoryItemScreen"
+import { UpdateProfileScreen } from "../screens/update_profile/UpdateProfileScreen"
+import { TabNav } from "./TabNav"
 
-const Stack = createStackNavigator();
+const Stack = createStackNavigator()
 
 const HomeStack = () => {
-  const { hasPremium } = useContext(PremiumContext);
-  const headerTitle = hasPremium ? "★ Plenti-Full" : "Plenti";
+  const { hasPremium } = useContext(PremiumContext)
+  const headerTitle = hasPremium ? "★ Plenti-Full" : "Plenti"
   // unclear why the type system doesn't recognize this function
 
   return (
@@ -21,11 +21,7 @@ const HomeStack = () => {
         cardStyle: { backgroundColor: Theme.colors.background },
       }}
     >
-      <Stack.Screen
-        name="Plenti"
-        component={TabNav}
-        options={{ headerTitleAlign: "left", headerTitle: headerTitle }}
-      />
+      <Stack.Screen name="Plenti" component={TabNav} options={{ headerTitleAlign: "left", headerTitle: headerTitle }} />
       {/* <Stack.Screen
         name="Chat"
         component={ChatScreen}
@@ -59,7 +55,7 @@ const HomeStack = () => {
         options={{ title: "Plenti-Full" }}
       /> */}
     </Stack.Navigator>
-  );
-};
+  )
+}
 
-export default HomeStack;
+export default HomeStack

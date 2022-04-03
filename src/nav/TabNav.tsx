@@ -23,9 +23,9 @@ export const TabNav = () => {
     if (!nextUnreadHN) {
       return undefined
     }
-    if (!nextUnreadHN.blocking) {
-      nextUnreadHN.appendCommands(() => acknowledgeHN(nextUnreadHN))
-    }
+    // if (!nextUnreadHN.blocking) {
+    //   nextUnreadHN.appendCommands(() => acknowledgeHN(nextUnreadHN))
+    // }
     return nextUnreadHN
   }, [nextUnreadHN])
 

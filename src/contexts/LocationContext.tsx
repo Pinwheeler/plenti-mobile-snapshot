@@ -1,6 +1,7 @@
 import React, { useCallback, useContext, useEffect, useMemo, useState } from "react"
 import Geolocation, { GeoPosition } from "react-native-geolocation-service"
 import { check, PERMISSIONS, request, RESULTS } from "react-native-permissions"
+import { Logger } from "../lib/Logger"
 import { AccountContext } from "./AccountContext"
 import { DeviceContext } from "./DeviceContext"
 import { NotificationContext } from "./NotificationContext"
@@ -8,29 +9,29 @@ import { NotificationContext } from "./NotificationContext"
 interface ILocationContext {
   getCurrentPosition: () => Promise<GeoPosition>
   lastKnownPosition?: GeoPosition
-  distanceInKMToPoint: (lat: number, lng: number) => number | undefined
-  distanceInMiToPoint: (lat: number, lng: number) => number | undefined
+  distanceInKMToPoint: (lat: number, lng: number) => number
+  distanceInMiToPoint: (lat: number, lng: number) => number
   convertKMToMi: (km: number) => number
   convertMiToKM: (mi: number) => number
   distanceInPreferredUnits: (km: number) => string
   isCurrentlyCheckingPermissions: boolean
 }
 
-const LocationContext = React.createContext({} as ILocationContext)
+export const LocationContext = React.createContext({} as ILocationContext)
 
 const R = 6371 // Radius of the earth
 export const LOCATION_SLUG = "LOCATION"
 
-const LocationProvider: React.FC = (props) => {
+export const LocationProvider: React.FC = (props) => {
   const [lastKnownPosition, setLastKnownPosition] = useState<GeoPosition>()
   const [isCurrentlyCheckingPermissions, setIsCurrentlyCHeckingPermissions] = useState(false)
   const { loggedInAccount } = useContext(AccountContext)
   const { deviceType } = useContext(DeviceContext)
-  // const { hasSlugBeenAck } = useContext(NotificationContext)
+  const { hasSlugBeenAck } = useContext(NotificationContext)
 
-  // const acceptedLocationCheck = useMemo(() => {
-  //   return hasSlugBeenAck(LOCATION_SLUG)
-  // }, [hasSlugBeenAck])
+  const acceptedLocationCheck = useMemo(() => {
+    return hasSlugBeenAck(LOCATION_SLUG)
+  }, [hasSlugBeenAck])
 
   useEffect(() => {
     if (acceptedLocationCheck) {
@@ -104,6 +105,11 @@ const LocationProvider: React.FC = (props) => {
   }
 
   const distanceInMetersToPoint = (targetLat: number, targetLng: number) => {
+    if (!lastKnownPosition) {
+      const reason = "trying to get distance without knowing the user's location"
+      Logger.error(reason)
+      throw new Error(reason)
+    }
     const currentLat = lastKnownPosition.coords.latitude
     const currentLng = lastKnownPosition.coords.longitude
     const latDistance = toRadians(targetLat - currentLat)
@@ -139,7 +145,7 @@ const LocationProvider: React.FC = (props) => {
   }
 
   const distanceInPreferredUnits = (km: number) => {
-    const prefersMetric = account.prefersMetric ? true : false
+    const prefersMetric = loggedInAccount?.prefersMetric ? true : false
     if (prefersMetric) {
       return `${km.toFixed(2)} km`
     } else {
@@ -160,6 +166,3 @@ const LocationProvider: React.FC = (props) => {
 
   return <LocationContext.Provider value={value}>{props.children}</LocationContext.Provider>
 }
-
-export default LocationContext
-export { ILocationContext, LocationProvider }

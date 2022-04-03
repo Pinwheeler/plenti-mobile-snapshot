@@ -34,9 +34,9 @@ export const UpdateProfileScreen = () => {
   const changeLocationDefault: AccountUpdateForm = {
     username: loggedInAccount.username,
     firstname: loggedInAccount.firstname || "",
-    pickupAddress: loggedInAccount.pickupAddress || "",
-    latitude: loggedInAccount.latitude ? `${loggedInAccount.latitude}` : "",
-    longitude: loggedInAccount.longitude ? `${loggedInAccount.longitude}` : "",
+    pickupAddress: loggedInAccount.pickupLocation?.address ?? "",
+    latitude: loggedInAccount.pickupLocation?.latitude ? `${loggedInAccount.pickupLocation.latitude}` : "",
+    longitude: loggedInAccount.pickupLocation?.longitude ? `${loggedInAccount.pickupLocation.longitude}` : "",
     prefersMetric: loggedInAccount.prefersMetric,
     maxDistance: loggedInAccount.maxDistance ?? -1,
   }

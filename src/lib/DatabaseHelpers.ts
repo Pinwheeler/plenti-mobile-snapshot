@@ -15,23 +15,25 @@ export const URLS = {
 
   reportsTargetingUser: (account: AccountEntity) => logPath(`/reports/${account.uid}`),
 
-  connectionsForUser: (account: LoggedInAccountEntity) => logPath(`/connections/${account.uid}`),
+  connectionsForAccount: (account: AccountEntity) => logPath(`/connections/${account.uid}`),
 
   watchersForItem: (account: LoggedInAccountEntity, item: PlentiItem) =>
     logPath(`/watchers/${account.uid}/${item.name}`),
 
   notification: (notification: HardwareNotification) => logPath(`/notifications/${notification.slug}`),
 
-  profilePicture: (account: AccountEntity) => logPath(`users/${account.uid}/profile-picture.png`),
-
-  produceItem: (account: AccountEntity, plentiItem: PlentiItem) =>
-    logPath(`users/${account.uid}/produce-images/${plentiItem.name}.png`),
+  images: {
+    profile: (account: AccountEntity) => logPath(`users/${account.uid}/profile-picture.png`),
+    produceItem: (account: AccountEntity, plentiItem: PlentiItem) =>
+      logPath(`users/${account.uid}/produce-images/${plentiItem.name}.png`),
+  },
 
   acknowledgedNotifications: (deviceId: string) => logPath(`/devices/${deviceId}/acknowledgedNotifications`),
 
-  public: (account: FirebaseAuthTypes.User | AccountEntity) => logPath(`/accounts/${account.uid}`),
-
-  secure: (account: FirebaseAuthTypes.User | AccountEntity) => logPath(`/secure/${account.uid}/account`),
+  account: {
+    public: (account: FirebaseAuthTypes.User | AccountEntity) => logPath(`/accounts/${account.uid}`),
+    secure: (account: FirebaseAuthTypes.User | AccountEntity) => logPath(`/secure/${account.uid}/account`),
+  },
 }
 
 const logPath = (path: string) => {

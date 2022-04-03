@@ -3,8 +3,8 @@ import React, { useCallback, useContext } from "react"
 import { AccountEntity } from "../api/models/Account"
 import { isLoggedInAccount, LoggedInAccountEntity } from "../api/models/LoggedInAccount"
 import { PlentiItem } from "../assets/PlentiItemsIndex"
-import { Logger } from "../lib/Logger"
 import { URLS } from "../lib/DatabaseHelpers"
+import { Logger } from "../lib/Logger"
 import { AccountContext } from "./AccountContext"
 
 interface IImageContext {
@@ -23,14 +23,14 @@ export const ImageProvider: React.FC = (props) => {
       if (isLoggedInAccount(account) && profilePicture) {
         return Promise.resolve(profilePicture)
       }
-      return storage().ref(URLS.images.profilePicture(account)).getDownloadURL()
+      return storage().ref(URLS.images.profile(account)).getDownloadURL()
     },
     [profilePicture],
   )
 
   const uploadNewProfilePicture = (imageUri: string, account: LoggedInAccountEntity) =>
     storage()
-      .ref(URLS.images.profilePicture(account))
+      .ref(URLS.images.profile(account))
       .putFile(imageUri)
       .catch((error) => {
         Logger.error(error)

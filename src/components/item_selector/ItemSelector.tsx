@@ -14,10 +14,7 @@ interface Props {
 
 const ItemSelector: React.FC<Props> = (props) => {
   const { onItemSelect } = props
-  const { loggedInAccount } = useContext(AccountContext)
-  const { uploadNewProduceImage } = useContext(ImageContext)
-  // const { addItem } = useContext(InventoryContext)
-  const [selectedItem, setSelectedItem] = useState<PlentiItem>()
+
   const [searchText, setSearchText] = useState("")
   // const navigation = useNavigation()
 
@@ -40,11 +37,6 @@ const ItemSelector: React.FC<Props> = (props) => {
     })
   }, [searchText, plentiItems])
 
-  // const goToAccount = () => {
-  //   setSelectedItem(undefined)
-  //   navigation.dispatch(CommonActions.navigate({ name: "Profile" }))
-  // }
-
   const InnerContent = () => {
     if (searchText.length > 0) {
       return (
@@ -53,7 +45,7 @@ const ItemSelector: React.FC<Props> = (props) => {
             <ProduceGridItem
               plentiItem={item}
               key={`selector-grid-item-${item.name}`}
-              onPress={() => setSelectedItem(item)}
+              onPress={() => onItemSelect(item)}
             />
           ))}
         </ProduceGrid>
@@ -68,7 +60,7 @@ const ItemSelector: React.FC<Props> = (props) => {
                 <ProduceGrid>
                   {items.map((item) => (
                     <ProduceGridItem
-                      onPress={() => setSelectedItem(item)}
+                      onPress={() => onItemSelect(item)}
                       plentiItem={item}
                       key={`selector-grid-item-${item.name}`}
                     />
@@ -83,12 +75,6 @@ const ItemSelector: React.FC<Props> = (props) => {
     }
   }
 
-  // const handleAddItem = (itemName: string, quantity: Quantity, imageUri?: string | undefined) => {
-  //   return addItem(itemName, quantity, imageUri)
-  //     .then(() => setSelectedItem(undefined))
-  //     .finally(() => onComplete())
-  // }
-
   return (
     <View>
       <Searchbar
@@ -99,19 +85,6 @@ const ItemSelector: React.FC<Props> = (props) => {
         style={{ marginVertical: 10, borderRadius: 30, marginHorizontal: 10 }}
       />
       <InnerContent />
-      {/* <Portal>
-        <Modal visible={!!selectedItem} onDismiss={() => setSelectedItem(undefined)}>
-          <LoggedInGate onClose={() => setSelectedItem(undefined)} account={loggedInAccount} goToAccount={goToAccount}>
-            <ProduceItemDetails
-              upcertItem={handleAddItem}
-              uploadNewProduceImage={uploadNewProduceImage}
-              loggedInAccount={loggedInAccount!}
-              selectedItem={selectedItem}
-              onClose={() => setSelectedItem(undefined)}
-            />
-          </LoggedInGate>
-        </Modal>
-      </Portal> */}
     </View>
   )
 }

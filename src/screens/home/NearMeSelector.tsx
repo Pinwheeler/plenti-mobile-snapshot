@@ -1,37 +1,31 @@
-import { NavigationContext, useNavigation } from "@react-navigation/native"
+import { CommonActions, useNavigation } from "@react-navigation/native"
 import React, { useContext, useEffect, useMemo, useState } from "react"
-import { RefreshControl, TouchableOpacity, View } from "react-native"
-import { IconButton, Modal, Paragraph, Portal } from "react-native-paper"
+import { TouchableOpacity, View } from "react-native"
+import { Modal, Paragraph, Portal } from "react-native-paper"
+import { IconButton } from "../../components/IconButton"
 import LoggedInGate from "../../components/LoggedInGate"
 import { ProduceGrid } from "../../components/produce_grid/ProduceGrid"
 import { AccountContext } from "../../contexts/AccountContext"
+import { ChatContext } from "../../contexts/ChatContext"
+import { LocationContext } from "../../contexts/LocationContext"
 import { PremiumContext } from "../../contexts/PremiumContext"
 import Theme from "../../lib/Theme"
+import { ConfirmNearbyRequest } from "./ConfirmNearbyRequest"
 import { NearMeContext } from "./NearMeContext"
+import { NearMeGridItem } from "./NearMeGridItem"
 
 export const NearMeSelector: React.FC = () => {
-  const { items, refresh, selectedItem, setSelectedItem } = useContext(NearMeContext)
+  const { items, selectedItem, setSelectedItem } = useContext(NearMeContext)
+  const { createConnection } = useContext(ChatContext)
   const { hasPremium } = useContext(PremiumContext)
-  const [refreshing, setRefreshing] = useState(false)
   const [removeUpgradeAdRequested, setRemoveUpgradeAdRequested] = useState(false)
   const { distanceInPreferredUnits } = useContext(LocationContext)
-  const { account } = useContext(AccountContext)
-  const { connectionService } = useContext(ApiContext)
-  const { navigate } = useContext(NavigationContext)
-
+  const { loggedInAccount } = useContext(AccountContext)
   const navigation = useNavigation()
 
-  const onRefresh = async () => {
-    setRefreshing(true)
-    refresh().finally(() => {
-      setRefreshing(false)
-      setRemoveUpgradeAdRequested(false)
-    })
-  }
-
   useEffect(() => {
-    onRefresh()
-  }, [account])
+    setRemoveUpgradeAdRequested(false)
+  }, [])
 
   const showUpgradeAd = useMemo(() => {
     return !hasPremium && !removeUpgradeAdRequested
@@ -39,7 +33,7 @@ export const NearMeSelector: React.FC = () => {
 
   const goToAccount = () => {
     setSelectedItem(undefined)
-    navigation.navigate("Profile")
+    navigation.dispatch(CommonActions.navigate({ name: "Profile" }))
   }
 
   const onCancel = () => {
@@ -47,24 +41,29 @@ export const NearMeSelector: React.FC = () => {
   }
 
   const onConnect = () => {
-    connectionService.createFromInventoryItem(selectedItem.inventoryItem).then((connection) => {
-      setSelectedItem(undefined)
-      navigation.navigate("Chat", { connection })
-    })
+    if (selectedItem) {
+      createConnection(selectedItem.inventoryItem).then(() =>
+        navigation.dispatch(CommonActions.navigate({ name: "Chat" })),
+      )
+    }
   }
 
   return (
     <>
-      <ProduceGrid refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+      <ProduceGrid>
         {items.map((item) => (
-          <NearMeGridItem item={item} key={`near-me-item-${item.inventoryItem.id}`} />
+          <NearMeGridItem item={item} key={`near-me-item-${item.inventoryItem.uid}`} />
         ))}
       </ProduceGrid>
       <Portal>
         <Modal visible={!!selectedItem} onDismiss={() => setSelectedItem(undefined)}>
           {!!selectedItem && (
-            <LoggedInGate onClose={() => setSelectedItem(undefined)} account={account} goToAccount={goToAccount}>
-              {account && (
+            <LoggedInGate
+              onClose={() => setSelectedItem(undefined)}
+              account={loggedInAccount}
+              goToAccount={goToAccount}
+            >
+              {loggedInAccount && (
                 <ConfirmNearbyRequest
                   selectedItem={selectedItem}
                   distanceString={distanceInPreferredUnits(selectedItem.distance)}
@@ -97,7 +96,7 @@ export const NearMeSelector: React.FC = () => {
               justifyContent: "center",
               alignItems: "center",
             }}
-            onPress={() => navigate("Store")}
+            onPress={() => navigation.dispatch(CommonActions.navigate({ name: "Store" }))}
           >
             <View
               style={{
@@ -111,7 +110,7 @@ export const NearMeSelector: React.FC = () => {
               <Paragraph style={{ fontSize: 17, position: "absolute", left: 15 }}>Seeking something else?</Paragraph>
               <IconButton
                 style={{ position: "absolute", right: 5, height: 30, width: 30 }}
-                type={IconType.close}
+                type={"times"}
                 size={20}
                 onPress={() => setRemoveUpgradeAdRequested(true)}
               />

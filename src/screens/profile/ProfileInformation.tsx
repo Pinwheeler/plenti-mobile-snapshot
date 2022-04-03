@@ -58,7 +58,7 @@ export const ProfileInformation: React.FC = () => {
           <Button
             onPress={() => {
               const options: ShowOptions = {
-                end: loggedInAccount.pickupAddress,
+                end: loggedInAccount.pickupLocation?.address,
               }
               openMap(options)
             }}
@@ -66,7 +66,7 @@ export const ProfileInformation: React.FC = () => {
             OPEN IN MAPS
           </Button>
         </View>
-        <Text style={{ paddingBottom: 8 }}>{loggedInAccount.pickupAddress}</Text>
+        <Text style={{ paddingBottom: 8 }}>{loggedInAccount.pickupLocation?.address}</Text>
       </View>
       <Button onPress={logout}>Logout</Button>
       <View style={{ height: 50 }} />

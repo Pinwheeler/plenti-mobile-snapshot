@@ -14,6 +14,7 @@ interface IInventoryContext {
   deleteItem(item: InventoryItem): Promise<void>
   addWatcher(item: PlentiItem, quantity: Quantity): Promise<void>
   removeWatcher(item: PlentiItem): Promise<void>
+  usernameForItem(item: InventoryItem): Promise<string>
 }
 
 export const InventoryContext = React.createContext<IInventoryContext>({} as IInventoryContext)
@@ -22,6 +23,12 @@ export const InventoryProvider: React.FC = (props) => {
   const { loggedInAccount } = useContext(AccountContext)
   const [myInventory, setMyInventory] = useState(new Map<string, InventoryItem>())
   const [myWatchers, setMyWatchers] = useState(new Map<string, PlentiWatcher>())
+
+  const usernameForItem = (item: InventoryItem) =>
+    database()
+      .ref(`/accounts/${item.accountUid}/username`)
+      .once("value")
+      .then((snapshot) => snapshot.val() as string)
 
   useEffect(() => {
     if (loggedInAccount) {
@@ -86,6 +93,7 @@ export const InventoryProvider: React.FC = (props) => {
     deleteItem,
     addWatcher,
     removeWatcher,
+    usernameForItem,
   }
 
   return <InventoryContext.Provider value={value}>{props.children}</InventoryContext.Provider>

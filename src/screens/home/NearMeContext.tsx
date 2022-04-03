@@ -1,59 +1,105 @@
-import { DistancedInventoryItemEntity, Page } from "plenti-api"
-import React, { useContext, useEffect, useState } from "react"
-import AccountContext from "src/account/AccountContext"
-import { LoggerService } from "src/lib/LoggerService"
-import ApiContext from "src/shared/ApiContext"
-import LocationContext from "src/shared/LocationContext"
+import database from "@react-native-firebase/database"
+import React, { useContext, useEffect, useMemo, useState } from "react"
+import { Inventory } from "../../api/models/Inventory.model"
+import { DistancedInventoryItem } from "../../api/views/DistancedInventoryItem.view"
+import { AccountContext } from "../../contexts/AccountContext"
+import { LocationContext } from "../../contexts/LocationContext"
+
+const APPRX_KM_IN_DEG = 111
 
 export interface INearMeContext {
-  items: DistancedInventoryItemEntity[]
-  requestPage: (pageNumber: number) => void
-  refresh: () => Promise<void>
-  selectedItem?: DistancedInventoryItemEntity
-  setSelectedItem: (item?: DistancedInventoryItemEntity) => void
+  items: DistancedInventoryItem[]
+  selectedItem?: DistancedInventoryItem
+  setSelectedItem: (item?: DistancedInventoryItem) => void
 }
 
 export const NearMeContext = React.createContext({} as INearMeContext)
 
 export const NearMeProvider: React.FC = (props) => {
-  const { inventoryService } = useContext(ApiContext)
-  const { account } = useContext(AccountContext)
-  const { lastKnownPosition, getCurrentPosition } = useContext(LocationContext)
-  const [items, setItems] = useState<DistancedInventoryItemEntity[]>([])
-  const [selectedItem, setSelectedItem] = useState<DistancedInventoryItemEntity>()
+  const { loggedInAccount } = useContext(AccountContext)
+  const { lastKnownPosition, getCurrentPosition, distanceInKMToPoint } = useContext(LocationContext)
+  const [selectedItem, setSelectedItem] = useState<DistancedInventoryItem>()
+  const [inventoriesWithinLatBounds, setInventoryWithinLatBounds] = useState(new Map<string, Inventory>())
+  const [inventoriesWithinLngBounds, setInventoryWithinLngBounds] = useState(new Map<string, Inventory>())
 
   const refresh = async () => {
     await getCurrentPosition() // force a refresh of the current position
   }
 
+  const maxDistance = loggedInAccount?.maxDistance ?? 1000
+  const maxDegDiff = maxDistance / APPRX_KM_IN_DEG
+
+  const latRange = useMemo(() => {
+    if (lastKnownPosition) {
+      const latitude = lastKnownPosition.coords.latitude
+      return { minLat: latitude - maxDegDiff, maxLat: latitude + maxDegDiff }
+    }
+  }, [loggedInAccount])
+
+  const lngRange = useMemo(() => {
+    if (lastKnownPosition) {
+      const longitude = lastKnownPosition.coords.longitude
+      return { minLng: longitude - maxDegDiff, maxLng: longitude + maxDegDiff }
+    }
+  }, [loggedInAccount])
+
   useEffect(() => {
-    setItems([])
-    requestPage(0)
+    if (lastKnownPosition && latRange) {
+      const onLatBoundChange = database()
+        .ref("/inventories")
+        .orderByChild("latitude")
+        .startAt(latRange.minLat)
+        .endAt(latRange.maxLat)
+        .on("value", (snapshot) => setInventoryWithinLatBounds(snapshot.val()))
+
+      return () => database().ref("/inventories").off("value", onLatBoundChange)
+    }
   }, [lastKnownPosition])
 
-  const requestPage = async (pageNumber: number) => {
-    inventoryService
-      .nearPoint(lastKnownPosition.coords.latitude, lastKnownPosition.coords.longitude, {
-        page: pageNumber,
+  useEffect(() => {
+    if (lastKnownPosition && lngRange) {
+      const onLngBoundChange = database()
+        .ref("/inventories")
+        .orderByChild("longitude")
+        .startAt(lngRange.minLng)
+        .endAt(lngRange.maxLng)
+        .on("value", (snapshot) => setInventoryWithinLngBounds(snapshot.val()))
+
+      return () => database().ref("/inventories").off("value", onLngBoundChange)
+    }
+  })
+
+  const inventoriesWithinBounds = useMemo(() => {
+    const keys = Array.from(inventoriesWithinLatBounds.keys())
+    const temp = Array.from(inventoriesWithinLatBounds.values())
+    inventoriesWithinLngBounds.forEach((val, key) => {
+      if (!keys.includes(key)) {
+        temp.push(val)
+      }
+    })
+    return temp
+  }, [inventoriesWithinLatBounds, inventoriesWithinLngBounds])
+
+  const items = useMemo(() => {
+    const val: DistancedInventoryItem[] = []
+    inventoriesWithinBounds.forEach((inv) => {
+      const distanceToInventory = distanceInKMToPoint(inv.latitude, inv.longitude)
+      inv.items.forEach((item) => {
+        const distanced: DistancedInventoryItem = {
+          owningAccountUsername: inv.accountUsername,
+          inventoryItem: item,
+          distance: distanceToInventory,
+          referenceLat: inv.latitude,
+          referenceLng: inv.longitude,
+        }
+        val.push(distanced)
       })
-      .then((page: Page<DistancedInventoryItemEntity>) => {
-        setItems(
-          page.content.filter((item) => {
-            if (account) {
-              return item.inventoryItem.account.id !== account.id
-            } else {
-              return true
-            }
-          }),
-        )
-      })
-      .catch((error) => LoggerService.instance().error(error, "NearMe error"))
-  }
+    })
+    return val
+  }, [inventoriesWithinBounds])
 
   const value: INearMeContext = {
     items,
-    requestPage,
-    refresh,
     selectedItem,
     setSelectedItem,
   }

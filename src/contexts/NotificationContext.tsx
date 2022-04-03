@@ -7,6 +7,7 @@ import { DeviceContext } from "./DeviceContext"
 interface INotificationContext {
   acknowledgeHN(arg: HardwareNotification): Promise<void>
   nextUnreadHN?: HardwareNotification
+  hasSlugBeenAck(slug: string): boolean
 }
 
 export const NotificationContext = React.createContext({} as INotificationContext)
@@ -39,6 +40,8 @@ export const NotificationProvider: React.FC = (props) => {
     return database().ref(URLS.acknowledgedNotifications(deviceIdentifier)).update(update)
   }
 
+  const hasSlugBeenAck = (slug: string): boolean => !!acknowledgedUids.find((val) => slug === val)
+
   const unacknowledgedHNs = useMemo(
     () =>
       Array.from(notifications.entries())
@@ -54,7 +57,7 @@ export const NotificationProvider: React.FC = (props) => {
     return undefined
   }, [unacknowledgedHNs])
 
-  const value = { acknowledgeHN, nextUnreadHN }
+  const value = { acknowledgeHN, nextUnreadHN, hasSlugBeenAck }
 
   return <NotificationContext.Provider value={value}>{props.children}</NotificationContext.Provider>
 }
