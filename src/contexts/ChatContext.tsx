@@ -4,7 +4,7 @@ import uuid from "react-native-uuid"
 import { Connection } from "../api/models/Connection"
 import { Conversation } from "../api/models/Conversation"
 import { InventoryItem } from "../api/models/InventoryItem"
-import { handleUnauthenticatedRequest, URLS } from "../lib/DatabaseHelpers"
+import { handleUnauthenticatedRequest, StringMapFromObj, URLS } from "../lib/DatabaseHelpers"
 import { AccountContext } from "./AccountContext"
 
 interface IChatContext {
@@ -22,7 +22,7 @@ export const ChatProvider: React.FC = (props) => {
     if (loggedInAccount) {
       const onConnectionsChange = database()
         .ref(URLS.connectionsForAccount(loggedInAccount))
-        .on("value", (snapshot) => setMyConnections(new Map<string, Connection>(snapshot.val())))
+        .on("value", (snapshot) => setMyConnections(StringMapFromObj(snapshot.val())))
       return () => database().ref(URLS.connectionsForAccount(loggedInAccount)).off("value", onConnectionsChange)
     }
   }, [loggedInAccount])
@@ -30,7 +30,7 @@ export const ChatProvider: React.FC = (props) => {
   const value = {
     unreadCount: Array.from(myConnections.values())
       .map((con) => con.unreadMessageCount)
-      .reduce((a, b) => a + b),
+      .reduce((a, b) => a + b, 0),
     createConnection: (inventoryItem: InventoryItem) => {
       if (loggedInAccount) {
         const conversation: Conversation = {

@@ -1,10 +1,10 @@
 import database from "@react-native-firebase/database"
 import React, { useContext, useEffect, useState } from "react"
-import { InventoryItem } from "../api/models/InventoryItem"
+import { InventoryItem, inventoryItemFromUI } from "../api/models/InventoryItem"
 import { PlentiWatcher } from "../api/models/PlentiWatcher"
 import { Quantity } from "../api/models/Quantity"
 import { PlentiItem } from "../assets/PlentiItemsIndex"
-import { handleUnauthenticatedRequest, URLS } from "../lib/DatabaseHelpers"
+import { handleUnauthenticatedRequest, StringMapFromObj, URLS } from "../lib/DatabaseHelpers"
 import { AccountContext } from "./AccountContext"
 
 interface IInventoryContext {
@@ -35,7 +35,7 @@ export const InventoryProvider: React.FC = (props) => {
       const path = URLS.inventory(loggedInAccount)
       const onInventoryChange = database()
         .ref(path)
-        .on("value", (snapshot) => setMyInventory(new Map(snapshot.val())))
+        .on("value", (snapshot) => setMyInventory(StringMapFromObj(snapshot.val())))
       return () => database().ref(path).off("value", onInventoryChange)
     }
   }, [loggedInAccount])
@@ -45,7 +45,7 @@ export const InventoryProvider: React.FC = (props) => {
       const path = URLS.watchers(loggedInAccount)
       const onWatchersChange = database()
         .ref(path)
-        .on("value", (snapshot) => setMyWatchers(new Map(snapshot.val())))
+        .on("value", (snapshot) => setMyWatchers(StringMapFromObj(snapshot.val())))
       return () => database().ref(path).off("value", onWatchersChange)
     }
   })
@@ -71,7 +71,7 @@ export const InventoryProvider: React.FC = (props) => {
 
   const addItem = (itemName: string, quantity: Quantity, imageUrl?: string) => {
     if (loggedInAccount) {
-      const model = InventoryItem.modelFromUI(itemName, quantity, loggedInAccount, imageUrl)
+      const model = inventoryItemFromUI(itemName, quantity, loggedInAccount, imageUrl)
       return database().ref(URLS.inventoryItem(model)).set(model)
     } else {
       return handleUnauthenticatedRequest("addItem")

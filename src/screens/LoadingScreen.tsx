@@ -1,11 +1,12 @@
-import React from "react";
-import { View } from "react-native";
-import { ActivityIndicator } from "react-native-paper";
-import { H2 } from "../components/typography";
-import Theme from "../lib/Theme";
+import React from "react"
+import { View } from "react-native"
+import { ActivityIndicator } from "react-native-paper"
+import { H2 } from "../components/typography"
+import Theme from "../lib/Theme"
 
 interface Props {
-  loading: boolean;
+  loading: boolean
+  loadingMessage: string
 }
 
 export const LoadingScreen: React.FC<Props> = (props) => {
@@ -22,11 +23,11 @@ export const LoadingScreen: React.FC<Props> = (props) => {
             backgroundColor: Theme.colors.background,
           }}
         >
-          <H2>Loading...</H2>
+          <H2>{props.loadingMessage}</H2>
           <View style={{ height: 20 }} />
           <ActivityIndicator />
         </View>
       )}
     </>
-  );
-};
+  )
+}

@@ -5,6 +5,7 @@ import { InventoryItem } from "../../api/models/InventoryItem"
 import { itemForName } from "../../assets/PlentiItemsIndex"
 import { ProduceGridItem } from "../../components/produce_grid/ProduceGridItem"
 import { StalenessIcon } from "../../components/produce_grid/StalenessIcon"
+import { fromISOTime } from "../../lib/DateHelper"
 import Theme from "../../lib/Theme"
 
 interface Props {
@@ -26,7 +27,7 @@ export const InventoryItemGridItem: React.FC<Props> = (props) => {
       <View style={{ flexDirection: "row" }}>
         <Paragraph style={{ color: Theme.colors.secondaryText }}>{inventoryItem.quantity}</Paragraph>
         <Paragraph style={{ marginLeft: "auto" }}>
-          <StalenessIcon date={inventoryItem.updatedAt} />
+          <StalenessIcon date={fromISOTime(inventoryItem.updatedAt)} />
         </Paragraph>
       </View>
     </ProduceGridItem>

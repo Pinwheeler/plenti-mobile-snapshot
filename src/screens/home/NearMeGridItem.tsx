@@ -7,6 +7,7 @@ import { ProduceGridItem } from "../../components/produce_grid/ProduceGridItem"
 import { StalenessIcon } from "../../components/produce_grid/StalenessIcon"
 import { AccountContext } from "../../contexts/AccountContext"
 import { LocationContext } from "../../contexts/LocationContext"
+import { fromISOTime } from "../../lib/DateHelper"
 import { Logger } from "../../lib/Logger"
 import Theme from "../../lib/Theme"
 import { NearMeContext } from "./NearMeContext"
@@ -47,7 +48,7 @@ export const NearMeGridItem: React.FC<Props> = (props) => {
       <View style={{ flexDirection: "row" }}>
         <Paragraph style={{ color: Theme.colors.secondaryText }}>{displayDistance}</Paragraph>
         <Paragraph style={{ marginLeft: "auto" }}>
-          <StalenessIcon date={item.inventoryItem.updatedAt} />
+          <StalenessIcon date={fromISOTime(item.inventoryItem.updatedAt)} />
         </Paragraph>
       </View>
     </ProduceGridItem>

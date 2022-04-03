@@ -1,7 +1,7 @@
 import database from "@react-native-firebase/database"
 import React, { useContext, useEffect, useMemo, useState } from "react"
 import { HardwareNotification } from "../api/models/HardwareNotification"
-import { URLS } from "../lib/DatabaseHelpers"
+import { StringMapFromObj, URLS } from "../lib/DatabaseHelpers"
 import { DeviceContext } from "./DeviceContext"
 
 interface INotificationContext {
@@ -15,39 +15,43 @@ export const NotificationContext = React.createContext({} as INotificationContex
 export const NotificationProvider: React.FC = (props) => {
   const { deviceIdentifier } = useContext(DeviceContext)
   const [notifications, setNotifications] = useState(new Map<string, HardwareNotification>())
-  const [acknowledgedUids, setAcknowledgedUids] = useState<string[]>([])
+  const [acknowledgedSlugs, setAcknowledgedSlugs] = useState<string[]>([])
 
   useEffect(() => {
-    const onNotificationsChange = database()
+    database()
       .ref("/notifications")
-      .on("value", (snapshot) => setNotifications(new Map<string, HardwareNotification>(snapshot.val())))
-    return () => database().ref("/notifications").off("value", onNotificationsChange)
+      .once("value", (snapshot) => setNotifications(StringMapFromObj(snapshot.val())))
   }, [])
 
   useEffect(() => {
-    const onAckedNotificationsChange = database()
+    database()
       .ref(URLS.acknowledgedNotifications(deviceIdentifier))
-      .on("value", (snapshot) =>
-        setAcknowledgedUids(Array.from(new Map<string, HardwareNotification>(snapshot.val()).keys())),
-      )
-    return () =>
-      database().ref(URLS.acknowledgedNotifications(deviceIdentifier)).off("value", onAckedNotificationsChange)
+      .once("value", (snapshot) => setAcknowledgedSlugs(Array.from(StringMapFromObj(snapshot.val()).keys())))
   }, [])
 
   const acknowledgeHN = (arg: HardwareNotification) => {
     const update: { [key: string]: HardwareNotification } = {}
     update[arg.slug] = arg
-    return database().ref(URLS.acknowledgedNotifications(deviceIdentifier)).update(update)
+    return database()
+      .ref(URLS.acknowledgedNotifications(deviceIdentifier))
+      .update(update)
+      .then(() => {
+        setAcknowledgedSlugs((oldVal) => {
+          const newVal = [...oldVal]
+          newVal.push(arg.slug)
+          return newVal
+        })
+      })
   }
 
-  const hasSlugBeenAck = (slug: string): boolean => !!acknowledgedUids.find((val) => slug === val)
+  const hasSlugBeenAck = (slug: string): boolean => !!acknowledgedSlugs.find((val) => slug === val)
 
   const unacknowledgedHNs = useMemo(
     () =>
       Array.from(notifications.entries())
-        .filter(([key, _val]) => !!acknowledgedUids.find((ack) => key === ack))
+        .filter(([key, _val]) => !acknowledgedSlugs.includes(key))
         .map(([_key, val]) => val),
-    [notifications, acknowledgedUids],
+    [notifications, acknowledgedSlugs],
   )
 
   const nextUnreadHN = useMemo(() => {
@@ -58,6 +62,10 @@ export const NotificationProvider: React.FC = (props) => {
   }, [unacknowledgedHNs])
 
   const value = { acknowledgeHN, nextUnreadHN, hasSlugBeenAck }
+
+  console.log("totalHNs", notifications)
+  console.log("acknowledgedIds", acknowledgedSlugs)
+  console.log("unackNote", unacknowledgedHNs)
 
   return <NotificationContext.Provider value={value}>{props.children}</NotificationContext.Provider>
 }

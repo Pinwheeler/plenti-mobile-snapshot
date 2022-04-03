@@ -65,7 +65,7 @@ export const AuthProvider: React.FC = (props) => {
   const value = { user, signedInAnonymously, logout, login, signup }
 
   if (initializing) {
-    return <LoadingScreen loading />
+    return <LoadingScreen loadingMessage="Authenticating..." loading />
   }
 
   return <AuthContext.Provider value={value}>{props.children}</AuthContext.Provider>

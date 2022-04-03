@@ -22,10 +22,6 @@ export const NearMeProvider: React.FC = (props) => {
   const [inventoriesWithinLatBounds, setInventoryWithinLatBounds] = useState(new Map<string, Inventory>())
   const [inventoriesWithinLngBounds, setInventoryWithinLngBounds] = useState(new Map<string, Inventory>())
 
-  const refresh = async () => {
-    await getCurrentPosition() // force a refresh of the current position
-  }
-
   const maxDistance = loggedInAccount?.maxDistance ?? 1000
   const maxDegDiff = maxDistance / APPRX_KM_IN_DEG
 
@@ -45,6 +41,7 @@ export const NearMeProvider: React.FC = (props) => {
 
   useEffect(() => {
     if (lastKnownPosition && latRange) {
+      console.log("looking for inventories with max lat max/min", latRange.maxLat, latRange.minLat)
       const onLatBoundChange = database()
         .ref("/inventories")
         .orderByChild("latitude")

@@ -1,12 +1,13 @@
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs"
-import React, { useContext, useMemo } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import { Modal, Portal } from "react-native-paper"
 import { HardwareNotification } from "../api/models/HardwareNotification"
+import { HardwareNotificationContent } from "../api/models/HardwareNotificationContent"
 import { AdBanner } from "../components/AdBanner"
 import { Icon } from "../components/Icon"
 import { AdContext } from "../contexts/AdContext"
-import { HardwareNotificationContent } from "../contexts/HardwareNotificationContent"
 import { NotificationContext } from "../contexts/NotificationContext"
+import { Logger } from "../lib/Logger"
 import Theme from "../lib/Theme"
 import { ConnectScreen } from "../screens/ConnectScreen"
 import { HomeScreen } from "../screens/home/HomeScreen"
@@ -18,16 +19,19 @@ const Tab = createMaterialBottomTabNavigator()
 export const TabNav = () => {
   const { shouldShowAds } = useContext(AdContext)
   const { acknowledgeHN, nextUnreadHN } = useContext(NotificationContext)
+  const [currentHN, setCurrentHN] = useState<HardwareNotification>()
 
-  const nextActionableHN: HardwareNotification | undefined = useMemo(() => {
-    if (!nextUnreadHN) {
-      return undefined
-    }
-    // if (!nextUnreadHN.blocking) {
-    //   nextUnreadHN.appendCommands(() => acknowledgeHN(nextUnreadHN))
-    // }
-    return nextUnreadHN
+  useEffect(() => {
+    setCurrentHN(nextUnreadHN)
   }, [nextUnreadHN])
+
+  const handleAckPressed = () => {
+    if (currentHN) {
+      acknowledgeHN(currentHN)
+    } else {
+      Logger.error("Attempted to acknowledge undefined Hardware Notification")
+    }
+  }
 
   const hasUnreads = false
 
@@ -67,7 +71,7 @@ export const TabNav = () => {
       {shouldShowAds && <AdBanner />}
       <Portal>
         <Modal
-          visible={!!nextActionableHN}
+          visible={!!currentHN}
           dismissable={false}
           contentContainerStyle={{
             backgroundColor: Theme.colors.surface,
@@ -75,7 +79,7 @@ export const TabNav = () => {
             margin: 15,
           }}
         >
-          {nextActionableHN && <HardwareNotificationContent notification={nextActionableHN} />}
+          {currentHN && <HardwareNotificationContent onAcknowledge={handleAckPressed} notification={currentHN} />}
         </Modal>
       </Portal>
     </>

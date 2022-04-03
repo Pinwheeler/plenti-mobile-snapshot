@@ -22,6 +22,7 @@ export type IconType =
   | "chevron-up"
   | "chevron-down"
   | "pencil"
+  | "map-marked-alt"
 
 interface Props {
   type: IconType
