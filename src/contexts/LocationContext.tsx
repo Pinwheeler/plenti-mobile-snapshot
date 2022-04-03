@@ -1,20 +1,17 @@
-import React, { useCallback, useContext, useEffect, useMemo, useState } from "react"
-import Geolocation, { GeoPosition } from "react-native-geolocation-service"
-import { check, PERMISSIONS, request, RESULTS } from "react-native-permissions"
+import * as Location from "expo-location"
+import React, { useContext, useEffect, useMemo, useState } from "react"
 import { Logger } from "../lib/Logger"
 import { AccountContext } from "./AccountContext"
-import { DeviceContext } from "./DeviceContext"
+import { AppContext } from "./AppContext"
 import { NotificationContext } from "./NotificationContext"
 
 interface ILocationContext {
-  getCurrentPosition: () => Promise<GeoPosition>
-  lastKnownPosition?: GeoPosition
+  lastKnownPosition?: Location.LocationObject
   distanceInKMToPoint: (lat: number, lng: number) => number
   distanceInMiToPoint: (lat: number, lng: number) => number
   convertKMToMi: (km: number) => number
   convertMiToKM: (mi: number) => number
   distanceInPreferredUnits: (km: number) => string
-  isCurrentlyCheckingPermissions: boolean
 }
 
 export const LocationContext = React.createContext({} as ILocationContext)
@@ -23,82 +20,29 @@ const R = 6371 // Radius of the earth
 export const LOCATION_SLUG = "LOCATION"
 
 export const LocationProvider: React.FC = (props) => {
-  const [lastKnownPosition, setLastKnownPosition] = useState<GeoPosition>()
-  const [isCurrentlyCheckingPermissions, setIsCurrentlyCHeckingPermissions] = useState(false)
+  const [lastKnownPosition, setLastKnownPosition] = useState<Location.LocationObject>()
   const { loggedInAccount } = useContext(AccountContext)
-  const { deviceType } = useContext(DeviceContext)
   const { hasSlugBeenAck } = useContext(NotificationContext)
+  const { setAppwideError } = useContext(AppContext)
 
   const acceptedLocationCheck = useMemo(() => {
     return hasSlugBeenAck(LOCATION_SLUG)
   }, [hasSlugBeenAck])
 
   useEffect(() => {
-    if (acceptedLocationCheck) {
-      let permissionCheck: Promise<any>
-      switch (deviceType) {
-        case "iOS":
-          permissionCheck = check(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE)
-          break
-        case "Android":
-          permissionCheck = check(PERMISSIONS.ANDROID.ACCESS_COARSE_LOCATION)
-          break
-      }
-      setIsCurrentlyCHeckingPermissions(true)
-      permissionCheck
-        .then((result) => {
-          switch (result) {
-            case RESULTS.UNAVAILABLE:
-              throw new Error("Location permission not available on this device / in this context")
-            case RESULTS.DENIED: {
-              // persmission has not yet been requested / is denied but is requestable
-              let req
-              switch (deviceType) {
-                case "iOS":
-                  req = request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE)
-                  break
-                case "Android":
-                  req = request(PERMISSIONS.ANDROID.ACCESS_COARSE_LOCATION)
-                  break
-              }
-              req.then((result) => {
-                switch (result) {
-                  case RESULTS.GRANTED:
-                    getCurrentPosition()
-                    break
-                  default:
-                    throw new Error("the user rejected location permissions")
-                }
-              })
-              break
-            }
-            case RESULTS.GRANTED:
-              getCurrentPosition()
-              break
-            case RESULTS.BLOCKED:
-              throw new Error("Location permission is denied and not requestable anymore")
-          }
-        })
-        .finally(() => {
-          setIsCurrentlyCHeckingPermissions(false)
-        })
-    }
-  }, [acceptedLocationCheck])
+    ;(async () => {
+      if (acceptedLocationCheck) {
+        let foreground = await Location.requestForegroundPermissionsAsync()
+        if (foreground.status !== "granted") {
+          setAppwideError(new Error("Permission to access location was denied"))
+          return
+        }
 
-  const getCurrentPosition = useCallback(() => {
-    if (acceptedLocationCheck) {
-      const positionPromise: Promise<GeoPosition> = new Promise((resolve, reject) => {
-        Geolocation.getCurrentPosition(
-          (position) => resolve(position),
-          (error) => reject(error),
-        )
-      })
-      positionPromise.then((position) => setLastKnownPosition(position))
-      return positionPromise
-    } else {
-      return Promise.reject("User has not yet accepted location checking")
-    }
-  }, [acceptedLocationCheck])
+        let location = await Location.getCurrentPositionAsync({})
+        setLastKnownPosition(location)
+      }
+    })()
+  }, [])
 
   const toRadians = (degrees: number) => {
     return (degrees * Math.PI) / 180
@@ -154,14 +98,12 @@ export const LocationProvider: React.FC = (props) => {
   }
 
   const value = {
-    getCurrentPosition,
     lastKnownPosition,
     distanceInKMToPoint,
     distanceInMiToPoint,
     convertKMToMi,
     convertMiToKM,
     distanceInPreferredUnits,
-    isCurrentlyCheckingPermissions,
   }
 
   return <LocationContext.Provider value={value}>{props.children}</LocationContext.Provider>

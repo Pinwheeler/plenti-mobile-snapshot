@@ -17,7 +17,7 @@ export const NearMeContext = React.createContext({} as INearMeContext)
 
 export const NearMeProvider: React.FC = (props) => {
   const { loggedInAccount } = useContext(AccountContext)
-  const { lastKnownPosition, getCurrentPosition, distanceInKMToPoint } = useContext(LocationContext)
+  const { lastKnownPosition, distanceInKMToPoint } = useContext(LocationContext)
   const [selectedItem, setSelectedItem] = useState<DistancedInventoryItem>()
   const [inventoriesWithinLatBounds, setInventoryWithinLatBounds] = useState(new Map<string, Inventory>())
   const [inventoriesWithinLngBounds, setInventoryWithinLngBounds] = useState(new Map<string, Inventory>())

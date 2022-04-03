@@ -6,6 +6,7 @@ import { IconButton } from "../../components/IconButton"
 import LoggedInGate from "../../components/LoggedInGate"
 import { ProduceGrid } from "../../components/produce_grid/ProduceGrid"
 import { AccountContext } from "../../contexts/AccountContext"
+import { AppContext } from "../../contexts/AppContext"
 import { ChatContext } from "../../contexts/ChatContext"
 import { LocationContext } from "../../contexts/LocationContext"
 import { PremiumContext } from "../../contexts/PremiumContext"
@@ -22,6 +23,7 @@ export const NearMeSelector: React.FC = () => {
   const { distanceInPreferredUnits } = useContext(LocationContext)
   const { loggedInAccount } = useContext(AccountContext)
   const navigation = useNavigation()
+  const { appwideError } = useContext(AppContext)
 
   useEffect(() => {
     setRemoveUpgradeAdRequested(false)
