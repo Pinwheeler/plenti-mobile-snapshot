@@ -63,9 +63,5 @@ export const NotificationProvider: React.FC = (props) => {
 
   const value = { acknowledgeHN, nextUnreadHN, hasSlugBeenAck }
 
-  console.log("totalHNs", notifications)
-  console.log("acknowledgedIds", acknowledgedSlugs)
-  console.log("unackNote", unacknowledgedHNs)
-
   return <NotificationContext.Provider value={value}>{props.children}</NotificationContext.Provider>
 }

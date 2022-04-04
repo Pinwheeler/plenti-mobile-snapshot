@@ -9,6 +9,7 @@ import { ProduceGrid } from "../../components/produce_grid/ProduceGrid"
 import { AccountContext } from "../../contexts/AccountContext"
 import { ImageContext } from "../../contexts/ImageContext"
 import { InventoryContext } from "../../contexts/InventoryContext"
+import { StringMapFromObj } from "../../lib/DatabaseHelpers"
 import { Logger } from "../../lib/Logger"
 import Theme from "../../lib/Theme"
 import { InventoryItemGridItem } from "./InventoryItemGridItem"
@@ -42,7 +43,7 @@ export const InventoryList = () => {
     if (loggedInAccount === undefined) {
       setLoginGateVisible(true)
     } else {
-      if (loggedInAccount.pickupLocation?.address) {
+      if (myInventory) {
         navigation.dispatch(CommonActions.navigate({ name: "AddInventoryItem" }))
       } else {
         setLocationGateVisible(true)
@@ -64,24 +65,26 @@ export const InventoryList = () => {
     item ? deleteItem(item) : Logger.warn("attempted to delete undefined item")
 
   const Content = () => {
-    if (myInventory && myInventory.size > 0) {
-      return (
-        <ProduceGrid>
-          {Array.from(myInventory).map(([_key, item]) => (
-            <InventoryItemGridItem onPress={() => onEdit(item)} inventoryItem={item} key={item.uid} />
-          ))}
-        </ProduceGrid>
-      )
-    } else {
-      return (
-        <ScrollView>
-          <Text style={{ textAlign: "center", color: Theme.colors.disabled }}>No Inventory Items Found</Text>
-          <Text style={{ textAlign: "center", color: Theme.colors.disabled }}>
-            Use the button on this page to add an Inventory Item
-          </Text>
-        </ScrollView>
-      )
+    if (myInventory) {
+      const map = StringMapFromObj(myInventory.items)
+      if (map.size > 0) {
+        return (
+          <ProduceGrid>
+            {Array.from(map).map(([_key, item]) => (
+              <InventoryItemGridItem onPress={() => onEdit(item)} inventoryItem={item} key={item.uid} />
+            ))}
+          </ProduceGrid>
+        )
+      }
     }
+    return (
+      <ScrollView>
+        <Text style={{ textAlign: "center", color: Theme.colors.disabled }}>No Inventory Items Found</Text>
+        <Text style={{ textAlign: "center", color: Theme.colors.disabled }}>
+          Use the button on this page to add an Inventory Item
+        </Text>
+      </ScrollView>
+    )
   }
 
   return (

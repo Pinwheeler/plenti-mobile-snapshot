@@ -22,18 +22,21 @@ export const AuthProvider: React.FC = (props) => {
   const [signedInAnonymously, setSignedInAnonymously] = useState(false)
 
   useEffect(() => {
+    console.log("=================== auth call")
     const unsubscribe = auth().onAuthStateChanged((u) => {
       if (u) {
+        console.log("============ got user", u)
         authenticateUser(u)
         setUser(u)
         setInitializing(false)
       } else {
+        console.log("================ signing in anonymously")
         auth()
           .signInAnonymously()
           .then(() => {
             setSignedInAnonymously(true)
             setInitializing(false)
-            console.log("User signed in anonymously")
+            console.log("============== User signed in anonymously")
           })
           .catch((error) => {
             if (error.code === "auth/operation-not-allowed") {
@@ -45,7 +48,7 @@ export const AuthProvider: React.FC = (props) => {
       }
     })
     return unsubscribe
-  })
+  }, [])
 
   const logout = () =>
     auth()

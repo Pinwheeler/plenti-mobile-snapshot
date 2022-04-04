@@ -10,7 +10,7 @@ export const URLS = {
   inventory: (account: AccountEntity) => logPath(`/inventories/${account.uid}`),
   watchers: (account: AccountEntity) => logPath(`/watchers/${account.uid}`),
 
-  inventoryItem: (item: InventoryItem) => logPath(`/inventories/${item.accountUid}/${item.plentiItemName}`),
+  inventoryItem: (item: InventoryItem) => logPath(`/inventories/${item.accountUid}/items/${item.plentiItemName}`),
 
   reportsTargetingUser: (account: AccountEntity) => logPath(`/reports/${account.uid}`),
 
@@ -37,7 +37,7 @@ export const URLS = {
 
 const logPath = (path: string) => {
   if (__DEV__) {
-    console.log(path)
+    console.log(`%c accessing data path <${path}>`, "color: #993")
   }
   return path
 }

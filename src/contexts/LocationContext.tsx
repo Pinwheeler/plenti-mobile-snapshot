@@ -42,7 +42,7 @@ export const LocationProvider: React.FC = (props) => {
         setLastKnownPosition(location)
       }
     })()
-  }, [])
+  }, [acceptedLocationCheck])
 
   const toRadians = (degrees: number) => {
     return (degrees * Math.PI) / 180

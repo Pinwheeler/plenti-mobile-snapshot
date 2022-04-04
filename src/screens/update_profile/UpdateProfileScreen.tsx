@@ -10,6 +10,7 @@ import { TextField } from "../../components/TextField"
 import { H2, H3 } from "../../components/typography"
 import { AccountContext } from "../../contexts/AccountContext"
 import { GeocodingContext } from "../../contexts/GeocodingContext"
+import { InventoryContext } from "../../contexts/InventoryContext"
 import { Logger } from "../../lib/Logger"
 import Theme from "../../lib/Theme"
 import { MaxDistanceAdjustor } from "./MaxDistanceAdjustor"
@@ -18,6 +19,7 @@ import { UpdateProfilePicture } from "./UpdateProfilePicture"
 
 export const UpdateProfileScreen = () => {
   const { loggedInAccount, updateAccount } = useContext(AccountContext)
+  const { myInventory } = useContext(InventoryContext)
   const [pickupAddressEntered, setPickupAddressEntered] = useState(false)
   const [editsMade, setEditsMade] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -34,9 +36,9 @@ export const UpdateProfileScreen = () => {
   const changeLocationDefault: AccountUpdateForm = {
     username: loggedInAccount.username,
     firstname: loggedInAccount.firstname || "",
-    pickupAddress: loggedInAccount.pickupLocation?.address ?? "",
-    latitude: loggedInAccount.pickupLocation?.latitude ? `${loggedInAccount.pickupLocation.latitude}` : "",
-    longitude: loggedInAccount.pickupLocation?.longitude ? `${loggedInAccount.pickupLocation.longitude}` : "",
+    pickupAddress: myInventory?.address ?? "",
+    latitude: myInventory?.latitude ? `${myInventory.latitude}` : "",
+    longitude: myInventory?.longitude ? `${myInventory.longitude}` : "",
     prefersMetric: loggedInAccount.prefersMetric,
     maxDistance: loggedInAccount.maxDistance ?? -1,
   }

@@ -4,6 +4,6 @@ export interface Inventory {
   address: string
   latitude: number
   longitude: number
-  items: Map<string, InventoryItem>
+  items: { [key: string]: InventoryItem }
   accountUsername: string
 }

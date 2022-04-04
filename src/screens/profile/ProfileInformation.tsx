@@ -8,12 +8,14 @@ import { LoadingIndicator } from "../../components/LoadingIndicator"
 import { H3 } from "../../components/typography"
 import { AccountContext } from "../../contexts/AccountContext"
 import { AuthContext } from "../../contexts/AuthContext"
+import { InventoryContext } from "../../contexts/InventoryContext"
 import Theme from "../../lib/Theme"
 import { ProfilePicture } from "./ProfilePicture"
 
 export const ProfileInformation: React.FC = () => {
   const { logout } = useContext(AuthContext)
   const { loggedInAccount } = useContext(AccountContext)
+  const { myInventory } = useContext(InventoryContext)
   const navigate = useContext(NavigationContext)
 
   if (!loggedInAccount) {
@@ -58,7 +60,7 @@ export const ProfileInformation: React.FC = () => {
           <Button
             onPress={() => {
               const options: ShowOptions = {
-                end: loggedInAccount.pickupLocation?.address,
+                end: myInventory?.address,
               }
               openMap(options)
             }}
@@ -66,7 +68,7 @@ export const ProfileInformation: React.FC = () => {
             OPEN IN MAPS
           </Button>
         </View>
-        <Text style={{ paddingBottom: 8 }}>{loggedInAccount.pickupLocation?.address}</Text>
+        <Text style={{ paddingBottom: 8 }}>{myInventory?.address}</Text>
       </View>
       <Button onPress={logout}>Logout</Button>
       <View style={{ height: 50 }} />

@@ -14,7 +14,7 @@ interface IAccountContext {
   accountForUser(user: FirebaseAuthTypes.User): Promise<AccountEntity>
   authenticateUser(user: FirebaseAuthTypes.User): void
   createAccount(user: FirebaseAuthTypes.User, form: AccountSignupForm): void
-  updateAccount(form: AccountUpdateForm): Promise<[void, void]>
+  updateAccount(form: AccountUpdateForm): Promise<any>
   refreshProfilePicture(): void
   blockUser(targetAccount: AccountEntity, reason?: string): Promise<[void, void]>
   logout(): void
@@ -64,9 +64,18 @@ export const AccountProvider: React.FC = (props) => {
 
   const updateAccount = (form: AccountUpdateForm) => {
     if (loggedInAccount) {
+      const profileUpdate = { firstname: form.firstname, username: form.username, profilePicture }
+      const secureProfileUpdate = { ...profileUpdate, prefersMetric: form.prefersMetric, maxDistance: form.maxDistance }
+      const inventoryUpdate = {
+        address: form.pickupAddress,
+        latitude: form.latitude,
+        longitude: form.longitude,
+        accountUsername: form.username,
+      }
       return Promise.all([
-        database().ref(URLS.account.public(loggedInAccount)).update(form),
-        database().ref(URLS.account.secure(loggedInAccount)).update(form),
+        database().ref(URLS.account.public(loggedInAccount)).update(profileUpdate),
+        database().ref(URLS.account.secure(loggedInAccount)).update(secureProfileUpdate),
+        database().ref(URLS.inventory(loggedInAccount)).update(inventoryUpdate),
       ])
     }
     return handleUnauthenticatedRequest("updateAccount")

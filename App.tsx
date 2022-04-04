@@ -5,6 +5,9 @@ import { ErrorBoundary } from "./src/components/ErrorBoundary"
 import { ContextStack } from "./src/contexts/ContextStack"
 import Theme from "./src/lib/Theme"
 import RootNavigator from "./src/nav/RootNavigator"
+import * as Location from "expo-location"
+
+Location.installWebGeolocationPolyfill()
 
 export default function App() {
   return (

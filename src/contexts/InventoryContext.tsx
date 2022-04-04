@@ -1,5 +1,6 @@
 import database from "@react-native-firebase/database"
 import React, { useContext, useEffect, useState } from "react"
+import { Inventory } from "../api/models/Inventory.model"
 import { InventoryItem, inventoryItemFromUI } from "../api/models/InventoryItem"
 import { PlentiWatcher } from "../api/models/PlentiWatcher"
 import { Quantity } from "../api/models/Quantity"
@@ -8,7 +9,7 @@ import { handleUnauthenticatedRequest, StringMapFromObj, URLS } from "../lib/Dat
 import { AccountContext } from "./AccountContext"
 
 interface IInventoryContext {
-  myInventory: Map<string, InventoryItem>
+  myInventory?: Inventory
   myWatchers: Map<string, PlentiWatcher>
   addItem(itemName: string, quantity: Quantity, imageUri?: string): Promise<void>
   deleteItem(item: InventoryItem): Promise<void>
@@ -21,7 +22,7 @@ export const InventoryContext = React.createContext<IInventoryContext>({} as IIn
 
 export const InventoryProvider: React.FC = (props) => {
   const { loggedInAccount } = useContext(AccountContext)
-  const [myInventory, setMyInventory] = useState(new Map<string, InventoryItem>())
+  const [myInventory, setMyInventory] = useState<Inventory>()
   const [myWatchers, setMyWatchers] = useState(new Map<string, PlentiWatcher>())
 
   const usernameForItem = (item: InventoryItem) =>
@@ -35,7 +36,7 @@ export const InventoryProvider: React.FC = (props) => {
       const path = URLS.inventory(loggedInAccount)
       const onInventoryChange = database()
         .ref(path)
-        .on("value", (snapshot) => setMyInventory(StringMapFromObj(snapshot.val())))
+        .on("value", (snapshot) => setMyInventory(snapshot.val()))
       return () => database().ref(path).off("value", onInventoryChange)
     }
   }, [loggedInAccount])
