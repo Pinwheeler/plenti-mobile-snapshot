@@ -53,31 +53,33 @@ export const NearMeProvider: React.FC = (props) => {
         .orderByChild("latitude")
         // .startAt(latRange.minLat)
         // .endAt(latRange.maxLat)
-        .once("value", (snapshot) => setInventoryWithinLatBounds(StringMapFromObj(snapshot.val())))
+        .on("value", (snapshot) => setInventoryWithinLatBounds(StringMapFromObj(snapshot.val())))
 
-      // return () => database().ref("/inventories").off("value", onLatBoundChange)
+      return () => database().ref("/inventories").off("value", onLatBoundChange)
     }
   }, [lastKnownPosition, user])
 
   useEffect(() => {
     if (lastKnownPosition && lngRange && user) {
-      database()
+      const onLngBoundChange = database()
         .ref("/inventories")
         .orderByChild("longitude")
         // .startAt(lngRange.minLng)
         // .endAt(lngRange.maxLng)
-        .once("value", (snapshot) => setInventoryWithinLngBounds(StringMapFromObj(snapshot.val())))
+        .on("value", (snapshot) => setInventoryWithinLngBounds(StringMapFromObj(snapshot.val())))
 
-      // return () => database().ref("/inventories").off("value", onLngBoundChange)
+      return () => database().ref("/inventories").off("value", onLngBoundChange)
     }
   }, [lastKnownPosition, user])
 
   const inventoriesWithinBounds = useMemo(() => {
     if (inventoriesWithinLatBounds && inventoriesWithinLngBounds) {
       const keys = Array.from(inventoriesWithinLatBounds.keys())
-      const temp = Array.from(inventoriesWithinLatBounds.values())
+      const temp = Array.from(inventoriesWithinLatBounds.values()).filter(
+        (value) => value.accountUid !== loggedInAccount?.uid,
+      )
       inventoriesWithinLngBounds.forEach((val, key) => {
-        if (!keys.includes(key)) {
+        if (key !== loggedInAccount?.uid && !keys.includes(key)) {
           temp.push(val)
         }
       })

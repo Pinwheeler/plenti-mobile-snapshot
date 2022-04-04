@@ -71,6 +71,7 @@ export const AccountProvider: React.FC = (props) => {
         latitude: form.latitude,
         longitude: form.longitude,
         accountUsername: form.username,
+        accountUid: loggedInAccount.uid,
       }
       return Promise.all([
         database().ref(URLS.account.public(loggedInAccount)).update(profileUpdate),

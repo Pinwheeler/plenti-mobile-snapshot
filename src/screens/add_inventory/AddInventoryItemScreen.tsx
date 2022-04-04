@@ -1,7 +1,6 @@
 import { CommonActions, useNavigation } from "@react-navigation/native"
 import React, { useContext, useState } from "react"
-import { Modal } from "react-native"
-import { Portal } from "react-native-paper"
+import { Modal, Portal } from "react-native-paper"
 import { Quantity } from "../../api/models/Quantity"
 import { PlentiItem } from "../../assets/PlentiItemsIndex"
 import ItemSelector from "../../components/item_selector/ItemSelector"
@@ -32,9 +31,9 @@ export const AddInventoryItemScreen = () => {
   return (
     <>
       <TopInfoBar text="What kind of produce?" />
-      <ItemSelector onItemSelect={() => navigation.goBack()} />
+      <ItemSelector onItemSelect={setSelectedItem} />
       <Portal>
-        <Modal visible={!!selectedItem} onDismiss={() => setSelectedItem(undefined)}>
+        <Modal style={{ margin: 20 }} visible={!!selectedItem} onDismiss={() => setSelectedItem(undefined)}>
           <LoggedInGate onClose={() => setSelectedItem(undefined)} account={loggedInAccount} goToAccount={goToAccount}>
             <ProduceItemDetails
               upcertItem={handleAddItem}

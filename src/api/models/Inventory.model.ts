@@ -6,4 +6,5 @@ export interface Inventory {
   longitude: number
   items: { [key: string]: InventoryItem }
   accountUsername: string
+  accountUid: string
 }

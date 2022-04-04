@@ -5,6 +5,7 @@ import { DistancedInventoryItem } from "../../api/views/DistancedInventoryItem.v
 import { Icon } from "../../components/Icon"
 import { IconButton } from "../../components/IconButton"
 import { ProduceItemImage } from "../../components/ProduceItemImage"
+import { fromISOTime, timeDifference } from "../../lib/DateHelper"
 import Theme from "../../lib/Theme"
 
 interface Props {
@@ -22,7 +23,7 @@ export const ConfirmNearbyRequest: React.FC<Props> = (props) => {
 
   const quantityLine = selectedItem.inventoryItem.quantity
   const distanceLine = `${distanceString} away`
-  const stalenessLine = "Staleness Line"
+  const stalenessLine = timeDifference(new Date(), fromISOTime(selectedItem.inventoryItem.updatedAt))
   return (
     <View style={{ backgroundColor: Theme.colors.surface, margin: 30, borderRadius: 5 }}>
       <ProduceItemImage
