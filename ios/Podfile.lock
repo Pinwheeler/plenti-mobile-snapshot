@@ -16,6 +16,9 @@ PODS:
   - EXJSONUtils (0.2.1)
   - EXKeepAwake (10.0.2):
     - ExpoModulesCore
+  - EXLocation (14.0.2):
+    - ExpoModulesCore
+    - UMTaskManagerInterface
   - EXManifests (0.2.4):
     - EXJSONUtils
   - Expo (44.0.6):
@@ -390,6 +393,10 @@ PODS:
     - React-jsi (= 0.64.3)
     - React-perflogger (= 0.64.3)
   - React-jsinspector (0.64.3)
+  - react-native-geolocation-service (5.3.0-beta.4):
+    - React
+  - react-native-pager-view (5.4.9):
+    - React-Core
   - react-native-safe-area-context (3.3.2):
     - React-Core
   - react-native-slider (4.2.1):
@@ -458,6 +465,8 @@ PODS:
     - React-cxxreact (= 0.64.3)
     - React-jsi (= 0.64.3)
     - React-perflogger (= 0.64.3)
+  - RNDeviceInfo (8.7.0):
+    - React-Core
   - RNFBApp (14.7.0):
     - Firebase/CoreOnly (= 8.14.0)
     - React-Core
@@ -486,6 +495,8 @@ PODS:
   - RNScreens (3.10.2):
     - React-Core
     - React-RCTImage
+  - UMTaskManagerInterface (7.1.1):
+    - ExpoModulesCore
   - Yoga (1.14.0)
 
 DEPENDENCIES:
@@ -498,6 +509,7 @@ DEPENDENCIES:
   - EXImagePicker (from `../node_modules/expo-image-picker/ios`)
   - EXJSONUtils (from `../node_modules/expo-json-utils/ios`)
   - EXKeepAwake (from `../node_modules/expo-keep-awake/ios`)
+  - EXLocation (from `../node_modules/expo-location/ios`)
   - EXManifests (from `../node_modules/expo-manifests/ios`)
   - Expo (from `../node_modules/expo/ios`)
   - expo-dev-client (from `../node_modules/expo-dev-client/ios`)
@@ -525,6 +537,8 @@ DEPENDENCIES:
   - React-jsi (from `../node_modules/react-native/ReactCommon/jsi`)
   - React-jsiexecutor (from `../node_modules/react-native/ReactCommon/jsiexecutor`)
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
+  - react-native-geolocation-service (from `../node_modules/react-native-geolocation-service`)
+  - react-native-pager-view (from `../node_modules/react-native-pager-view`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - "react-native-slider (from `../node_modules/@react-native-community/slider`)"
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
@@ -539,6 +553,7 @@ DEPENDENCIES:
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBAuth (from `../node_modules/@react-native-firebase/auth`)"
   - "RNFBCrashlytics (from `../node_modules/@react-native-firebase/crashlytics`)"
@@ -547,6 +562,7 @@ DEPENDENCIES:
   - "RNFBStorage (from `../node_modules/@react-native-firebase/storage`)"
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNScreens (from `../node_modules/react-native-screens`)
+  - UMTaskManagerInterface (from `../node_modules/unimodules-task-manager-interface/ios`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -587,6 +603,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-json-utils/ios"
   EXKeepAwake:
     :path: "../node_modules/expo-keep-awake/ios"
+  EXLocation:
+    :path: "../node_modules/expo-location/ios"
   EXManifests:
     :path: "../node_modules/expo-manifests/ios"
   Expo:
@@ -637,6 +655,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/jsiexecutor"
   React-jsinspector:
     :path: "../node_modules/react-native/ReactCommon/jsinspector"
+  react-native-geolocation-service:
+    :path: "../node_modules/react-native-geolocation-service"
+  react-native-pager-view:
+    :path: "../node_modules/react-native-pager-view"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
   react-native-slider:
@@ -665,6 +687,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/runtimeexecutor"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  RNDeviceInfo:
+    :path: "../node_modules/react-native-device-info"
   RNFBApp:
     :path: "../node_modules/@react-native-firebase/app"
   RNFBAuth:
@@ -681,6 +705,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-gesture-handler"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+  UMTaskManagerInterface:
+    :path: "../node_modules/unimodules-task-manager-interface/ios"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -695,6 +721,7 @@ SPEC CHECKSUMS:
   EXImagePicker: bf4d62532cc2bf217edbe4abbb0014e73e079eac
   EXJSONUtils: 5ee0d5cf76da70ad86f0be1a41cc70f47d69e06f
   EXKeepAwake: bf48d7f740a5cd2befed6cf9a49911d385c6c47d
+  EXLocation: 013b5d07cca26c2d15d998766322e70b7a228b57
   EXManifests: d3464cd2278f4a19cd80c1aa673231570b534c11
   Expo: 534e51e607aba8229293297da5585f4b26f50fa1
   expo-dev-client: 6856be1c9b8a098a23e1099abee01a9d66bc0fa4
@@ -735,6 +762,8 @@ SPEC CHECKSUMS:
   React-jsi: a8b09c29521c798f1783348b37b511ba7b3dbeb3
   React-jsiexecutor: df6abc9fafbecb8e5b7a5fbc5e6d4bd017d594d5
   React-jsinspector: 34e23860273a23695342f58eed3ffd3ba10c31e0
+  react-native-geolocation-service: c0efb872258ed9240f1003a70fca9e9757e5c785
+  react-native-pager-view: 3ee7d4c7697fb3ef788346e834a60cca97ed8540
   react-native-safe-area-context: 584dc04881deb49474363f3be89e4ca0e854c057
   react-native-slider: 241935e3ea8e47599c317f512f96ee8de607d4cb
   React-perflogger: cc76a4254d19640f1d8ad1c66fdee800414b805c
@@ -749,6 +778,7 @@ SPEC CHECKSUMS:
   React-RCTVibration: c7f845861e79eae13dc1e8217a3cf47a3945b504
   React-runtimeexecutor: 493d9abb8b23c3f84e19ae221eeba92cadcb70dc
   ReactCommon: 8fea6422328e2fc093e25c9fac67adbcf0f04fb4
+  RNDeviceInfo: 36286df381fcaf1933ff9d2d3c34ba2abeb2d8d8
   RNFBApp: 097a31d372b3db15b41c7a1a5c429433b0609e12
   RNFBAuth: 41066b6314efb842c5e7df621f0818cde41bf914
   RNFBCrashlytics: 4ec9aae1a1dbb6572d095417392483bec82b07bb
@@ -757,6 +787,7 @@ SPEC CHECKSUMS:
   RNFBStorage: c5e7b02c06014908fa70261836a05fa0ef476d45
   RNGestureHandler: e1099204721a17a89c81fcd1cc2e92143dc040fb
   RNScreens: d6da2b9e29cf523832c2542f47bf1287318b1868
+  UMTaskManagerInterface: 3184c93ecc290bd422c6e344badc89b601e9c29b
   Yoga: e6ecf3fa25af9d4c87e94ad7d5d292eedef49749
 
 PODFILE CHECKSUM: 6bc2e5074a573d61237d459bacaf764f8d07dd40
