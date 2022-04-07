@@ -8,6 +8,8 @@ import { handleUnauthenticatedRequest, StringMapFromObj, URLS } from "../lib/Dat
 import { AccountContext } from "./AccountContext"
 
 interface IChatContext {
+  myConnections: Map<string, Connection>
+  deleteConnection(connection: Connection): Promise<any>
   createConnection(inventoryItem: InventoryItem): Promise<any>
   unreadCount: number
 }
@@ -28,9 +30,18 @@ export const ChatProvider: React.FC = (props) => {
   }, [loggedInAccount])
 
   const value = {
+    myConnections,
     unreadCount: Array.from(myConnections.values())
       .map((con) => con.unreadMessageCount)
       .reduce((a, b) => a + b, 0),
+    deleteConnection: (connection: Connection) => {
+      if (loggedInAccount) {
+        return database()
+          .ref(URLS.connectionsForAccount(loggedInAccount) + `/${connection.partnerUid}`)
+          .remove()
+      }
+      return handleUnauthenticatedRequest("deleteConnection")
+    },
     createConnection: (inventoryItem: InventoryItem) => {
       if (loggedInAccount) {
         const conversation: Conversation = {
@@ -61,7 +72,7 @@ export const ChatProvider: React.FC = (props) => {
           database().ref(`conversations/${conversation.uid}`).set(conversation),
         ])
       }
-      return handleUnauthenticatedRequest("updateAccount")
+      return handleUnauthenticatedRequest("createConnection")
     },
   }
 

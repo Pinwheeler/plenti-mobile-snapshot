@@ -1,9 +1,7 @@
-import React, { useContext, useMemo, useState } from "react"
+import React, { useMemo, useState } from "react"
 import { ScrollView, View } from "react-native"
 import { List, Searchbar } from "react-native-paper"
-import { PlentiItem, plentiItems, ProduceType } from "../../assets/PlentiItemsIndex"
-import { AccountContext } from "../../contexts/AccountContext"
-import { ImageContext } from "../../contexts/ImageContext"
+import { AllPlentiItems, PlentiItem, ProduceType } from "../../assets/PlentiItemsIndex"
 import Theme from "../../lib/Theme"
 import { ProduceGrid } from "../produce_grid/ProduceGrid"
 import { ProduceGridItem } from "../produce_grid/ProduceGridItem"
@@ -20,7 +18,7 @@ const ItemSelector: React.FC<Props> = (props) => {
 
   const categories: Map<ProduceType, PlentiItem[]> = useMemo(() => {
     const c = new Map()
-    plentiItems.forEach((item) => {
+    AllPlentiItems.forEach((item) => {
       if (c.get(item.type) === undefined) {
         c.set(item.type, [])
       }
@@ -29,13 +27,13 @@ const ItemSelector: React.FC<Props> = (props) => {
       c.set(item.type, newArray)
     })
     return c
-  }, [plentiItems])
+  }, [AllPlentiItems])
 
   const filteredItems = useMemo(() => {
-    return plentiItems.filter((item) => {
+    return AllPlentiItems.filter((item) => {
       return item.name.toLowerCase().match(searchText.toLowerCase())
     })
-  }, [searchText, plentiItems])
+  }, [searchText, AllPlentiItems])
 
   const InnerContent = () => {
     if (searchText.length > 0) {
