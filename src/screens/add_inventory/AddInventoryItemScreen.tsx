@@ -1,6 +1,6 @@
 import { CommonActions, useNavigation } from "@react-navigation/native"
 import React, { useContext, useState } from "react"
-import { Modal, Portal } from "react-native-paper"
+
 import { Quantity } from "../../api/models/Quantity"
 import { PlentiItem } from "../../assets/PlentiItemsIndex"
 import ItemSelector from "../../components/item_selector/ItemSelector"

@@ -1,6 +1,7 @@
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs"
+import { Overlay } from "@rneui/base"
 import React, { useContext, useEffect, useState } from "react"
-import { Modal, Portal } from "react-native-paper"
+
 import { HardwareNotification } from "../api/models/HardwareNotification"
 import { HardwareNotificationContent } from "../api/models/HardwareNotificationContent"
 import { AdBanner } from "../components/AdBanner"
@@ -69,19 +70,16 @@ export const TabNav = () => {
         />
       </Tab.Navigator>
       {shouldShowAds && <AdBanner />}
-      <Portal>
-        <Modal
-          visible={!!currentHN}
-          dismissable={false}
-          contentContainerStyle={{
-            backgroundColor: Theme.colors.surface,
-            padding: 15,
-            margin: 15,
-          }}
-        >
-          {currentHN && <HardwareNotificationContent onAcknowledge={handleAckPressed} notification={currentHN} />}
-        </Modal>
-      </Portal>
+      <Overlay
+        isVisible={!!currentHN}
+        style={{
+          backgroundColor: Theme.colors.surface,
+          padding: 15,
+          margin: 15,
+        }}
+      >
+        {currentHN && <HardwareNotificationContent onAcknowledge={handleAckPressed} notification={currentHN} />}
+      </Overlay>
     </>
   )
 }

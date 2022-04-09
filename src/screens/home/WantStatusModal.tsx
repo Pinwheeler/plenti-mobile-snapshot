@@ -1,6 +1,7 @@
+import { Text } from "@rneui/themed"
 import React, { useContext, useState } from "react"
-import { Text, View } from "react-native"
-import { Title } from "react-native-paper"
+import { View } from "react-native"
+
 import { Quantity } from "../../api/models/Quantity"
 import { PlentiItem } from "../../assets/PlentiItemsIndex"
 import { ButtonWithStatus } from "../../components/ButtonWithStatus"
@@ -37,7 +38,9 @@ export const WantStatusModal: React.FC<Props> = (props) => {
 
   return (
     <View style={{ backgroundColor: "white", padding: 15, margin: 15 }}>
-      <Title style={{ marginBottom: 15, textDecorationLine: "underline" }}>{titleText}</Title>
+      <Text h1 style={{ marginBottom: 15, textDecorationLine: "underline" }}>
+        {titleText}
+      </Text>
       <QuantitySelector quantitySelected={setQuantity} selectedItem={item} />
       <Text style={{ paddingBottom: 30 }}>{detailText}</Text>
       <ButtonWithStatus disabled={!quantity} loading={loading} onPress={handleButtonPress}>

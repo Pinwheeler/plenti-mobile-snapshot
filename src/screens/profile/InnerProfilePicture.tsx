@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
-import { Image, StyleSheet } from "react-native"
-import { ActivityIndicator } from "react-native-paper"
+import { ActivityIndicator, Image, StyleSheet } from "react-native"
+
 import { Icon } from "../../components/Icon"
 import { Logger } from "../../lib/Logger"
 import Theme from "../../lib/Theme"

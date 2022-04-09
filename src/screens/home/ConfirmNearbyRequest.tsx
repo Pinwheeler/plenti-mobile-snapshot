@@ -1,6 +1,7 @@
+import { Button, Text } from "@rneui/themed"
 import React from "react"
 import { View } from "react-native"
-import { Button, Text } from "react-native-paper"
+
 import { DistancedInventoryItem } from "../../api/views/DistancedInventoryItem.view"
 import { Icon } from "../../components/Icon"
 import { IconButton } from "../../components/IconButton"
@@ -51,9 +52,7 @@ export const ConfirmNearbyRequest: React.FC<Props> = (props) => {
             </View>
           </View>
         </View>
-        <Button mode="contained" onPress={onConnect}>
-          Connect
-        </Button>
+        <Button onPress={onConnect}>Connect</Button>
       </View>
       <IconButton
         onPress={onCancel}

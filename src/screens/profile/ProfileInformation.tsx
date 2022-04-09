@@ -1,8 +1,9 @@
 import { CommonActions, NavigationContext } from "@react-navigation/native"
+import { Button, Text } from "@rneui/themed"
 import React, { useContext } from "react"
 import { ScrollView, View } from "react-native"
 import openMap, { ShowOptions } from "react-native-open-maps"
-import { Button, Text } from "react-native-paper"
+
 import { IconButton } from "../../components/IconButton"
 import { LoadingIndicator } from "../../components/LoadingIndicator"
 import { H3 } from "../../components/typography"

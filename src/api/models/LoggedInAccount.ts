@@ -1,6 +1,8 @@
 import { fromISOTime, optoISOTime } from "../../lib/DateHelper"
 import { AccountEntity } from "./Account"
 
+export type BlockedUsers = { [blockedUserId: string]: { uid: string; reason: string } }
+
 export function isLoggedInAccount(account: AccountEntity | LoggedInAccountEntity): account is LoggedInAccountEntity {
   return (account as LoggedInAccountEntity).prefersMetric !== undefined
 }
@@ -12,7 +14,7 @@ export class LoggedInAccountEntity extends AccountEntity {
   maxDistance: number // in KM
   premiumUntil?: Date
   iapId: string
-  blockedUsers: { blockedUserId: string; reason?: string }[]
+  blockedUsers: BlockedUsers
 
   constructor(model: LoggedInAccountModel) {
     super(model)
@@ -51,5 +53,5 @@ export interface LoggedInAccountModel {
   maxDistance: number
   premiumUntil?: string
   iapId: string
-  blockedUsers: { blockedUserId: string; reason?: string }[]
+  blockedUsers: BlockedUsers
 }

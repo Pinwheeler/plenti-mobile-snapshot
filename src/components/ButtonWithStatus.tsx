@@ -1,6 +1,6 @@
+import { Button, Text } from "@rneui/themed"
 import React from "react"
-import { ViewStyle } from "react-native"
-import { ActivityIndicator, Button, Text } from "react-native-paper"
+import { ActivityIndicator, ViewStyle } from "react-native"
 
 interface Props {
   success?: boolean

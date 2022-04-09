@@ -1,6 +1,7 @@
 import * as ImagePicker from "expo-image-picker"
 import React, { useContext, useState } from "react"
-import { TouchableRipple } from "react-native-paper"
+import { TouchableOpacity } from "react-native-gesture-handler"
+
 import { LoadingIndicator } from "../../components/LoadingIndicator"
 import { H2 } from "../../components/typography"
 import { AccountContext } from "../../contexts/AccountContext"
@@ -32,11 +33,11 @@ export const UpdateProfilePicture: React.FC = () => {
   }
 
   return (
-    <TouchableRipple style={{ flexDirection: "row", alignItems: "center", marginBottom: 20 }} onPress={selectImage}>
+    <TouchableOpacity style={{ flexDirection: "row", alignItems: "center", marginBottom: 20 }} onPress={selectImage}>
       <>
         <ProfilePicture account={loggedInAccount} updatable loading={loading} />
         <H2 style={{ marginLeft: 15 }}>Edit profile photo</H2>
       </>
-    </TouchableRipple>
+    </TouchableOpacity>
   )
 }

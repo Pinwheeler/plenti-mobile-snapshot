@@ -1,7 +1,8 @@
 import * as ImagePicker from "expo-image-picker"
 import React from "react"
 import { Image, Pressable, Text, View } from "react-native"
-import { TouchableRipple } from "react-native-paper"
+import { TouchableOpacity } from "react-native-gesture-handler"
+
 import { PlentiItem } from "../../../assets/PlentiItemsIndex"
 import Theme from "../../../lib/Theme"
 import { Icon } from "../../Icon"
@@ -81,7 +82,7 @@ export const ProduceImageSelector: React.FC<Props> = (props) => {
           style={{ width: imageSize, height: imageSize, borderRadius: 10 }}
           resizeMode="cover"
         />
-        <TouchableRipple
+        <TouchableOpacity
           onPress={selectImage}
           style={{ width: imageSize, height: imageSize, alignItems: "center", justifyContent: "center" }}
         >
@@ -102,7 +103,7 @@ export const ProduceImageSelector: React.FC<Props> = (props) => {
             <Text>Add Photo</Text>
             <Text>(Optional)</Text>
           </>
-        </TouchableRipple>
+        </TouchableOpacity>
       </View>
     )
   }

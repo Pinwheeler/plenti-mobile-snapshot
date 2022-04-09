@@ -1,23 +1,28 @@
 import { useNavigation } from "@react-navigation/native"
+import { Overlay } from "@rneui/base"
+import { Button, Input } from "@rneui/themed"
 import React, { useContext, useEffect, useState } from "react"
-import { Keyboard, RefreshControl, SafeAreaView, ScrollView, Text, View } from "react-native"
-import { Button, Modal, Portal, TextInput } from "react-native-paper"
-import ConnectContext from "src/connect/ConnectContext"
-import { ConnectionContext } from "src/conversation/ConnectionContext"
-import Theme from "src/lib/Theme"
-import DeviceContext from "src/shared/DeviceContext"
-import { IconType } from "src/shared/icons/Icon"
-import { IconButton } from "src/shared/icons/IconButton"
-import ChatContext from "./ChatContext"
+import { Keyboard, KeyboardEventListener, RefreshControl, SafeAreaView, ScrollView, Text, View } from "react-native"
+import { IconButton } from "../../components/IconButton"
+import { ChatContext } from "../../contexts/ChatContext"
+import { DeviceContext } from "../../contexts/DeviceContext"
+import Theme from "../../lib/Theme"
+
 import ChatItem from "./ChatItem"
+import { ConversationContext } from "./ConversationContext"
 
 const ChatMain = () => {
-  const { messages, sendMessage, refresh, shareLocation } = useContext(ConnectionContext)
-  const { shareLocationModalOpen, setShareLocationModalOpen } = useContext(ChatContext)
-  const { offendingAccount, setOffendingAccount, reportOffendingAccount } = useContext(ConnectContext)
+  const {
+    shareLocation,
+    setShareLocationOpen,
+    shareLocationOpen,
+    offendingAccount,
+    setOffendingAccount,
+    reportOffendingAccount,
+  } = useContext(ConversationContext)
+  const { messages, sendMessage } = useContext(ConversationContext)
   const [reportReason, setReportReason] = useState("")
   const { deviceType } = useContext(DeviceContext)
-  const [refreshing, setRefreshing] = useState(false)
   const [chatMessage, setChatMessage] = useState("")
   const [keyboardOffset, setKeyboardOffset] = useState(0)
   const navigation = useNavigation()
@@ -28,22 +33,22 @@ const ChatMain = () => {
     setChatMessage("")
   }
 
-  const onRefresh = async () => {
-    setRefreshing(true)
-    await refresh()
-    setRefreshing(false)
-  }
+  // const onRefresh = async () => {
+  //   setRefreshing(true)
+  //   await refresh()
+  //   setRefreshing(false)
+  // }
 
   useEffect(() => {
     scrollView?.scrollToEnd()
   }, [messages])
 
-  const handleKeyboardWillShow = (event) => {
+  const handleKeyboardWillShow: KeyboardEventListener = (event) => {
     const keyboardHeight = event.endCoordinates.height
     setKeyboardOffset(keyboardHeight)
   }
 
-  const handleKeyboardWillHide = () => {
+  const handleKeyboardWillHide: KeyboardEventListener = () => {
     setKeyboardOffset(0)
   }
 
@@ -78,7 +83,6 @@ const ChatMain = () => {
         }}
       >
         <ScrollView
-          ref={(scroll) => (scrollView = scroll)}
           style={{
             ...textAreaStyle,
             marginTop: 10,
@@ -89,11 +93,10 @@ const ChatMain = () => {
             flex: 9,
             backgroundColor: Theme.colors.background,
           }}
-          refreshControl={<RefreshControl onRefresh={onRefresh} refreshing={refreshing} />}
         >
           <>
-            {messages.map((message) => {
-              return <ChatItem message={message} key={message.socketString()} />
+            {Array.from(messages.entries()).map(([isoKey, message]) => {
+              return <ChatItem message={message} key={`message_from_${isoKey}`} />
             })}
           </>
         </ScrollView>
@@ -112,85 +115,80 @@ const ChatMain = () => {
         >
           <InputBar onChangeText={setChatMessage} value={chatMessage} onPress={send} />
         </View>
-        <Portal>
-          <Modal
-            visible={shareLocationModalOpen}
-            onDismiss={() => setShareLocationModalOpen(false)}
-            contentContainerStyle={{ backgroundColor: Theme.colors.surface, padding: 15, margin: 15 }}
-          >
-            <Text style={{ textAlign: "center" }}>Are you sure you want to share your pickup location?</Text>
-            <View style={{ height: 18 }} />
-            <Text style={{ textAlign: "center" }}>You can adjust your pickup location on your profile page</Text>
-            <View style={{ height: 18 }} />
-            <View>
-              <View style={{ flexDirection: "row", alignContent: "space-between" }}>
-                <View style={{ width: "40%" }}>
-                  <Button mode="outlined" color={Theme.colors.error} onPress={() => setShareLocationModalOpen(false)}>
-                    Cancel
-                  </Button>
-                </View>
-                <View style={{ width: "20%" }} />
-                <View style={{ width: "40%" }}>
-                  <Button
-                    mode="contained"
-                    onPress={() => {
-                      shareLocation(true)
-                      setShareLocationModalOpen(false)
-                    }}
-                  >
-                    Confirm
-                  </Button>
-                </View>
+        <Overlay
+          isVisible={shareLocationOpen}
+          onBackdropPress={() => setShareLocationOpen(false)}
+          style={{ backgroundColor: Theme.colors.surface, padding: 15, margin: 15 }}
+        >
+          <Text style={{ textAlign: "center" }}>Are you sure you want to share your pickup location?</Text>
+          <View style={{ height: 18 }} />
+          <Text style={{ textAlign: "center" }}>You can adjust your pickup location on your profile page</Text>
+          <View style={{ height: 18 }} />
+          <View>
+            <View style={{ flexDirection: "row", alignContent: "space-between" }}>
+              <View style={{ width: "40%" }}>
+                <Button onPress={() => setShareLocationOpen(false)}>
+                  {/**color={Theme.colors.error} */}
+                  Cancel
+                </Button>
+              </View>
+              <View style={{ width: "20%" }} />
+              <View style={{ width: "40%" }}>
+                <Button
+                  onPress={() => {
+                    shareLocation(true)
+                    setShareLocationOpen(false)
+                  }}
+                >
+                  Confirm
+                </Button>
               </View>
             </View>
-          </Modal>
-        </Portal>
-        <Portal>
-          <Modal
-            visible={offendingAccount !== undefined}
-            onDismiss={() => setOffendingAccount(undefined)}
-            contentContainerStyle={{ backgroundColor: Theme.colors.surface, padding: 15, margin: 15 }}
-          >
-            <Text style={{ textAlign: "center" }}>{`Report ${offendingAccount?.username ?? "chat partner"}?`}</Text>
-            <View style={{ height: 18 }} />
+          </View>
+        </Overlay>
+        <Overlay
+          isVisible={offendingAccount !== undefined}
+          onBackdropPress={() => setOffendingAccount(undefined)}
+          style={{ backgroundColor: Theme.colors.surface, padding: 15, margin: 15 }}
+        >
+          <Text style={{ textAlign: "center" }}>{`Report ${offendingAccount?.username ?? "chat partner"}?`}</Text>
+          <View style={{ height: 18 }} />
 
-            <Text style={{ fontStyle: "italic", marginBottom: 5 }}>
-              <Text style={{ fontWeight: "bold" }}>Warning: </Text>After your report you will no longer see content from
-              this user, nor will you be able to chat with them.
-            </Text>
-            <TextInput
-              mode="outlined"
-              onChangeText={(text) => setReportReason(text)}
-              value={reportReason}
-              placeholder="Reson for report"
-              multiline={true}
-            />
-            <View style={{ height: 18 }} />
-            <View>
-              <View style={{ flexDirection: "row", alignContent: "space-between" }}>
-                <View style={{ width: "40%" }}>
-                  <Button mode="outlined" color={Theme.colors.error} onPress={() => setOffendingAccount(undefined)}>
-                    Cancel
-                  </Button>
-                </View>
-                <View style={{ width: "20%" }} />
-                <View style={{ width: "40%" }}>
-                  <Button
-                    mode="contained"
-                    onPress={() => {
-                      reportOffendingAccount(reportReason)
-                      setOffendingAccount(undefined)
-                      setReportReason("")
-                      navigation.goBack()
-                    }}
-                  >
-                    Confirm
-                  </Button>
-                </View>
+          <Text style={{ fontStyle: "italic", marginBottom: 5 }}>
+            <Text style={{ fontWeight: "bold" }}>Warning: </Text>After your report you will no longer see content from
+            this user, nor will you be able to chat with them.
+          </Text>
+          <Input
+            onChangeText={(text) => setReportReason(text)}
+            value={reportReason}
+            placeholder="Reson for report"
+            multiline={true}
+          />
+          <View style={{ height: 18 }} />
+          <View>
+            <View style={{ flexDirection: "row", alignContent: "space-between" }}>
+              <View style={{ width: "40%" }}>
+                <Button onPress={() => setOffendingAccount(undefined)}>
+                  {/**color={Theme.colors.error}  */}
+                  Cancel
+                </Button>
+              </View>
+              <View style={{ width: "20%" }} />
+              <View style={{ width: "40%" }}>
+                <Button
+                  onPress={() => {
+                    reportOffendingAccount(reportReason)
+                    setOffendingAccount(undefined)
+                    setReportReason("")
+                    navigation.goBack()
+                  }}
+                >
+                  Confirm
+                </Button>
               </View>
             </View>
-          </Modal>
-        </Portal>
+          </View>
+        </Overlay>
       </SafeAreaView>
     </>
   )
@@ -198,7 +196,7 @@ const ChatMain = () => {
 
 interface InputBarProps {
   onChangeText: (text: string) => void
-  onPress: VoidFunction
+  onPress(): void
   value: string
 }
 
@@ -206,7 +204,7 @@ const InputBar: React.FC<InputBarProps> = (props) => {
   const { onChangeText, value, onPress } = props
   return (
     <>
-      <TextInput
+      <Input
         style={{
           position: "absolute",
           bottom: 0,
@@ -219,11 +217,10 @@ const InputBar: React.FC<InputBarProps> = (props) => {
         value={value}
         placeholder="Type chat message here..."
         multiline={true}
-        underlineColor="transparent"
         underlineColorAndroid="transparent"
       />
       <IconButton
-        type={IconType.play}
+        type={"play"}
         onPress={onPress}
         color={"white"}
         size={24}

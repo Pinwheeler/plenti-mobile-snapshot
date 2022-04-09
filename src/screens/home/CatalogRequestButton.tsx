@@ -1,7 +1,8 @@
 import { CommonActions, useNavigation } from "@react-navigation/native"
+import { Button, Text } from "@rneui/themed"
 import React from "react"
 import { View, ViewProps } from "react-native"
-import { Button, Text } from "react-native-paper"
+
 import Theme from "../../lib/Theme"
 
 export const CatalogRequestButton: React.FC<ViewProps> = (props) => {
@@ -34,10 +35,7 @@ export const CatalogRequestButton: React.FC<ViewProps> = (props) => {
         >
           Don't see what you're looking for?
         </Text>
-        <Button
-          mode="contained"
-          onPress={() => navigation.dispatch(CommonActions.navigate({ name: "CatalogRequest" }))}
-        >
+        <Button onPress={() => navigation.dispatch(CommonActions.navigate({ name: "CatalogRequest" }))}>
           Click Here
         </Button>
       </View>

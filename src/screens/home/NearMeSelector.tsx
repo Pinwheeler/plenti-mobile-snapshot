@@ -1,7 +1,8 @@
 import { CommonActions, useNavigation } from "@react-navigation/native"
+import { Overlay, Text } from "@rneui/themed"
 import React, { useContext, useEffect, useMemo, useState } from "react"
 import { TouchableOpacity, View } from "react-native"
-import { Modal, Paragraph, Portal } from "react-native-paper"
+
 import { IconButton } from "../../components/IconButton"
 import LoggedInGate from "../../components/LoggedInGate"
 import { ProduceGrid } from "../../components/produce_grid/ProduceGrid"
@@ -57,26 +58,20 @@ export const NearMeSelector: React.FC = () => {
           <NearMeGridItem item={item} key={`near-me-item-${item.inventoryItem.uid}`} />
         ))}
       </ProduceGrid>
-      <Portal>
-        <Modal visible={!!selectedItem} onDismiss={() => setSelectedItem(undefined)}>
-          {!!selectedItem && (
-            <LoggedInGate
-              onClose={() => setSelectedItem(undefined)}
-              account={loggedInAccount}
-              goToAccount={goToAccount}
-            >
-              {loggedInAccount && (
-                <ConfirmNearbyRequest
-                  selectedItem={selectedItem}
-                  distanceString={distanceInPreferredUnits(selectedItem.distance)}
-                  onCancel={onCancel}
-                  onConnect={onConnect}
-                />
-              )}
-            </LoggedInGate>
-          )}
-        </Modal>
-      </Portal>
+      <Overlay isVisible={!!selectedItem} onDismiss={() => setSelectedItem(undefined)}>
+        {!!selectedItem && (
+          <LoggedInGate onClose={() => setSelectedItem(undefined)} account={loggedInAccount} goToAccount={goToAccount}>
+            {loggedInAccount && (
+              <ConfirmNearbyRequest
+                selectedItem={selectedItem}
+                distanceString={distanceInPreferredUnits(selectedItem.distance)}
+                onCancel={onCancel}
+                onConnect={onConnect}
+              />
+            )}
+          </LoggedInGate>
+        )}
+      </Overlay>
       {showUpgradeAd && (
         <View
           style={{
@@ -109,7 +104,7 @@ export const NearMeSelector: React.FC = () => {
                 position: "relative",
               }}
             >
-              <Paragraph style={{ fontSize: 17, position: "absolute", left: 15 }}>Seeking something else?</Paragraph>
+              <Text style={{ fontSize: 17, position: "absolute", left: 15 }}>Seeking something else?</Text>
               <IconButton
                 style={{ position: "absolute", right: 5, height: 30, width: 30 }}
                 type={"times"}

@@ -1,7 +1,7 @@
 import { NavigationContainer } from "@react-navigation/native"
 import * as Location from "expo-location"
 import React from "react"
-import { Provider } from "react-native-paper"
+
 import { ErrorBoundary } from "./src/components/ErrorBoundary"
 import { ContextStack } from "./src/contexts/ContextStack"
 import Theme from "./src/lib/Theme"

@@ -1,10 +1,9 @@
-import React from "react";
-import { View } from "react-native";
-import { ActivityIndicator } from "react-native-paper";
-import { H3 } from "./typography";
+import React from "react"
+import { View } from "react-native"
+import { H3 } from "./typography"
 
 interface Props {
-  thingThatIsLoading: string;
+  thingThatIsLoading: string
 }
 
 export const LoadingIndicator: React.FC<Props> = (props) => {
@@ -13,5 +12,5 @@ export const LoadingIndicator: React.FC<Props> = (props) => {
       <ActivityIndicator />
       <H3>{`Loading ${props.thingThatIsLoading}`}</H3>
     </View>
-  );
-};
+  )
+}

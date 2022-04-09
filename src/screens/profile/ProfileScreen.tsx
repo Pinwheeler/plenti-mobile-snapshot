@@ -1,20 +1,20 @@
-import React, { useContext } from "react";
-import { View } from "react-native";
-import { Text } from "react-native-paper";
-import { AccountContext } from "../../contexts/AccountContext";
-import { LoginSignupSelector } from "./LoginSignupSelector";
-import { ProfileInformation } from "./ProfileInformation";
+import { Text } from "@rneui/themed"
+import React, { useContext } from "react"
+import { View } from "react-native"
+import { AccountContext } from "../../contexts/AccountContext"
+import { LoginSignupSelector } from "./LoginSignupSelector"
+import { ProfileInformation } from "./ProfileInformation"
 
 export const ProfileScreen: React.FC = () => {
-  const { loggedInAccount } = useContext(AccountContext);
+  const { loggedInAccount } = useContext(AccountContext)
 
   const InnerComponent = () => {
     if (loggedInAccount) {
-      return <ProfileInformation />;
+      return <ProfileInformation />
     } else {
-      return <LoginSignupSelector />;
+      return <LoginSignupSelector />
     }
-  };
+  }
 
   return (
     <View style={{ paddingHorizontal: 15, height: "100%" }}>
@@ -23,5 +23,5 @@ export const ProfileScreen: React.FC = () => {
         <Text>Version Information Here</Text>
       </View>
     </View>
-  );
-};
+  )
+}

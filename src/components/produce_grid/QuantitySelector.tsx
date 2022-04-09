@@ -1,6 +1,7 @@
+import { Button, Text } from "@rneui/themed"
 import React from "react"
 import { View } from "react-native"
-import { Button, Text, Title } from "react-native-paper"
+
 import { Quantity } from "../../api/models/Quantity"
 import { PlentiItem } from "../../assets/PlentiItemsIndex"
 
@@ -16,7 +17,7 @@ export const QuantitySelector: React.FC<Props> = (props) => {
 
   return (
     <View style={{ backgroundColor: "white", padding: 15, margin: 15 }}>
-      <Title style={{ marginBottom: 15, textDecorationLine: "underline" }}>{`How many ${displayName}?`}</Title>
+      <Text h1 style={{ marginBottom: 15, textDecorationLine: "underline" }}>{`How many ${displayName}?`}</Text>
       <QuantitySelectorItem quantity={"A Little"} quantitySelected={quantitySelected} />
       <QuantitySelectorItem quantity={"Some"} quantitySelected={quantitySelected} />
       <QuantitySelectorItem quantity={"A Lot"} quantitySelected={quantitySelected} />
@@ -32,7 +33,7 @@ interface ItemProps {
 const QuantitySelectorItem: React.FC<ItemProps> = (props) => {
   const { quantitySelected, quantity } = props
   return (
-    <Button onPress={() => quantitySelected(quantity)} mode="contained" style={{ marginVertical: 10 }}>
+    <Button onPress={() => quantitySelected(quantity)} style={{ marginVertical: 10 }}>
       <Text>{props.quantity}</Text>
     </Button>
   )

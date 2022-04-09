@@ -1,8 +1,8 @@
 import { useNavigation } from "@react-navigation/native"
+import { Button, Overlay, Text } from "@rneui/themed"
 import { Formik } from "formik"
 import React, { useContext, useState } from "react"
-import { ScrollView, View } from "react-native"
-import { ActivityIndicator, Button, Modal, Portal, Text } from "react-native-paper"
+import { ActivityIndicator, ScrollView, View } from "react-native"
 import * as yup from "yup"
 import { AccountUpdateForm } from "../../api/forms/AccountUpdateForm"
 import { LoadingIndicator } from "../../components/LoadingIndicator"
@@ -127,7 +127,7 @@ export const UpdateProfileScreen = () => {
             {loading ? (
               <ActivityIndicator />
             ) : (
-              <Button mode="contained" disabled={!editsMade} style={{ marginBottom: 20 }} onPress={handleSubmit}>
+              <Button disabled={!editsMade} style={{ marginBottom: 20 }} onPress={handleSubmit}>
                 Submit
               </Button>
             )}
@@ -135,67 +135,56 @@ export const UpdateProfileScreen = () => {
           </ScrollView>
         )}
       </Formik>
-      <Portal>
-        <Modal
-          visible={successModalVisible}
-          onDismiss={handleDismiss}
-          contentContainerStyle={{
-            backgroundColor: Theme.colors.surface,
-            padding: 15,
-            margin: 15,
+      <Overlay
+        isVisible={successModalVisible}
+        onBackdropPress={handleDismiss}
+        style={{ backgroundColor: Theme.colors.surface, padding: 15, margin: 15 }}
+      >
+        <H2
+          style={{
+            marginBottom: 15,
+            alignItems: "center",
           }}
         >
-          <H2
-            style={{
-              marginBottom: 15,
-              alignItems: "center",
-            }}
-          >
-            Update Successful
-          </H2>
-          <Button
-            mode="contained"
-            onPress={() => {
-              handleDismiss()
-              navigation.goBack()
-            }}
-          >
-            <Text>Okay</Text>
-          </Button>
-        </Modal>
-      </Portal>
-      <Portal>
-        <Modal
-          visible={geocodeFailModalVisible}
-          onDismiss={handleDismiss}
-          contentContainerStyle={{
-            backgroundColor: Theme.colors.surface,
-            padding: 15,
-            margin: 15,
+          Update Successful
+        </H2>
+        <Button
+          onPress={() => {
+            handleDismiss()
+            navigation.goBack()
           }}
         >
-          <H2
-            style={{
-              marginBottom: 15,
-              alignItems: "center",
-            }}
-          >
-            Update Failed
-          </H2>
-          <Text
-            style={{
-              marginBottom: 15,
-              alignItems: "center",
-            }}
-          >
-            We couldn't validate that the input address resulted in a physical location. Please check your address and
-            try again. You can also try being more generic. Just a city/state should do.
-          </Text>
-          <Button mode="contained" onPress={handleDismiss}>
-            Okay
-          </Button>
-        </Modal>
-      </Portal>
+          <Text>Okay</Text>
+        </Button>
+      </Overlay>
+      <Overlay
+        isVisible={geocodeFailModalVisible}
+        onBackdropPress={handleDismiss}
+        style={{
+          backgroundColor: Theme.colors.surface,
+          padding: 15,
+          margin: 15,
+        }}
+      >
+        <H2
+          style={{
+            marginBottom: 15,
+            alignItems: "center",
+          }}
+        >
+          Update Failed
+        </H2>
+        <Text
+          style={{
+            marginBottom: 15,
+            alignItems: "center",
+          }}
+        >
+          We couldn't validate that the input address resulted in a physical location. Please check your address and try
+          again. You can also try being more generic. Just a city/state should do.
+        </Text>
+        <Button onPress={handleDismiss}>Okay</Button>
+      </Overlay>
     </>
   )
 }

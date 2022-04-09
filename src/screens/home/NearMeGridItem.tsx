@@ -1,6 +1,7 @@
+import { Text } from "@rneui/themed"
 import React, { useContext, useEffect, useState } from "react"
 import { View } from "react-native"
-import { Paragraph } from "react-native-paper"
+
 import { DistancedInventoryItem } from "../../api/views/DistancedInventoryItem.view"
 import { itemForName } from "../../assets/PlentiItemsIndex"
 import { ProduceGridItem } from "../../components/produce_grid/ProduceGridItem"
@@ -46,10 +47,10 @@ export const NearMeGridItem: React.FC<Props> = (props) => {
   return (
     <ProduceGridItem plentiItem={plentiItem} onPress={() => setSelectedItem(item)}>
       <View style={{ flexDirection: "row" }}>
-        <Paragraph style={{ color: Theme.colors.secondaryText }}>{displayDistance}</Paragraph>
-        <Paragraph style={{ marginLeft: "auto" }}>
+        <Text style={{ color: Theme.colors.secondaryText }}>{displayDistance}</Text>
+        <Text style={{ marginLeft: "auto" }}>
           <StalenessIcon date={fromISOTime(item.inventoryItem.updatedAt)} />
-        </Paragraph>
+        </Text>
       </View>
     </ProduceGridItem>
   )

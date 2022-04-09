@@ -1,6 +1,7 @@
+import { Text } from "@rneui/themed"
 import React from "react"
 import { View } from "react-native"
-import { Paragraph } from "react-native-paper"
+
 import { InventoryItem } from "../../api/models/InventoryItem"
 import { itemForName } from "../../assets/PlentiItemsIndex"
 import { ProduceGridItem } from "../../components/produce_grid/ProduceGridItem"
@@ -25,10 +26,10 @@ export const InventoryItemGridItem: React.FC<Props> = (props) => {
   return (
     <ProduceGridItem onPress={onPress} plentiItem={item} imageURL={inventoryItem.imageUrl}>
       <View style={{ flexDirection: "row" }}>
-        <Paragraph style={{ color: Theme.colors.secondaryText }}>{inventoryItem.quantity}</Paragraph>
-        <Paragraph style={{ marginLeft: "auto" }}>
+        <Text style={{ color: Theme.colors.secondaryText }}>{inventoryItem.quantity}</Text>
+        <Text style={{ marginLeft: "auto" }}>
           <StalenessIcon date={fromISOTime(inventoryItem.updatedAt)} />
-        </Paragraph>
+        </Text>
       </View>
     </ProduceGridItem>
   )

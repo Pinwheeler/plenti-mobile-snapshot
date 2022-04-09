@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react"
 import { ScrollView, View } from "react-native"
-import { List, Searchbar } from "react-native-paper"
+
 import { AllPlentiItems, PlentiItem, ProduceType } from "../../assets/PlentiItemsIndex"
 import Theme from "../../lib/Theme"
 import { ProduceGrid } from "../produce_grid/ProduceGrid"

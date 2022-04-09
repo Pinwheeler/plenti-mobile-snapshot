@@ -1,5 +1,5 @@
 import React from "react"
-import { Button, Text } from "react-native-paper"
+
 import { Quantity } from "../../api/models/Quantity"
 
 interface ItemProps {

@@ -1,6 +1,7 @@
 import database from "@react-native-firebase/database"
 import React, { useContext, useEffect, useState } from "react"
 import uuid from "react-native-uuid"
+import { ChatMessage } from "../api/models/ChatMessage"
 import { Connection } from "../api/models/Connection"
 import { Conversation } from "../api/models/Conversation"
 import { InventoryItem } from "../api/models/InventoryItem"
@@ -8,10 +9,10 @@ import { handleUnauthenticatedRequest, StringMapFromObj, URLS } from "../lib/Dat
 import { AccountContext } from "./AccountContext"
 
 interface IChatContext {
+  unreadCount: number
   myConnections: Map<string, Connection>
   deleteConnection(connection: Connection): Promise<any>
   createConnection(inventoryItem: InventoryItem): Promise<any>
-  unreadCount: number
 }
 
 export const ChatContext = React.createContext({} as IChatContext)

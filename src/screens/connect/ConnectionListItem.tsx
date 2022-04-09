@@ -1,6 +1,6 @@
 import { CommonActions, useNavigation } from "@react-navigation/native"
 import React, { useContext, useEffect, useState } from "react"
-import { Text, TouchableRipple } from "react-native-paper"
+
 import { AccountEntity } from "../../api/models/Account"
 import { Connection } from "../../api/models/Connection"
 import { AccountContext } from "../../contexts/AccountContext"
@@ -8,6 +8,8 @@ import { ChatContext } from "../../contexts/ChatContext"
 import Theme from "../../lib/Theme"
 import database from "@react-native-firebase/database"
 import { LoadingIndicator } from "../../components/LoadingIndicator"
+import { Text } from "@rneui/themed"
+import { TouchableOpacity } from "react-native-gesture-handler"
 
 interface Props {
   connection: Connection
@@ -45,12 +47,12 @@ export const ConnectionListItem: React.FC<Props> = (props) => {
 
   return (
     <>
-      <TouchableRipple
+      <TouchableOpacity
         style={{
           flexDirection: "row",
           padding: 15,
         }}
-        underlayColor={Theme.colors.primary}
+        // underlayColor={Theme.colors.primary}
         onPress={() => {
           navigation.dispatch(CommonActions.navigate({ name: "Chat", params: { connection, partnerAccount } }))
         }}
@@ -59,7 +61,7 @@ export const ConnectionListItem: React.FC<Props> = (props) => {
           <Text style={{ color: Theme.colors.notification }}>{unread ? "⬤\t" : ""}</Text>
           <Text style={{ textAlign: "left" }}>{partnerAccount.username}</Text>
         </Text>
-      </TouchableRipple>
+      </TouchableOpacity>
     </>
   )
 }

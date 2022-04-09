@@ -1,6 +1,6 @@
 import React from "react"
-import { View } from "react-native"
-import { ActivityIndicator } from "react-native-paper"
+import { ActivityIndicator, View } from "react-native"
+
 import { H2 } from "../components/typography"
 import Theme from "../lib/Theme"
 

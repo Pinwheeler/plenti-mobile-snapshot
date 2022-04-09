@@ -1,6 +1,7 @@
+import { Button, Text } from "@rneui/themed"
 import React from "react"
 import { View } from "react-native"
-import { Button, Text, Title } from "react-native-paper"
+
 import { Icon } from "../../components/Icon"
 import Theme from "../../lib/Theme"
 import { HardwareNotification } from "./HardwareNotification"
@@ -14,7 +15,7 @@ export const HardwareNotificationContent: React.FC<Props> = (props) => {
   const { notification } = props
   return (
     <View style={{ position: "relative", justifyContent: "center", paddingTop: 10 }}>
-      <Title>{notification.title}</Title>
+      <Text h1>{notification.title}</Text>
       {notification.iconName && (
         <View
           style={{
@@ -46,7 +47,7 @@ export const HardwareNotificationContent: React.FC<Props> = (props) => {
       )}
       <Text>{notification.description}</Text>
       {!notification.blocking && (
-        <Button style={{ marginTop: 20 }} mode="contained" onPress={props.onAcknowledge}>
+        <Button style={{ marginTop: 20 }} onPress={props.onAcknowledge}>
           Okay!
         </Button>
       )}

@@ -1,9 +1,11 @@
 import { CommonActions, useNavigation } from "@react-navigation/native"
+import { Button, Overlay, Text } from "@rneui/themed"
 import React, { useContext, useState } from "react"
 import { ScrollView, View } from "react-native"
-import { Button, FAB, Modal, Portal, Text, Title } from "react-native-paper"
+
 import { InventoryItem } from "../../api/models/InventoryItem"
 import { Quantity } from "../../api/models/Quantity"
+import { IconButton } from "../../components/IconButton"
 import { ProduceItemDetails } from "../../components/produce_grid/modify_inventory/ProduceItemDetails"
 import { ProduceGrid } from "../../components/produce_grid/ProduceGrid"
 import { AccountContext } from "../../contexts/AccountContext"
@@ -90,53 +92,50 @@ export const InventoryList = () => {
   return (
     <View style={{ flex: 1 }}>
       <Content />
-      <FAB icon={"plus"} onPress={onAdd} style={{ position: "absolute", right: 15, bottom: 15 }} />
-      <Portal>
-        <Modal visible={!!selectedItem} onDismiss={() => setSelectedItem(undefined)}>
-          <ProduceItemDetails
-            upcertItem={handleUpcertItem}
-            uploadNewProduceImage={uploadNewProduceImage}
-            loggedInAccount={loggedInAccount!}
-            selectedItem={selectedItem}
-            onClose={() => setSelectedItem(undefined)}
-            onDelete={() => handleDeleteItem(selectedItem)}
-          />
-        </Modal>
-      </Portal>
-      <Portal>
-        <>
-          <Modal visible={locationGateVisible} onDismiss={onClose}>
-            <View style={{ backgroundColor: "white", padding: 15, margin: 15 }}>
-              <Title>Error</Title>
-              <Text style={{ marginVertical: 15, textAlign: "center" }}>
-                You must have a Pickup Location (latitude/longitude) set before you can add to your inventory.
-              </Text>
-              <Text style={{ marginTop: 15, textAlign: "center" }}>You can set this up on the</Text>
-              <Text style={{ textAlign: "center" }}>Profile Screen</Text>
-              <Button onPress={goToProfile} mode="contained" style={{ marginTop: 15 }}>
-                Go To Profile Screen
-              </Button>
-              <Button style={{ marginTop: 20 }} onPress={onClose} mode="outlined">
-                Close
-              </Button>
-            </View>
-          </Modal>
-          <Modal visible={loginGateVisible} onDismiss={onClose}>
-            <View style={{ backgroundColor: "white", padding: 15, margin: 15 }}>
-              <Title>Error</Title>
-              <Text style={{ marginVertical: 15, textAlign: "center" }}>
-                You must have an account to add to your Inventory.
-              </Text>
-              <Button onPress={goToAccount} mode="contained" style={{ marginBottom: 15 }}>
-                Go To Login
-              </Button>
-              <Button onPress={onClose} mode="outlined">
-                Close
-              </Button>
-            </View>
-          </Modal>
-        </>
-      </Portal>
+      <IconButton type={"plus"} onPress={onAdd} style={{ position: "absolute", right: 15, bottom: 15 }} />
+      <Overlay isVisible={!!selectedItem} onBackdropPress={() => setSelectedItem(undefined)}>
+        <ProduceItemDetails
+          upcertItem={handleUpcertItem}
+          uploadNewProduceImage={uploadNewProduceImage}
+          loggedInAccount={loggedInAccount!}
+          selectedItem={selectedItem}
+          onClose={() => setSelectedItem(undefined)}
+          onDelete={() => handleDeleteItem(selectedItem)}
+        />
+      </Overlay>
+      <Overlay isVisible={locationGateVisible} onBackdropPress={onClose}>
+        <View style={{ backgroundColor: "white", padding: 15, margin: 15 }}>
+          <Text h1>Error</Text>
+          <Text style={{ marginVertical: 15, textAlign: "center" }}>
+            You must have a Pickup Location (latitude/longitude) set before you can add to your inventory.
+          </Text>
+          <Text style={{ marginTop: 15, textAlign: "center" }}>You can set this up on the</Text>
+          <Text style={{ textAlign: "center" }}>Profile Screen</Text>
+          <Button onPress={goToProfile} style={{ marginTop: 15 }}>
+            Go To Profile Screen
+          </Button>
+          <Button style={{ marginTop: 20 }} onPress={onClose}>
+            {" "}
+            {/**mode="outlined" */}
+            Close
+          </Button>
+        </View>
+      </Overlay>
+      <Overlay isVisible={loginGateVisible} onBackdropPress={onClose}>
+        <View style={{ backgroundColor: "white", padding: 15, margin: 15 }}>
+          <Text h1>Error</Text>
+          <Text style={{ marginVertical: 15, textAlign: "center" }}>
+            You must have an account to add to your Inventory.
+          </Text>
+          <Button onPress={goToAccount} style={{ marginBottom: 15 }}>
+            Go To Login
+          </Button>
+          <Button onPress={onClose}>
+            {/**mode="outlined" */}
+            Close
+          </Button>
+        </View>
+      </Overlay>
     </View>
   )
 }

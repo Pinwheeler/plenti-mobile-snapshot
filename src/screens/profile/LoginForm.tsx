@@ -1,8 +1,9 @@
 import { ReactNativeFirebase } from "@react-native-firebase/app"
+import { Button } from "@rneui/themed"
 import { Formik } from "formik"
 import React, { useContext, useState } from "react"
-import { View } from "react-native"
-import { ActivityIndicator, Button } from "react-native-paper"
+import { ActivityIndicator, View } from "react-native"
+
 import { AccountLoginForm } from "../../api/forms/AccountLoginForm"
 import { TextField } from "../../components/TextField"
 import { AuthContext } from "../../contexts/AuthContext"
@@ -76,7 +77,6 @@ const LoginForm: React.FC = () => {
           ) : (
             <Button
               style={{ backgroundColor: Theme.colors.accent, marginTop: 15 }}
-              mode="contained"
               onPress={() => {
                 handleSubmit()
               }}

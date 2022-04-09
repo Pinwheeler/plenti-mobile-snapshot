@@ -1,8 +1,9 @@
 import { ReactNativeFirebase } from "@react-native-firebase/app"
 import storage from "@react-native-firebase/storage"
+import { Button, Text } from "@rneui/themed"
 import React, { useState } from "react"
 import { Dimensions, View } from "react-native"
-import { Button, Text, Title } from "react-native-paper"
+
 import { InventoryItem } from "../../../api/models/InventoryItem"
 import { LoggedInAccountEntity } from "../../../api/models/LoggedInAccount"
 import { Quantity } from "../../../api/models/Quantity"
@@ -93,7 +94,7 @@ export const ProduceItemDetails: React.FC<Props> = (props) => {
 
   return (
     <View style={{ backgroundColor: "white", padding: 15, margin: 15 }}>
-      <Title style={{ marginBottom: 15, textDecorationLine: "underline" }}>{`Listing: ${displayName}`}</Title>
+      <Text h1 style={{ marginBottom: 15, textDecorationLine: "underline" }}>{`Listing: ${displayName}`}</Text>
       {error && <Text style={{ color: Theme.colors.error }}>{error.message}</Text>}
       <QuantitySelectorItem currentQuantity={quantity} quantity={"A Little"} quantitySelected={setQuantity} />
       <QuantitySelectorItem currentQuantity={quantity} quantity={"Some"} quantitySelected={setQuantity} />
@@ -110,7 +111,6 @@ export const ProduceItemDetails: React.FC<Props> = (props) => {
           onPress={() => {
             onClose()
           }}
-          mode="outlined"
         >
           Close
         </Button>
@@ -128,8 +128,8 @@ export const ProduceItemDetails: React.FC<Props> = (props) => {
       {itsAnInventoryItem && (
         <Button
           onPress={handleDeletePressed}
-          mode={confirmingDelete ? "contained" : "outlined"}
-          color={Theme.colors.error}
+          // mode={confirmingDelete ? "contained" : "outlined"}
+          // color={Theme.colors.error}
           style={{ marginTop: 15 }}
         >
           {confirmingDelete ? "Confirm" : "Delete Listing"}
@@ -150,9 +150,9 @@ const QuantitySelectorItem: React.FC<ItemProps> = (props) => {
   const selected = quantity === currentQuantity
   return (
     <Button
-      color={selected ? Theme.colors.accent : "white"}
+      // color={selected ? Theme.colors.accent : "white"}
       onPress={() => quantitySelected(quantity)}
-      mode="contained"
+      // mode="contained"
       style={{ marginVertical: 5 }}
     >
       <Text>{props.quantity}</Text>
