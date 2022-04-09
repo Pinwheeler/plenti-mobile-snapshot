@@ -1,4 +1,4 @@
-import { Text } from "@rneui/themed"
+import { Text, useTheme } from "@rneui/themed"
 import React from "react"
 import { View } from "react-native"
 
@@ -7,7 +7,6 @@ import { itemForName } from "../../assets/PlentiItemsIndex"
 import { ProduceGridItem } from "../../components/produce_grid/ProduceGridItem"
 import { StalenessIcon } from "../../components/produce_grid/StalenessIcon"
 import { fromISOTime } from "../../lib/DateHelper"
-import Theme from "../../lib/Theme"
 
 interface Props {
   inventoryItem: InventoryItem
@@ -16,6 +15,7 @@ interface Props {
 
 export const InventoryItemGridItem: React.FC<Props> = (props) => {
   const { inventoryItem, onPress } = props
+  const { theme } = useTheme()
 
   const item = itemForName(inventoryItem.plentiItemName)
 
@@ -26,7 +26,7 @@ export const InventoryItemGridItem: React.FC<Props> = (props) => {
   return (
     <ProduceGridItem onPress={onPress} plentiItem={item} imageURL={inventoryItem.imageUrl}>
       <View style={{ flexDirection: "row" }}>
-        <Text style={{ color: Theme.colors.secondaryText }}>{inventoryItem.quantity}</Text>
+        <Text style={{ color: theme.colors.grey2 }}>{inventoryItem.quantity}</Text>
         <Text style={{ marginLeft: "auto" }}>
           <StalenessIcon date={fromISOTime(inventoryItem.updatedAt)} />
         </Text>

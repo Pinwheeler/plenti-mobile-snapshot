@@ -1,5 +1,5 @@
 import { ReactNativeFirebase } from "@react-native-firebase/app"
-import { Button } from "@rneui/themed"
+import { Button, useTheme } from "@rneui/themed"
 import { Formik } from "formik"
 import React, { useContext, useState } from "react"
 import { ActivityIndicator, View } from "react-native"
@@ -9,10 +9,10 @@ import { AccountSignupForm } from "../../api/forms/AccountSignupForm"
 import { TextField } from "../../components/TextField"
 import { AuthContext } from "../../contexts/AuthContext"
 import { Logger } from "../../lib/Logger"
-import Theme from "../../lib/Theme"
 
 const SignupForm: React.FC = () => {
   const { signup } = useContext(AuthContext)
+  const { theme } = useTheme()
   const [loading, setLoading] = useState(false)
   const [usernameError, setUsernameError] = useState<string | undefined>(undefined)
   const [emailError, setEmailError] = useState<string | undefined>(undefined)
@@ -93,13 +93,12 @@ const SignupForm: React.FC = () => {
             <ActivityIndicator />
           ) : (
             <Button
-              style={{ backgroundColor: Theme.colors.accent, marginTop: 15 }}
+              style={{ backgroundColor: theme.colors.secondary, marginTop: 15 }}
               onPress={() => {
                 handleSubmit()
               }}
-            >
-              Sign Up
-            </Button>
+              title="Sign Up"
+            />
           )}
         </>
       )}

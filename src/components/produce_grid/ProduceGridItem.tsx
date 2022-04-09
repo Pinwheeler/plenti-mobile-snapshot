@@ -1,8 +1,9 @@
-import { Card } from "@rneui/themed"
+import { Card, Text } from "@rneui/themed"
 import React from "react"
 import { TouchableOpacity } from "react-native"
 
 import { PlentiItem } from "../../assets/PlentiItemsIndex"
+import { capitalize } from "../../lib/StringHelpers"
 import { ProduceItemImage } from "../ProduceItemImage"
 
 interface Props {
@@ -30,7 +31,7 @@ export const ProduceGridItem: React.FC<Props> = (props) => {
           style={{ height: 130, width: "100%" }}
           resizeMode="cover"
         />
-        <Card.Title>{plentiItem.name}</Card.Title>
+        <Text h4>{capitalize(plentiItem.name)}</Text>
         {props.children}
       </Card>
     </TouchableOpacity>

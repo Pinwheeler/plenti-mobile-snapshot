@@ -1,12 +1,11 @@
 import { CommonActions, useNavigation } from "@react-navigation/native"
-import { Button, Text } from "@rneui/themed"
+import { Button, Text, useTheme } from "@rneui/themed"
 import React from "react"
 import { View, ViewProps } from "react-native"
 
-import Theme from "../../lib/Theme"
-
 export const CatalogRequestButton: React.FC<ViewProps> = (props) => {
   const navigation = useNavigation()
+  const { theme } = useTheme()
 
   return (
     <View
@@ -16,7 +15,7 @@ export const CatalogRequestButton: React.FC<ViewProps> = (props) => {
         bottom: 0,
         left: 0,
         right: 0,
-        backgroundColor: Theme.colors.notification,
+        backgroundColor: theme.colors.success,
       }}
     >
       <View
@@ -35,9 +34,10 @@ export const CatalogRequestButton: React.FC<ViewProps> = (props) => {
         >
           Don't see what you're looking for?
         </Text>
-        <Button onPress={() => navigation.dispatch(CommonActions.navigate({ name: "CatalogRequest" }))}>
-          Click Here
-        </Button>
+        <Button
+          title="Click Here"
+          onPress={() => navigation.dispatch(CommonActions.navigate({ name: "CatalogRequest" }))}
+        />
       </View>
     </View>
   )

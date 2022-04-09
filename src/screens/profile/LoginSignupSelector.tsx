@@ -1,14 +1,14 @@
 import { CommonActions, NavigationContext } from "@react-navigation/native"
-import { Button, Text } from "@rneui/themed"
+import { Button, Text, useTheme } from "@rneui/themed"
 import React, { useContext, useState } from "react"
 import { ScrollView, View } from "react-native"
-import Theme from "../../lib/Theme"
 import LoginForm from "./LoginForm"
 import SignupForm from "./SignupForm"
 
 export const LoginSignupSelector: React.FC = () => {
   const [isSigningUp, setIsSigningUp] = useState(false)
   const navigate = useContext(NavigationContext)
+  const { theme } = useTheme()
 
   const InnerComponent = () => {
     if (isSigningUp) {
@@ -28,17 +28,16 @@ export const LoginSignupSelector: React.FC = () => {
           {title}
         </Text>
         <InnerComponent />
-        <Button style={{ marginTop: 15 }} onPress={() => setIsSigningUp(!isSigningUp)}>
-          {/**color={Theme.colors.accent} */}
-          {cta}
-        </Button>
         <Button
-          style={{ marginTop: 15 }}
+          title={cta}
+          style={{ marginTop: 15, backgroundColor: theme.colors.secondary }}
+          onPress={() => setIsSigningUp(!isSigningUp)}
+        />
+        <Button
+          title="Forgot Password?"
+          style={{ marginTop: 15, backgroundColor: theme.colors.secondary }}
           onPress={() => navigate?.dispatch(CommonActions.navigate({ name: "ForgotPassword" }))}
-        >
-          {/**color={Theme.colors.accent} */}
-          Forgot Password?
-        </Button>
+        />
         <View style={{ height: 150 }} />
       </ScrollView>
     </>

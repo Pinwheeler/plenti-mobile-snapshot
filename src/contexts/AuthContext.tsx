@@ -22,10 +22,8 @@ export const AuthProvider: React.FC = (props) => {
   const [signedInAnonymously, setSignedInAnonymously] = useState(false)
 
   useEffect(() => {
-    console.log("=================== auth call")
     const unsubscribe = auth().onAuthStateChanged((u) => {
       if (u) {
-        console.log("============ got user", u)
         authenticateUser(u)
         setUser(u)
         setInitializing(false)

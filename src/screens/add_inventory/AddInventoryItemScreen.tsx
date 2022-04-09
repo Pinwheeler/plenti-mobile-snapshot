@@ -1,5 +1,5 @@
 import { CommonActions, useNavigation } from "@react-navigation/native"
-import { Overlay } from "@rneui/base"
+import { Overlay } from "@rneui/themed"
 import React, { useContext, useState } from "react"
 
 import { Quantity } from "../../api/models/Quantity"

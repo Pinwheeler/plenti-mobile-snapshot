@@ -1,6 +1,6 @@
 import { ReactNativeFirebase } from "@react-native-firebase/app"
 import storage from "@react-native-firebase/storage"
-import { Button, Text, useTheme } from "@rneui/themed"
+import { Button, Text, ThemeConsumer, useTheme } from "@rneui/themed"
 import React, { useState } from "react"
 import { Dimensions, View } from "react-native"
 
@@ -10,7 +10,7 @@ import { Quantity } from "../../../api/models/Quantity"
 import { itemForName, PlentiItem } from "../../../assets/PlentiItemsIndex"
 import { URLS } from "../../../lib/DatabaseHelpers"
 import { Logger } from "../../../lib/Logger"
-import { ButtonWithStatus } from "../../ButtonWithStatus"
+import { capitalize } from "../../../lib/StringHelpers"
 import { ProduceImageSelector } from "./ProduceImageSelector"
 
 function isInventoryItem(item: PlentiItem | InventoryItem | undefined): item is InventoryItem {
@@ -93,8 +93,10 @@ export const ProduceItemDetails: React.FC<Props> = (props) => {
   }
 
   return (
-    <View style={{ backgroundColor: "white" }}>
-      <Text h1 style={{ marginBottom: 15, textDecorationLine: "underline" }}>{`Listing: ${displayName}`}</Text>
+    <View style={{ backgroundColor: "white", padding: 15 }}>
+      <Text h3 style={{ marginBottom: 15, textDecorationLine: "underline" }}>{`Listing: ${capitalize(
+        displayName,
+      )}`}</Text>
       {error && <Text style={{ color: theme.colors.error }}>{error.message}</Text>}
       <QuantitySelectorItem currentQuantity={quantity} quantity={"A Little"} quantitySelected={setQuantity} />
       <QuantitySelectorItem currentQuantity={quantity} quantity={"Some"} quantitySelected={setQuantity} />
@@ -105,35 +107,28 @@ export const ProduceItemDetails: React.FC<Props> = (props) => {
         plentiItem={plentiItem}
         onLocalImageSelect={setUserImageUri}
       />
-      <View style={{ flexDirection: "row", alignItems: "baseline", justifyContent: "space-evenly" }}>
+      <View style={{ flexDirection: "row" }}>
         <Button
-          style={{ flex: 1, marginRight: 5 }}
+          containerStyle={{ flex: 1, marginRight: 10 }}
           onPress={() => {
             onClose()
           }}
-        >
-          Close
-        </Button>
-        <ButtonWithStatus
-          style={{ flex: 1, marginLeft: 5 }}
-          success={success}
+          title="Close"
+        />
+        <Button
           loading={loading}
           onPress={listItem}
           disabled={submitDisabled}
-          mode="contained"
-        >
-          {itsAnInventoryItem ? "Update Listing" : "List Item"}
-        </ButtonWithStatus>
+          title={itsAnInventoryItem ? "Update Listing" : "List Item"}
+        />
       </View>
       {itsAnInventoryItem && (
         <Button
           onPress={handleDeletePressed}
-          // mode={confirmingDelete ? "contained" : "outlined"}
-          // color={Theme.colors.error}
-          style={{ marginTop: 15 }}
-        >
-          {confirmingDelete ? "Confirm" : "Delete Listing"}
-        </Button>
+          type={confirmingDelete ? "outline" : "solid"}
+          buttonStyle={{ marginTop: 15, backgroundColor: confirmingDelete ? undefined : theme.colors.error }}
+          title={confirmingDelete ? "Confirm" : "Delete Listing"}
+        />
       )}
     </View>
   )
@@ -148,14 +143,12 @@ interface ItemProps {
 const QuantitySelectorItem: React.FC<ItemProps> = (props) => {
   const { quantitySelected, quantity, currentQuantity } = props
   const selected = quantity === currentQuantity
+  const { theme } = useTheme()
   return (
     <Button
-      // color={selected ? Theme.colors.accent : "white"}
       onPress={() => quantitySelected(quantity)}
-      // mode="contained"
-      style={{ marginVertical: 5 }}
-    >
-      <Text>{props.quantity}</Text>
-    </Button>
+      buttonStyle={{ marginVertical: 5, backgroundColor: selected ? theme.colors.secondary : theme.colors.grey4 }}
+      title={props.quantity}
+    />
   )
 }

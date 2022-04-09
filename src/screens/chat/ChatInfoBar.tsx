@@ -3,9 +3,8 @@ import { View } from "react-native"
 import openMap, { ShowOptions } from "react-native-open-maps"
 import { ConversationContext } from "./ConversationContext"
 import { LoadingIndicator } from "../../components/LoadingIndicator"
-import Theme from "../../lib/Theme"
 import { IconButton } from "../../components/IconButton"
-import { Button, Text } from "@rneui/themed"
+import { Button, Text, useTheme } from "@rneui/themed"
 
 const ChatInfoBar: React.FC = (props) => {
   const { setOffendingAccount } = useContext(ConversationContext)
@@ -28,6 +27,7 @@ const ChatInfoBar: React.FC = (props) => {
   }, [connection])
 
   const InnerComponent = () => {
+    const { theme } = useTheme()
     return (
       <View style={{ flexDirection: "row" }}>
         <View>
@@ -45,15 +45,14 @@ const ChatInfoBar: React.FC = (props) => {
                 }
                 openMap(options)
               }}
-            >
-              Copy to Clipboard
-            </Button>
+              title="Copy to Clipboard"
+            />
           )}
         </View>
         <View>
           <IconButton
             size={24}
-            type={"gps"}
+            type="gps-fixed"
             onPress={() => {
               if (!iHaveSharedPickupLocation) {
                 setShareLocationOpen(true)
@@ -61,7 +60,7 @@ const ChatInfoBar: React.FC = (props) => {
                 shareLocation(false)
               }
             }}
-            style={{ backgroundColor: iHaveSharedPickupLocation ? Theme.colors.primary : "transparent" }}
+            style={{ backgroundColor: iHaveSharedPickupLocation ? theme.colors.primary : "transparent" }}
           />
         </View>
       </View>

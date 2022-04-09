@@ -1,6 +1,6 @@
+import { Text } from "@rneui/themed"
 import React from "react"
 import { ActivityIndicator, View } from "react-native"
-import { H3 } from "./typography"
 
 interface Props {
   thingThatIsLoading: string
@@ -10,7 +10,7 @@ export const LoadingIndicator: React.FC<Props> = (props) => {
   return (
     <View style={{ flexDirection: "row" }}>
       <ActivityIndicator />
-      <H3>{`Loading ${props.thingThatIsLoading}`}</H3>
+      <Text h3>{`Loading ${props.thingThatIsLoading}`}</Text>
     </View>
   )
 }

@@ -30,7 +30,6 @@ export const AccountProvider: React.FC = (props) => {
   const refreshProfilePicture = () => {
     if (loggedInAccount) {
       const path = URLS.images.profile(loggedInAccount)
-      console.log("fetching", path)
       setProfilePicture(storage().ref(path).getDownloadURL())
     }
   }

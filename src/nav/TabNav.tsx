@@ -1,5 +1,5 @@
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs"
-import { Overlay } from "@rneui/base"
+import { useTheme, Overlay } from "@rneui/themed"
 import React, { useContext, useEffect, useState } from "react"
 
 import { HardwareNotification } from "../api/models/HardwareNotification"
@@ -9,7 +9,6 @@ import { Icon } from "../components/Icon"
 import { AdContext } from "../contexts/AdContext"
 import { NotificationContext } from "../contexts/NotificationContext"
 import { Logger } from "../lib/Logger"
-import Theme from "../lib/Theme"
 import ConnectScreen from "../screens/connect/ConnectScreen"
 import { HomeScreen } from "../screens/home/HomeScreen"
 import { InventoryScreen } from "../screens/inventory/InventoryScreen"
@@ -20,6 +19,7 @@ const Tab = createMaterialBottomTabNavigator()
 export const TabNav = () => {
   const { shouldShowAds } = useContext(AdContext)
   const { acknowledgeHN, nextUnreadHN } = useContext(NotificationContext)
+  const { theme } = useTheme()
   const [currentHN, setCurrentHN] = useState<HardwareNotification>()
 
   useEffect(() => {
@@ -38,7 +38,7 @@ export const TabNav = () => {
 
   return (
     <>
-      <Tab.Navigator barStyle={{ backgroundColor: Theme.colors.primary }}>
+      <Tab.Navigator barStyle={{ backgroundColor: theme.colors.primary }}>
         <Tab.Screen
           name="Request"
           component={HomeScreen}
@@ -73,7 +73,7 @@ export const TabNav = () => {
       <Overlay
         isVisible={!!currentHN}
         style={{
-          backgroundColor: Theme.colors.surface,
+          backgroundColor: theme.colors.background,
           padding: 15,
           margin: 15,
         }}

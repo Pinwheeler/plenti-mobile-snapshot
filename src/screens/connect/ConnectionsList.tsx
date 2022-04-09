@@ -1,12 +1,13 @@
+import { useTheme } from "@rneui/themed"
 import React, { useContext, useState } from "react"
 import { Text, RefreshControl, View } from "react-native"
 import { ScrollView } from "react-native"
 import { ChatContext } from "../../contexts/ChatContext"
-import Theme from "../../lib/Theme"
 import { ConnectionListItem } from "./ConnectionListItem"
 
 const ConnectionsList: React.FC = () => {
   const { myConnections } = useContext(ChatContext)
+  const { theme } = useTheme()
   const [refreshing, setRefreshing] = useState(false)
 
   if (myConnections.size > 0) {
@@ -19,7 +20,7 @@ const ConnectionsList: React.FC = () => {
               paddingHorizontal: 15,
               paddingTop: 15,
               paddingBottom: 5,
-              backgroundColor: Theme.colors.notification,
+              backgroundColor: theme.colors.success,
             }}
           >
             <Text style={{ textAlign: "left", flex: 6, fontWeight: "bold" }}>Partner</Text>
@@ -36,10 +37,11 @@ const ConnectionsList: React.FC = () => {
   } else {
     return (
       <ScrollView refreshControl={<RefreshControl refreshing={refreshing} />}>
-        <Text style={{ textAlign: "center", color: Theme.colors.disabled }}>
-          ↓↓ No Connections Found. Pull down to Refresh ↓↓
+        <Text style={{ textAlign: "center", color: theme.colors.disabled }}>No Connections Found.</Text>
+        <Text style={{ textAlign: "center", color: theme.colors.disabled }}>
+          Make connections on the Request screen.
         </Text>
-        <Text style={{ textAlign: "center", color: Theme.colors.disabled }} />
+        <Text style={{ textAlign: "center", color: theme.colors.disabled }} />
       </ScrollView>
     )
   }

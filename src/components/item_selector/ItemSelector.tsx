@@ -2,11 +2,10 @@ import React, { useMemo, useState } from "react"
 import { ScrollView, View } from "react-native"
 
 import { AllPlentiItems, PlentiItem, ProduceType } from "../../assets/PlentiItemsIndex"
-import Theme from "../../lib/Theme"
 import { Accordion } from "../Accordion"
 import { ProduceGrid } from "../produce_grid/ProduceGrid"
 import { ProduceGridItem } from "../produce_grid/ProduceGridItem"
-import { SearchBar } from "@rneui/themed"
+import { SearchBar, useTheme } from "@rneui/themed"
 
 interface Props {
   onItemSelect(item: PlentiItem): void
@@ -14,6 +13,7 @@ interface Props {
 
 const ItemSelector: React.FC<Props> = (props) => {
   const { onItemSelect } = props
+  const { theme } = useTheme()
 
   const [searchText, setSearchText] = useState("")
   // const navigation = useNavigation()
@@ -79,7 +79,7 @@ const ItemSelector: React.FC<Props> = (props) => {
         // cancelIcon={"close"}
         onChangeText={setSearchText}
         value={searchText}
-        // theme={Theme}
+        theme={theme}
         style={{ marginVertical: 10, borderRadius: 30, marginHorizontal: 10 }}
       />
       <InnerContent />

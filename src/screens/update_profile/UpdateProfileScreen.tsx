@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native"
-import { Button, Overlay, Text } from "@rneui/themed"
+import { Button, Overlay, Text, useTheme } from "@rneui/themed"
 import { Formik } from "formik"
 import React, { useContext, useState } from "react"
 import { ActivityIndicator, ScrollView, View } from "react-native"
@@ -7,12 +7,10 @@ import * as yup from "yup"
 import { AccountUpdateForm } from "../../api/forms/AccountUpdateForm"
 import { LoadingIndicator } from "../../components/LoadingIndicator"
 import { TextField } from "../../components/TextField"
-import { H2, H3 } from "../../components/typography"
 import { AccountContext } from "../../contexts/AccountContext"
 import { GeocodingContext } from "../../contexts/GeocodingContext"
 import { InventoryContext } from "../../contexts/InventoryContext"
 import { Logger } from "../../lib/Logger"
-import Theme from "../../lib/Theme"
 import { MaxDistanceAdjustor } from "./MaxDistanceAdjustor"
 import { PreferredDistanceUnitSelector } from "./PreferredDistanceUnitSelector"
 import { UpdateProfilePicture } from "./UpdateProfilePicture"
@@ -26,6 +24,7 @@ export const UpdateProfileScreen = () => {
   const [successModalVisible, setSuccessModalVisible] = useState(false)
   const [geocodeFailModalVisible, setGeocodeFailModalVisible] = useState(false)
   const navigation = useNavigation()
+  const { theme } = useTheme()
 
   const { geocode } = useContext(GeocodingContext)
 
@@ -120,16 +119,14 @@ export const UpdateProfileScreen = () => {
             )}
 
             <View style={{ marginBottom: 15 }}>
-              <H3>Distance Unit</H3>
+              <Text h3>Distance Unit</Text>
               <PreferredDistanceUnitSelector onChange={() => setEditsMade(true)} />
             </View>
             <MaxDistanceAdjustor prefersMetric={values.prefersMetric ?? true} onChange={() => setEditsMade(true)} />
             {loading ? (
               <ActivityIndicator />
             ) : (
-              <Button disabled={!editsMade} style={{ marginBottom: 20 }} onPress={handleSubmit}>
-                Submit
-              </Button>
+              <Button disabled={!editsMade} style={{ marginBottom: 20 }} onPress={handleSubmit} title="Submit" />
             )}
             <View style={{ height: 40 }} />
           </ScrollView>
@@ -138,42 +135,43 @@ export const UpdateProfileScreen = () => {
       <Overlay
         isVisible={successModalVisible}
         onBackdropPress={handleDismiss}
-        style={{ backgroundColor: Theme.colors.surface, padding: 15, margin: 15 }}
+        style={{ backgroundColor: theme.colors.background, padding: 15, margin: 15 }}
       >
-        <H2
+        <Text
+          h2
           style={{
             marginBottom: 15,
             alignItems: "center",
           }}
         >
           Update Successful
-        </H2>
+        </Text>
         <Button
           onPress={() => {
             handleDismiss()
             navigation.goBack()
           }}
-        >
-          <Text>Okay</Text>
-        </Button>
+          title="Okay"
+        />
       </Overlay>
       <Overlay
         isVisible={geocodeFailModalVisible}
         onBackdropPress={handleDismiss}
         style={{
-          backgroundColor: Theme.colors.surface,
+          backgroundColor: theme.colors.background,
           padding: 15,
           margin: 15,
         }}
       >
-        <H2
+        <Text
+          h2
           style={{
             marginBottom: 15,
             alignItems: "center",
           }}
         >
           Update Failed
-        </H2>
+        </Text>
         <Text
           style={{
             marginBottom: 15,
@@ -183,7 +181,7 @@ export const UpdateProfileScreen = () => {
           We couldn't validate that the input address resulted in a physical location. Please check your address and try
           again. You can also try being more generic. Just a city/state should do.
         </Text>
-        <Button onPress={handleDismiss}>Okay</Button>
+        <Button title="Okay" onPress={handleDismiss} />
       </Overlay>
     </>
   )

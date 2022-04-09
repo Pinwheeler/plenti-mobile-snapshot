@@ -32,9 +32,5 @@ interface ItemProps {
 
 const QuantitySelectorItem: React.FC<ItemProps> = (props) => {
   const { quantitySelected, quantity } = props
-  return (
-    <Button onPress={() => quantitySelected(quantity)} style={{ marginVertical: 10 }}>
-      <Text>{props.quantity}</Text>
-    </Button>
-  )
+  return <Button onPress={() => quantitySelected(quantity)} style={{ marginVertical: 10 }} title={props.quantity} />
 }

@@ -2,7 +2,6 @@ import { Input } from "@rneui/themed"
 import { useFormikContext } from "formik"
 import React, { useRef } from "react"
 import { TextInputProps } from "react-native"
-import Theme from "../lib/Theme"
 
 interface Props extends TextInputProps {
   label: string
@@ -21,11 +20,12 @@ export const TextField: React.FC<Props> = (props) => {
   return (
     <>
       <Input
+        shake={() => {}}
         {...otherProps}
         onChangeText={(text) => setFieldValue(name, text)}
         value={value}
         errorMessage={errorText}
-        // theme={Theme}
+        label={label}
       />
     </>
   )

@@ -7,6 +7,7 @@ import { Icon } from "../../components/Icon"
 import { IconButton } from "../../components/IconButton"
 import { ProduceItemImage } from "../../components/ProduceItemImage"
 import { fromISOTime, timeDifference } from "../../lib/DateHelper"
+import { capitalize } from "../../lib/StringHelpers"
 
 interface Props {
   selectedItem: DistancedInventoryItem
@@ -32,10 +33,14 @@ export const ConfirmNearbyRequest: React.FC<Props> = (props) => {
         style={{ width: "100%", height: 300, borderRadius: 5 }}
         item={selectedItem.inventoryItem.plentiItemName}
       />
-      <View style={{ padding: 15 }}>
+      <View>
+        <View style={{ flexDirection: "row", marginVertical: 4 }}>
+          <Text style={{ fontSize: 18, fontWeight: "600" }}>
+            {capitalize(selectedItem.inventoryItem.plentiItemName)}
+          </Text>
+        </View>
         <View style={{ flexDirection: "row", marginBottom: 15 }}>
           <View style={{ flexDirection: "column", width: "50%" }}>
-            <Text style={{ fontSize: 18, fontWeight: "600" }}>{selectedItem.inventoryItem.plentiItemName}</Text>
             <Text style={{ color: theme.colors.grey2 }}>{distanceLine}</Text>
             <Text style={{ color: theme.colors.grey2 }}>{quantityLine}</Text>
           </View>

@@ -1,10 +1,10 @@
+import { useTheme } from "@rneui/themed"
 import * as ImagePicker from "expo-image-picker"
 import React from "react"
 import { Image, Pressable, Text, View } from "react-native"
 import { TouchableOpacity } from "react-native-gesture-handler"
 
 import { PlentiItem } from "../../../assets/PlentiItemsIndex"
-import Theme from "../../../lib/Theme"
 import { Icon } from "../../Icon"
 
 interface Props {
@@ -16,6 +16,7 @@ interface Props {
 
 export const ProduceImageSelector: React.FC<Props> = (props) => {
   const { userImageUri, imageSize, plentiItem, onLocalImageSelect } = props
+  const { theme } = useTheme()
 
   const selectImage = async () => {
     // No permissions request is necessary for launching the image library
@@ -52,13 +53,13 @@ export const ProduceImageSelector: React.FC<Props> = (props) => {
               height: imageSize,
               borderRadius: 10,
               borderWidth: 4,
-              borderColor: Theme.colors.accent,
+              borderColor: theme.colors.secondary,
             }}
           />
           <Pressable
             onPress={() => onLocalImageSelect(undefined)}
             style={{
-              backgroundColor: Theme.colors.accent,
+              backgroundColor: theme.colors.secondary,
               width: 30,
               height: 30,
               justifyContent: "center",
@@ -89,7 +90,7 @@ export const ProduceImageSelector: React.FC<Props> = (props) => {
           <>
             <View
               style={{
-                backgroundColor: Theme.colors.notification,
+                backgroundColor: theme.colors.success,
                 width: "55%",
                 height: "55%",
                 alignItems: "center",

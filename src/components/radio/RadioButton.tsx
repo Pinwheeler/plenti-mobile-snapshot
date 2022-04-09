@@ -1,36 +1,33 @@
-import React, { useContext } from "react";
-import { Pressable, Text, View } from "react-native";
-import Theme from "../../lib/Theme";
-import { RadioGroupContext, RadioOption } from "./RadioGroupContext";
+import { useTheme } from "@rneui/themed"
+import React, { useContext } from "react"
+import { Pressable, Text, View } from "react-native"
+import { RadioGroupContext, RadioOption } from "./RadioGroupContext"
 
 interface Props<T> {
-  index: number;
-  option: RadioOption<T>;
+  index: number
+  option: RadioOption<T>
 }
 
 export function RadioButton<T>(props: Props<T>) {
-  const { option, index } = props;
-  const { selectIndex, unselectIndex, isIndexSelected } =
-    useContext(RadioGroupContext);
-  const selectedColor = Theme.colors.accent;
-  const unselectedColor = Theme.colors.secondaryText;
+  const { option, index } = props
+  const { selectIndex, unselectIndex, isIndexSelected } = useContext(RadioGroupContext)
+  const { theme } = useTheme()
+  const selectedColor = theme.colors.secondary
+  const unselectedColor = theme.colors.grey2
 
-  const selected = isIndexSelected(index);
-  const color = selected ? selectedColor : unselectedColor;
+  const selected = isIndexSelected(index)
+  const color = selected ? selectedColor : unselectedColor
 
   const handlePress = () => {
     if (selected) {
-      unselectIndex(index);
+      unselectIndex(index)
     } else {
-      selectIndex(index);
+      selectIndex(index)
     }
-  };
+  }
 
   return (
-    <Pressable
-      style={{ flexDirection: "row", alignItems: "center", marginTop: 8 }}
-      onPressOut={handlePress}
-    >
+    <Pressable style={{ flexDirection: "row", alignItems: "center", marginTop: 8 }} onPressOut={handlePress}>
       {({ pressed }) => (
         <>
           <View
@@ -60,5 +57,5 @@ export function RadioButton<T>(props: Props<T>) {
         </>
       )}
     </Pressable>
-  );
+  )
 }

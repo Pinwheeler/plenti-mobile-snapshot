@@ -1,9 +1,9 @@
+import { useTheme } from "@rneui/themed"
 import React, { useEffect, useState } from "react"
-import { ActivityIndicator, Image, StyleSheet } from "react-native"
+import { ActivityIndicator, Image } from "react-native"
 
 import { Icon } from "../../components/Icon"
 import { Logger } from "../../lib/Logger"
-import Theme from "../../lib/Theme"
 
 const ICON_SIZE = 45
 
@@ -13,19 +13,9 @@ interface Props {
   loading?: boolean
 }
 
-const styles = StyleSheet.create({
-  profilePicture: {
-    width: 75,
-    height: 75,
-    borderRadius: 80 / 2,
-    backgroundColor: Theme.colors.accent,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-})
-
 export const InnerProfilePicture: React.FC<Props> = (props) => {
   const { pictureUriPromise, updatable, loading } = props
+  const { theme } = useTheme()
   const [userImageUri, setUserImageUri] = useState<string>()
   const [fetching, setFetching] = useState(false)
 
@@ -58,12 +48,24 @@ export const InnerProfilePicture: React.FC<Props> = (props) => {
   }
 
   if (userImageUri) {
-    return <Image source={{ uri: userImageUri }} style={styles.profilePicture} />
+    return (
+      <Image
+        source={{ uri: userImageUri }}
+        style={{
+          width: 75,
+          height: 75,
+          borderRadius: 80 / 2,
+          backgroundColor: theme.colors.secondary,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      />
+    )
   } else {
     if (updatable) {
-      return <Icon type={"plus"} size={ICON_SIZE} color={Theme.colors.background} />
+      return <Icon type={"plus"} size={ICON_SIZE} color={theme.colors.background} />
     } else {
-      return <Icon type={"user-alt"} size={ICON_SIZE} color={Theme.colors.background} />
+      return <Icon type={"user-alt"} size={ICON_SIZE} color={theme.colors.background} />
     }
   }
 }

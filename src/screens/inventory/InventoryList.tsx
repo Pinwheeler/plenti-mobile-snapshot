@@ -1,5 +1,5 @@
 import { CommonActions, useNavigation } from "@react-navigation/native"
-import { Button, Overlay, Text } from "@rneui/themed"
+import { Button, Overlay, Text, useTheme } from "@rneui/themed"
 import React, { useContext, useState } from "react"
 import { ScrollView, View } from "react-native"
 
@@ -13,7 +13,6 @@ import { ImageContext } from "../../contexts/ImageContext"
 import { InventoryContext } from "../../contexts/InventoryContext"
 import { StringMapFromObj } from "../../lib/DatabaseHelpers"
 import { Logger } from "../../lib/Logger"
-import Theme from "../../lib/Theme"
 import { InventoryItemGridItem } from "./InventoryItemGridItem"
 
 export const InventoryList = () => {
@@ -24,6 +23,7 @@ export const InventoryList = () => {
   const [loginGateVisible, setLoginGateVisible] = useState(false)
   const [selectedItem, setSelectedItem] = useState<InventoryItem>()
   const navigation = useNavigation()
+  const { theme } = useTheme()
 
   const goToAccount = () => {
     navigation.dispatch(CommonActions.navigate({ name: "Profile" }))
@@ -67,6 +67,7 @@ export const InventoryList = () => {
     item ? deleteItem(item) : Logger.warn("attempted to delete undefined item")
 
   const Content = () => {
+    const { theme } = useTheme()
     if (myInventory) {
       const map = StringMapFromObj(myInventory.items)
       if (map.size > 0) {
@@ -81,8 +82,8 @@ export const InventoryList = () => {
     }
     return (
       <ScrollView>
-        <Text style={{ textAlign: "center", color: Theme.colors.disabled }}>No Inventory Items Found</Text>
-        <Text style={{ textAlign: "center", color: Theme.colors.disabled }}>
+        <Text style={{ textAlign: "center", color: theme.colors.disabled }}>No Inventory Items Found</Text>
+        <Text style={{ textAlign: "center", color: theme.colors.disabled }}>
           Use the button on this page to add an Inventory Item
         </Text>
       </ScrollView>
@@ -97,7 +98,7 @@ export const InventoryList = () => {
         onPress={onAdd}
         color="white"
         size={30}
-        style={{ position: "absolute", right: 15, bottom: 15, backgroundColor: Theme.colors.primary }}
+        style={{ position: "absolute", right: 15, bottom: 15, backgroundColor: theme.colors.primary }}
       />
       <Overlay isVisible={!!selectedItem} onBackdropPress={() => setSelectedItem(undefined)}>
         <ProduceItemDetails
@@ -117,13 +118,8 @@ export const InventoryList = () => {
           </Text>
           <Text style={{ marginTop: 15, textAlign: "center" }}>You can set this up on the</Text>
           <Text style={{ textAlign: "center" }}>Profile Screen</Text>
-          <Button onPress={goToProfile} style={{ marginTop: 15 }}>
-            Go To Profile Screen
-          </Button>
-          <Button style={{ marginTop: 20 }} onPress={onClose}>
-            {/**mode="outlined" */}
-            Close
-          </Button>
+          <Button onPress={goToProfile} style={{ marginTop: 15 }} title="Go To Profile Screen" />
+          <Button style={{ marginTop: 20 }} onPress={onClose} title="Close" />
         </View>
       </Overlay>
       <Overlay isVisible={loginGateVisible} onBackdropPress={onClose}>
@@ -132,13 +128,8 @@ export const InventoryList = () => {
           <Text style={{ marginVertical: 15, textAlign: "center" }}>
             You must have an account to add to your Inventory.
           </Text>
-          <Button onPress={goToAccount} style={{ marginBottom: 15 }}>
-            Go To Login
-          </Button>
-          <Button onPress={onClose}>
-            {/**mode="outlined" */}
-            Close
-          </Button>
+          <Button onPress={goToAccount} style={{ marginBottom: 15 }} title="Go To Login" />
+          <Button onPress={onClose} title="Close" />
         </View>
       </Overlay>
     </View>

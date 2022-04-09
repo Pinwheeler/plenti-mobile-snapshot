@@ -92,9 +92,7 @@ export const NearMeProvider: React.FC = (props) => {
     const val: DistancedInventoryItem[] = []
     inventoriesWithinBounds.forEach((inv) => {
       const distanceToInventory = distanceInKMToPoint(inv.latitude, inv.longitude)
-      console.log("inv", inv)
       const map = StringMapFromObj(inv.items)
-      console.log("map", map)
       Array.from(map.values()).forEach((item) => {
         const distanced: DistancedInventoryItem = {
           owningAccountUsername: inv.accountUsername,
@@ -103,14 +101,11 @@ export const NearMeProvider: React.FC = (props) => {
           referenceLat: inv.latitude,
           referenceLng: inv.longitude,
         }
-        console.log("distanced", distanced)
         val.push(distanced)
       })
     })
     return val
   }, [inventoriesWithinBounds])
-
-  console.log("items", items)
 
   const value: INearMeContext = {
     items,

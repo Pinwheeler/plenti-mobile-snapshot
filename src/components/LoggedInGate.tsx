@@ -21,10 +21,8 @@ const LoggedInGate: React.FC<Props> = (props) => {
     <View style={{ backgroundColor: "white", padding: 15, margin: 15 }}>
       <Text h1>Error</Text>
       <Text style={{ marginVertical: 20, textAlign: "center" }}>You have to log in before you can do this</Text>
-      <Button onPress={goToAccount}>Go To Login</Button>
-      <Button onPress={onClose} style={{ marginTop: 20 }}>
-        Close
-      </Button>
+      <Button onPress={goToAccount} title="Go To Login" />
+      <Button onPress={onClose} style={{ marginTop: 20 }} title="Close" />
     </View>
   )
 }

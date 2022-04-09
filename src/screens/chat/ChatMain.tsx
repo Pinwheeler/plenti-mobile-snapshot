@@ -1,17 +1,14 @@
 import { useNavigation } from "@react-navigation/native"
-import { Overlay } from "@rneui/base"
-import { Button, Input } from "@rneui/themed"
+import { Button, Input, useTheme, Overlay } from "@rneui/themed"
 import React, { useContext, useEffect, useState } from "react"
-import { Keyboard, KeyboardEventListener, RefreshControl, SafeAreaView, ScrollView, Text, View } from "react-native"
+import { Dimensions, Keyboard, KeyboardEventListener, SafeAreaView, ScrollView, Text, View } from "react-native"
 import { IconButton } from "../../components/IconButton"
-import { ChatContext } from "../../contexts/ChatContext"
 import { DeviceContext } from "../../contexts/DeviceContext"
-import Theme from "../../lib/Theme"
 
 import ChatItem from "./ChatItem"
 import { ConversationContext } from "./ConversationContext"
 
-const ChatMain = () => {
+export const ChatMain = () => {
   const {
     shareLocation,
     setShareLocationOpen,
@@ -26,18 +23,13 @@ const ChatMain = () => {
   const [chatMessage, setChatMessage] = useState("")
   const [keyboardOffset, setKeyboardOffset] = useState(0)
   const navigation = useNavigation()
+  const { theme } = useTheme()
   let scrollView: ScrollView | undefined
 
   const send = () => {
     sendMessage(chatMessage)
     setChatMessage("")
   }
-
-  // const onRefresh = async () => {
-  //   setRefreshing(true)
-  //   await refresh()
-  //   setRefreshing(false)
-  // }
 
   useEffect(() => {
     scrollView?.scrollToEnd()
@@ -79,7 +71,7 @@ const ChatMain = () => {
           flex: 10,
           marginHorizontal: 5,
           marginTop: 5,
-          backgroundColor: Theme.colors.background,
+          backgroundColor: theme.colors.background,
         }}
       >
         <ScrollView
@@ -91,7 +83,7 @@ const ChatMain = () => {
             borderTopLeftRadius: 5,
             borderTopRightRadius: 5,
             flex: 9,
-            backgroundColor: Theme.colors.background,
+            backgroundColor: theme.colors.background,
           }}
         >
           <>
@@ -110,7 +102,7 @@ const ChatMain = () => {
             marginBottom: keyboardOffset,
             flex: 0.03,
             minHeight: 70,
-            backgroundColor: Theme.colors.background,
+            backgroundColor: theme.colors.background,
           }}
         >
           <InputBar onChangeText={setChatMessage} value={chatMessage} onPress={send} />
@@ -118,7 +110,7 @@ const ChatMain = () => {
         <Overlay
           isVisible={shareLocationOpen}
           onBackdropPress={() => setShareLocationOpen(false)}
-          style={{ backgroundColor: Theme.colors.surface, padding: 15, margin: 15 }}
+          style={{ backgroundColor: theme.colors.background, padding: 15, margin: 15 }}
         >
           <Text style={{ textAlign: "center" }}>Are you sure you want to share your pickup location?</Text>
           <View style={{ height: 18 }} />
@@ -127,10 +119,11 @@ const ChatMain = () => {
           <View>
             <View style={{ flexDirection: "row", alignContent: "space-between" }}>
               <View style={{ width: "40%" }}>
-                <Button onPress={() => setShareLocationOpen(false)}>
-                  {/**color={Theme.colors.error} */}
-                  Cancel
-                </Button>
+                <Button
+                  onPress={() => setShareLocationOpen(false)}
+                  style={{ backgroundColor: theme.colors.error }}
+                  title="Cancel"
+                />
               </View>
               <View style={{ width: "20%" }} />
               <View style={{ width: "40%" }}>
@@ -139,9 +132,8 @@ const ChatMain = () => {
                     shareLocation(true)
                     setShareLocationOpen(false)
                   }}
-                >
-                  Confirm
-                </Button>
+                  title="Confirm"
+                />
               </View>
             </View>
           </View>
@@ -149,7 +141,7 @@ const ChatMain = () => {
         <Overlay
           isVisible={offendingAccount !== undefined}
           onBackdropPress={() => setOffendingAccount(undefined)}
-          style={{ backgroundColor: Theme.colors.surface, padding: 15, margin: 15 }}
+          style={{ backgroundColor: theme.colors.background, padding: 15, margin: 15 }}
         >
           <Text style={{ textAlign: "center" }}>{`Report ${offendingAccount?.username ?? "chat partner"}?`}</Text>
           <View style={{ height: 18 }} />
@@ -163,15 +155,16 @@ const ChatMain = () => {
             value={reportReason}
             placeholder="Reson for report"
             multiline={true}
+            shake={() => {}}
           />
           <View style={{ height: 18 }} />
           <View>
             <View style={{ flexDirection: "row", alignContent: "space-between" }}>
               <View style={{ width: "40%" }}>
-                <Button onPress={() => setOffendingAccount(undefined)}>
-                  {/**color={Theme.colors.error}  */}
-                  Cancel
-                </Button>
+                <Button
+                  onPress={() => setOffendingAccount(undefined)}
+                  style={{ backgroundColor: theme.colors.error }}
+                />
               </View>
               <View style={{ width: "20%" }} />
               <View style={{ width: "40%" }}>
@@ -182,9 +175,8 @@ const ChatMain = () => {
                     setReportReason("")
                     navigation.goBack()
                   }}
-                >
-                  Confirm
-                </Button>
+                  title="Confirm"
+                />
               </View>
             </View>
           </View>
@@ -202,20 +194,24 @@ interface InputBarProps {
 
 const InputBar: React.FC<InputBarProps> = (props) => {
   const { onChangeText, value, onPress } = props
+  const { theme } = useTheme()
+  const chatbarWidth = Dimensions.get("window").width * 0.5
   return (
-    <>
+    <View style={{ position: "relative", width: "100%", backgroundColor: "purple", justifyContent: "flex-end" }}>
       <Input
-        style={{
+        shake={() => {}}
+        containerStyle={{
           position: "absolute",
           bottom: 0,
           left: 8,
           right: 58,
-          backgroundColor: Theme.colors.background,
+          backgroundColor: theme.colors.background,
           borderBottomWidth: 0,
+          width: chatbarWidth,
         }}
         onChangeText={(text) => onChangeText(text)}
         value={value}
-        placeholder="Type chat message here..."
+        placeholder="Type chat message here"
         multiline={true}
         underlineColorAndroid="transparent"
       />
@@ -224,10 +220,8 @@ const InputBar: React.FC<InputBarProps> = (props) => {
         onPress={onPress}
         color={"white"}
         size={24}
-        style={{ position: "absolute", right: 0, bottom: 10, backgroundColor: Theme.colors.primary }}
+        style={{ backgroundColor: theme.colors.primary }}
       />
-    </>
+    </View>
   )
 }
-
-export default ChatMain

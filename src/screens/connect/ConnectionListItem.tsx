@@ -5,10 +5,9 @@ import { AccountEntity } from "../../api/models/Account"
 import { Connection } from "../../api/models/Connection"
 import { AccountContext } from "../../contexts/AccountContext"
 import { ChatContext } from "../../contexts/ChatContext"
-import Theme from "../../lib/Theme"
 import database from "@react-native-firebase/database"
 import { LoadingIndicator } from "../../components/LoadingIndicator"
-import { Text } from "@rneui/themed"
+import { Text, useTheme } from "@rneui/themed"
 import { TouchableOpacity } from "react-native-gesture-handler"
 
 interface Props {
@@ -24,6 +23,7 @@ export const ConnectionListItem: React.FC<Props> = (props) => {
   const [partnerAccount, setPartnerAccount] = useState<AccountEntity>()
   const myId = loggedInAccount?.uid || -1
   const unread = false
+  const { theme } = useTheme()
   // TODO: show images of all of the user's inventory items
 
   useEffect(() => {
@@ -58,7 +58,7 @@ export const ConnectionListItem: React.FC<Props> = (props) => {
         }}
       >
         <Text style={{ textAlign: "left", flex: 6 }}>
-          <Text style={{ color: Theme.colors.notification }}>{unread ? "⬤\t" : ""}</Text>
+          <Text style={{ color: theme.colors.success }}>{unread ? "⬤\t" : ""}</Text>
           <Text style={{ textAlign: "left" }}>{partnerAccount.username}</Text>
         </Text>
       </TouchableOpacity>

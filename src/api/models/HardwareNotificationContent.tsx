@@ -1,9 +1,8 @@
-import { Button, Text } from "@rneui/themed"
+import { Button, Text, useTheme } from "@rneui/themed"
 import React from "react"
 import { View } from "react-native"
 
 import { Icon } from "../../components/Icon"
-import Theme from "../../lib/Theme"
 import { HardwareNotification } from "./HardwareNotification"
 
 interface Props {
@@ -13,6 +12,7 @@ interface Props {
 
 export const HardwareNotificationContent: React.FC<Props> = (props) => {
   const { notification } = props
+  const { theme } = useTheme()
   return (
     <View style={{ position: "relative", justifyContent: "center", paddingTop: 10 }}>
       <Text h1>{notification.title}</Text>
@@ -27,30 +27,26 @@ export const HardwareNotificationContent: React.FC<Props> = (props) => {
             position: "absolute",
             top: -74,
             left: "36%",
-            backgroundColor: Theme.colors.background,
+            backgroundColor: theme.colors.background,
           }}
         >
           <View
             style={{
-              backgroundColor: Theme.colors.notification,
+              backgroundColor: theme.colors.success,
               width: 80,
               height: 80,
-              borderColor: Theme.colors.background,
+              borderColor: theme.colors.background,
               borderRadius: 100,
               alignItems: "center",
               justifyContent: "center",
             }}
           >
-            <Icon color={Theme.colors.primary} size={42} type={notification.iconName} />
+            <Icon color={theme.colors.primary} size={42} type={notification.iconName} />
           </View>
         </View>
       )}
       <Text>{notification.description}</Text>
-      {!notification.blocking && (
-        <Button style={{ marginTop: 20 }} onPress={props.onAcknowledge}>
-          Okay!
-        </Button>
-      )}
+      {!notification.blocking && <Button style={{ marginTop: 20 }} onPress={props.onAcknowledge} title="Okay!" />}
     </View>
   )
 }

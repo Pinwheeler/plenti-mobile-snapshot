@@ -1,10 +1,9 @@
-import { Text } from "@rneui/themed"
+import { Button, Text } from "@rneui/themed"
 import React, { useContext, useState } from "react"
 import { View } from "react-native"
 
 import { Quantity } from "../../api/models/Quantity"
 import { PlentiItem } from "../../assets/PlentiItemsIndex"
-import { ButtonWithStatus } from "../../components/ButtonWithStatus"
 import { QuantitySelector } from "../../components/produce_grid/QuantitySelector"
 import { InventoryContext } from "../../contexts/InventoryContext"
 
@@ -43,9 +42,12 @@ export const WantStatusModal: React.FC<Props> = (props) => {
       </Text>
       <QuantitySelector quantitySelected={setQuantity} selectedItem={item} />
       <Text style={{ paddingBottom: 30 }}>{detailText}</Text>
-      <ButtonWithStatus disabled={!quantity} loading={loading} onPress={handleButtonPress}>
-        {!currentWatcher ? "Add Watcher" : "Remove Watcher"}
-      </ButtonWithStatus>
+      <Button
+        disabled={!quantity}
+        loading={loading}
+        onPress={handleButtonPress}
+        title={!currentWatcher ? "Add Watcher" : "Remove Watcher"}
+      />
     </View>
   )
 }

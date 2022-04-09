@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { LayoutAnimation, View } from "react-native"
 import { TouchableOpacity } from "react-native-gesture-handler"
-import { capitalze } from "../lib/StringHelpers"
+import { capitalize } from "../lib/StringHelpers"
 
 interface Props {
   title: string
@@ -9,7 +9,7 @@ interface Props {
 
 export const Accordion: React.FC<Props> = (props) => {
   const [expanded, setExpanded] = useState(false)
-  const titleText = capitalze(props.title)
+  const titleText = capitalize(props.title)
 
   const toggleExpand = () => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)

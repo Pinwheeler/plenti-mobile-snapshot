@@ -1,16 +1,14 @@
 import { CommonActions, NavigationContext } from "@react-navigation/native"
-import { Button, Text } from "@rneui/themed"
+import { Button, Text, useTheme } from "@rneui/themed"
 import React, { useContext } from "react"
 import { ScrollView, View } from "react-native"
 import openMap, { ShowOptions } from "react-native-open-maps"
 
 import { IconButton } from "../../components/IconButton"
 import { LoadingIndicator } from "../../components/LoadingIndicator"
-import { H3 } from "../../components/typography"
 import { AccountContext } from "../../contexts/AccountContext"
 import { AuthContext } from "../../contexts/AuthContext"
 import { InventoryContext } from "../../contexts/InventoryContext"
-import Theme from "../../lib/Theme"
 import { ProfilePicture } from "./ProfilePicture"
 
 export const ProfileInformation: React.FC = () => {
@@ -18,6 +16,7 @@ export const ProfileInformation: React.FC = () => {
   const { loggedInAccount } = useContext(AccountContext)
   const { myInventory } = useContext(InventoryContext)
   const navigate = useContext(NavigationContext)
+  const { theme } = useTheme()
 
   if (!loggedInAccount) {
     return <LoadingIndicator thingThatIsLoading="Account Information" />
@@ -51,27 +50,30 @@ export const ProfileInformation: React.FC = () => {
       <View
         style={{
           flexDirection: "column",
-          backgroundColor: Theme.colors.accent,
+          backgroundColor: theme.colors.secondary,
           paddingHorizontal: 8,
           marginBottom: 16,
         }}
       >
         <View style={{ flexDirection: "row" }}>
           <Text style={{ paddingTop: 8, flex: 2 }}>Pickup Location</Text>
-          <Button
-            onPress={() => {
-              const options: ShowOptions = {
-                end: myInventory?.address,
-              }
-              openMap(options)
-            }}
-          >
-            OPEN IN MAPS
-          </Button>
+          {myInventory?.address && (
+            <Button
+              onPress={() => {
+                const options: ShowOptions = {
+                  end: myInventory?.address,
+                }
+                openMap(options)
+              }}
+              title="OPEN IN MAPS"
+              titleStyle={{ fontSize: 12 }}
+              type="clear"
+            />
+          )}
         </View>
         <Text style={{ paddingBottom: 8 }}>{myInventory?.address}</Text>
       </View>
-      <Button onPress={logout}>Logout</Button>
+      <Button onPress={logout} title="Logout" />
       <View style={{ height: 50 }} />
     </ScrollView>
   )
@@ -85,7 +87,7 @@ interface ProfileLineProps {
 const ProfileLine: React.FC<ProfileLineProps> = (props) => {
   return (
     <View style={{ marginBottom: 15 }}>
-      <H3>{props.title}</H3>
+      <Text h3>{props.title}</Text>
       <Text>{props.value}</Text>
     </View>
   )

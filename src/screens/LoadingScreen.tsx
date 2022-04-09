@@ -1,8 +1,6 @@
+import { Text, useTheme } from "@rneui/themed"
 import React from "react"
 import { ActivityIndicator, View } from "react-native"
-
-import { H2 } from "../components/typography"
-import Theme from "../lib/Theme"
 
 interface Props {
   loading: boolean
@@ -10,6 +8,7 @@ interface Props {
 }
 
 export const LoadingScreen: React.FC<Props> = (props) => {
+  const { theme } = useTheme()
   return (
     <>
       {props.children}
@@ -20,10 +19,10 @@ export const LoadingScreen: React.FC<Props> = (props) => {
             alignItems: "center",
             justifyContent: "center",
             height: "100%",
-            backgroundColor: Theme.colors.background,
+            backgroundColor: theme.colors.background,
           }}
         >
-          <H2>{props.loadingMessage}</H2>
+          <Text h2>{props.loadingMessage}</Text>
           <View style={{ height: 20 }} />
           <ActivityIndicator />
         </View>

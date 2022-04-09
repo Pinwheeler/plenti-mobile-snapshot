@@ -1,9 +1,8 @@
-import { Text } from "@rneui/themed"
+import { Text, useTheme } from "@rneui/themed"
 import React, { useContext } from "react"
 import { View } from "react-native"
 import { ChatMessage } from "../../api/models/ChatMessage"
 import { AccountContext } from "../../contexts/AccountContext"
-import Theme from "../../lib/Theme"
 
 interface Props {
   message: ChatMessage
@@ -17,6 +16,7 @@ const chatItemStyle = {
 
 const ChatItem: React.FC<Props> = (props) => {
   const { loggedInAccount } = useContext(AccountContext)
+  const { theme } = useTheme()
   const { message } = props
   if (!loggedInAccount) {
     return null
@@ -25,7 +25,7 @@ const ChatItem: React.FC<Props> = (props) => {
   if (fromMe) {
     return (
       <View style={{ flexDirection: "row-reverse" }}>
-        <View style={{ ...chatItemStyle, backgroundColor: Theme.colors.accent }}>
+        <View style={{ ...chatItemStyle, backgroundColor: theme.colors.secondary }}>
           <Text style={{ textAlign: "right" }}>{props.message.text}</Text>
         </View>
       </View>
@@ -33,7 +33,7 @@ const ChatItem: React.FC<Props> = (props) => {
   } else {
     return (
       <View style={{ flexDirection: "row" }}>
-        <View style={{ ...chatItemStyle, backgroundColor: Theme.colors.notification }}>
+        <View style={{ ...chatItemStyle, backgroundColor: theme.colors.success }}>
           <Text style={{ textAlign: "left" }}>{props.message.text}</Text>
         </View>
       </View>

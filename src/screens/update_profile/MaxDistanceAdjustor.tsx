@@ -1,10 +1,8 @@
 import Slider from "@react-native-community/slider"
-import { Text } from "@rneui/themed"
+import { Text, useTheme } from "@rneui/themed"
 import { useFormikContext } from "formik"
 import React, { useState } from "react"
 import { NativeSyntheticEvent, TextInput, TextInputSubmitEditingEventData, View } from "react-native"
-import { H3 } from "../../components/typography/H3"
-import Theme from "../../lib/Theme"
 
 const FORIMIK_KEY = "maxDistance"
 
@@ -23,6 +21,7 @@ export const MaxDistanceAdjustor: React.FC<Props> = (props) => {
   const { prefersMetric, onChange } = props
   const [textPreview, setTextPreview] = useState<string>()
   const [isEditingText, setEditingText] = useState(false)
+  const { theme } = useTheme()
   const distance = values.maxDistance
   const sliderValue = () => {
     if (distance < 0) {
@@ -79,7 +78,9 @@ export const MaxDistanceAdjustor: React.FC<Props> = (props) => {
 
   return (
     <View style={{ marginBottom: 15 }}>
-      <H3 style={{ marginBottom: 10 }}>Maximum Distance</H3>
+      <Text h3 style={{ marginBottom: 10 }}>
+        Maximum Distance
+      </Text>
       <View
         style={{
           flexDirection: "row",
@@ -92,8 +93,8 @@ export const MaxDistanceAdjustor: React.FC<Props> = (props) => {
           minimumValue={MIN_VALUE}
           maximumValue={MAX_VALUE}
           value={sliderValue()}
-          minimumTrackTintColor={Theme.colors.accent}
-          thumbTintColor={Theme.colors.accent}
+          minimumTrackTintColor={theme.colors.secondary}
+          thumbTintColor={theme.colors.secondary}
           onSlidingComplete={handleSliderChanged}
           onValueChange={handleSliderChanging}
         />
@@ -102,14 +103,14 @@ export const MaxDistanceAdjustor: React.FC<Props> = (props) => {
             marginLeft: 10,
             marginRight: 10,
             width: "12%",
-            color: Theme.colors.onSurface,
+            color: theme.colors.background,
           }}
           placeholder="Max"
           value={textValue()}
           keyboardType="number-pad"
           onSubmitEditing={handleTextEditSubmit}
           onChangeText={handleTextValueChanged}
-          placeholderTextColor={Theme.colors.disabled}
+          placeholderTextColor={theme.colors.disabled}
         />
         <Text style={{ paddingTop: 14, width: "8%" }}>{prefersMetric ? "km" : "mi"}</Text>
       </View>
