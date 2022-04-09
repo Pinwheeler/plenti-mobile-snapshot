@@ -195,25 +195,19 @@ interface InputBarProps {
 const InputBar: React.FC<InputBarProps> = (props) => {
   const { onChangeText, value, onPress } = props
   const { theme } = useTheme()
-  const chatbarWidth = Dimensions.get("window").width * 0.5
+  const chatbarWidth = Dimensions.get("window").width * 0.76
   return (
-    <View style={{ position: "relative", width: "100%", backgroundColor: "purple", justifyContent: "flex-end" }}>
+    <View style={{ flexDirection: "row", width: "100%", justifyContent: "flex-end" }}>
       <Input
         shake={() => {}}
         containerStyle={{
-          position: "absolute",
-          bottom: 0,
-          left: 8,
-          right: 58,
           backgroundColor: theme.colors.background,
-          borderBottomWidth: 0,
           width: chatbarWidth,
         }}
         onChangeText={(text) => onChangeText(text)}
         value={value}
         placeholder="Type chat message here"
         multiline={true}
-        underlineColorAndroid="transparent"
       />
       <IconButton
         type={"play"}
