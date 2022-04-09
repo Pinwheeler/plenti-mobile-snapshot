@@ -1,5 +1,5 @@
 import { CommonActions, useNavigation } from "@react-navigation/native"
-import { Overlay, Text } from "@rneui/themed"
+import { Overlay, Text, useTheme } from "@rneui/themed"
 import React, { useContext, useEffect, useMemo, useState } from "react"
 import { TouchableOpacity, View } from "react-native"
 
@@ -11,7 +11,6 @@ import { AppContext } from "../../contexts/AppContext"
 import { ChatContext } from "../../contexts/ChatContext"
 import { LocationContext } from "../../contexts/LocationContext"
 import { PremiumContext } from "../../contexts/PremiumContext"
-import Theme from "../../lib/Theme"
 import { ConfirmNearbyRequest } from "./ConfirmNearbyRequest"
 import { NearMeContext } from "./NearMeContext"
 import { NearMeGridItem } from "./NearMeGridItem"
@@ -24,7 +23,7 @@ export const NearMeSelector: React.FC = () => {
   const { distanceInPreferredUnits } = useContext(LocationContext)
   const { loggedInAccount } = useContext(AccountContext)
   const navigation = useNavigation()
-  const { appwideError } = useContext(AppContext)
+  const { theme } = useTheme()
 
   useEffect(() => {
     setRemoveUpgradeAdRequested(false)
@@ -58,7 +57,11 @@ export const NearMeSelector: React.FC = () => {
           <NearMeGridItem item={item} key={`near-me-item-${item.inventoryItem.uid}`} />
         ))}
       </ProduceGrid>
-      <Overlay isVisible={!!selectedItem} onDismiss={() => setSelectedItem(undefined)}>
+      <Overlay
+        overlayStyle={{ marginHorizontal: 15, paddingHorizontal: 15 }}
+        isVisible={!!selectedItem}
+        onDismiss={() => setSelectedItem(undefined)}
+      >
         {!!selectedItem && (
           <LoggedInGate onClose={() => setSelectedItem(undefined)} account={loggedInAccount} goToAccount={goToAccount}>
             {loggedInAccount && (
@@ -85,7 +88,7 @@ export const NearMeSelector: React.FC = () => {
             style={{
               width: "85%",
               height: "80%",
-              backgroundColor: Theme.colors.accent,
+              backgroundColor: theme.colors.secondary,
               position: "relative",
               left: "10%",
               top: "5%",

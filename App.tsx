@@ -5,8 +5,9 @@ import React from "react"
 
 import { ErrorBoundary } from "./src/components/ErrorBoundary"
 import { ContextStack } from "./src/contexts/ContextStack"
-import Theme from "./src/lib/Theme"
 import RootNavigator from "./src/nav/RootNavigator"
+import { SafeAreaProvider } from "react-native-safe-area-context"
+import { myTheme } from "./src/lib/Theme"
 
 Location.installWebGeolocationPolyfill()
 
@@ -15,8 +16,10 @@ export default function App() {
     <NavigationContainer>
       <ErrorBoundary>
         <ContextStack>
-          <ThemeProvider>
-            <RootNavigator />
+          <ThemeProvider theme={myTheme}>
+            <SafeAreaProvider>
+              <RootNavigator />
+            </SafeAreaProvider>
           </ThemeProvider>
         </ContextStack>
       </ErrorBoundary>

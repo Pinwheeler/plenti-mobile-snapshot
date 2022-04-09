@@ -1,6 +1,6 @@
 import { ReactNativeFirebase } from "@react-native-firebase/app"
 import storage from "@react-native-firebase/storage"
-import { Button, Text } from "@rneui/themed"
+import { Button, Text, useTheme } from "@rneui/themed"
 import React, { useState } from "react"
 import { Dimensions, View } from "react-native"
 
@@ -10,7 +10,6 @@ import { Quantity } from "../../../api/models/Quantity"
 import { itemForName, PlentiItem } from "../../../assets/PlentiItemsIndex"
 import { URLS } from "../../../lib/DatabaseHelpers"
 import { Logger } from "../../../lib/Logger"
-import Theme from "../../../lib/Theme"
 import { ButtonWithStatus } from "../../ButtonWithStatus"
 import { ProduceImageSelector } from "./ProduceImageSelector"
 
@@ -42,6 +41,7 @@ export const ProduceItemDetails: React.FC<Props> = (props) => {
     itsAnInventoryItem ? selectedItem.imageUrl : undefined,
   )
   const [confirmingDelete, setConfirmingDelete] = useState(false)
+  const { theme } = useTheme()
 
   if (!selectedItem) {
     return null
@@ -93,9 +93,9 @@ export const ProduceItemDetails: React.FC<Props> = (props) => {
   }
 
   return (
-    <View style={{ backgroundColor: "white", padding: 15, margin: 15 }}>
+    <View style={{ backgroundColor: "white" }}>
       <Text h1 style={{ marginBottom: 15, textDecorationLine: "underline" }}>{`Listing: ${displayName}`}</Text>
-      {error && <Text style={{ color: Theme.colors.error }}>{error.message}</Text>}
+      {error && <Text style={{ color: theme.colors.error }}>{error.message}</Text>}
       <QuantitySelectorItem currentQuantity={quantity} quantity={"A Little"} quantitySelected={setQuantity} />
       <QuantitySelectorItem currentQuantity={quantity} quantity={"Some"} quantitySelected={setQuantity} />
       <QuantitySelectorItem currentQuantity={quantity} quantity={"A Lot"} quantitySelected={setQuantity} />

@@ -1,4 +1,4 @@
-import { Text } from "@rneui/themed"
+import { Text, useTheme } from "@rneui/themed"
 import React, { useContext, useEffect, useState } from "react"
 import { View } from "react-native"
 
@@ -10,7 +10,6 @@ import { AccountContext } from "../../contexts/AccountContext"
 import { LocationContext } from "../../contexts/LocationContext"
 import { fromISOTime } from "../../lib/DateHelper"
 import { Logger } from "../../lib/Logger"
-import Theme from "../../lib/Theme"
 import { NearMeContext } from "./NearMeContext"
 
 interface Props {
@@ -28,6 +27,8 @@ export const NearMeGridItem: React.FC<Props> = (props) => {
   const itemLng = item.referenceLng
   const [distance, setDistance] = useState(metric ? convertMiToKM(item.distance) : item.distance)
   const displayDistance = `${distance.toFixed(1)} ${metric ? "km" : "mi"}`
+
+  const { theme } = useTheme()
 
   useEffect(() => {
     if (lastKnownPosition) {
@@ -47,7 +48,7 @@ export const NearMeGridItem: React.FC<Props> = (props) => {
   return (
     <ProduceGridItem plentiItem={plentiItem} onPress={() => setSelectedItem(item)}>
       <View style={{ flexDirection: "row" }}>
-        <Text style={{ color: Theme.colors.secondaryText }}>{displayDistance}</Text>
+        <Text style={{ color: theme.colors.grey2 }}>{displayDistance}</Text>
         <Text style={{ marginLeft: "auto" }}>
           <StalenessIcon date={fromISOTime(item.inventoryItem.updatedAt)} />
         </Text>

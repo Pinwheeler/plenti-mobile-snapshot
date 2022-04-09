@@ -92,7 +92,13 @@ export const InventoryList = () => {
   return (
     <View style={{ flex: 1 }}>
       <Content />
-      <IconButton type={"plus"} onPress={onAdd} style={{ position: "absolute", right: 15, bottom: 15 }} />
+      <IconButton
+        type={"plus"}
+        onPress={onAdd}
+        color="white"
+        size={30}
+        style={{ position: "absolute", right: 15, bottom: 15, backgroundColor: Theme.colors.primary }}
+      />
       <Overlay isVisible={!!selectedItem} onBackdropPress={() => setSelectedItem(undefined)}>
         <ProduceItemDetails
           upcertItem={handleUpcertItem}
@@ -115,7 +121,6 @@ export const InventoryList = () => {
             Go To Profile Screen
           </Button>
           <Button style={{ marginTop: 20 }} onPress={onClose}>
-            {" "}
             {/**mode="outlined" */}
             Close
           </Button>

@@ -1,5 +1,5 @@
+import { useTheme } from "@rneui/themed"
 import React, { useMemo } from "react"
-import Theme from "../../lib/Theme"
 import { Icon } from "../Icon"
 
 const DAYS_IN_MILLIS = 1000 * 60 * 60 * 24
@@ -10,14 +10,15 @@ interface Props {
 
 export const StalenessIcon: React.FC<Props> = (props) => {
   const { date } = props
+  const { theme } = useTheme()
   const stalenessColor = useMemo(() => {
     const staleness = new Date().getTime() - date.getTime()
     if (staleness < 7 * DAYS_IN_MILLIS) {
-      return Theme.colors.primary
+      return theme.colors.primary
     } else if (staleness < 30 * DAYS_IN_MILLIS) {
-      return Theme.colors.accent
+      return theme.colors.secondary
     } else {
-      return Theme.colors.error
+      return theme.colors.error
     }
   }, [date])
 

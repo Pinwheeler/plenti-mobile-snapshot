@@ -1,4 +1,4 @@
-import { Button, Text } from "@rneui/themed"
+import { Button, Text, useTheme } from "@rneui/themed"
 import React from "react"
 import { View } from "react-native"
 
@@ -7,7 +7,6 @@ import { Icon } from "../../components/Icon"
 import { IconButton } from "../../components/IconButton"
 import { ProduceItemImage } from "../../components/ProduceItemImage"
 import { fromISOTime, timeDifference } from "../../lib/DateHelper"
-import Theme from "../../lib/Theme"
 
 interface Props {
   selectedItem: DistancedInventoryItem
@@ -18,6 +17,7 @@ interface Props {
 
 export const ConfirmNearbyRequest: React.FC<Props> = (props) => {
   const { selectedItem, distanceString, onCancel, onConnect } = props
+  const { theme } = useTheme()
   if (!selectedItem) {
     return null
   }
@@ -26,39 +26,40 @@ export const ConfirmNearbyRequest: React.FC<Props> = (props) => {
   const distanceLine = `${distanceString} away`
   const stalenessLine = timeDifference(new Date(), fromISOTime(selectedItem.inventoryItem.updatedAt))
   return (
-    <View style={{ backgroundColor: Theme.colors.surface, margin: 30, borderRadius: 5 }}>
+    <View style={{ backgroundColor: theme.colors.background, borderRadius: 5 }}>
       <ProduceItemImage
         imageOverride={selectedItem.inventoryItem.imageUrl}
-        style={{ width: "100%", height: 300, borderTopLeftRadius: 5, borderTopRightRadius: 5 }}
+        style={{ width: "100%", height: 300, borderRadius: 5 }}
         item={selectedItem.inventoryItem.plentiItemName}
       />
       <View style={{ padding: 15 }}>
         <View style={{ flexDirection: "row", marginBottom: 15 }}>
           <View style={{ flexDirection: "column", width: "50%" }}>
             <Text style={{ fontSize: 18, fontWeight: "600" }}>{selectedItem.inventoryItem.plentiItemName}</Text>
-            <Text style={{ color: Theme.colors.secondaryText }}>{distanceLine}</Text>
-            <Text style={{ color: Theme.colors.secondaryText }}>{quantityLine}</Text>
+            <Text style={{ color: theme.colors.grey2 }}>{distanceLine}</Text>
+            <Text style={{ color: theme.colors.grey2 }}>{quantityLine}</Text>
           </View>
           <View style={{ flexDirection: "column", width: "50%", alignItems: "flex-end" }}>
             <View style={{ flexDirection: "row" }}>
-              <Text style={{ maxWidth: 240, color: Theme.colors.secondaryText, fontSize: 14, marginRight: 5 }}>
+              <Text style={{ maxWidth: 240, color: theme.colors.grey2, fontSize: 14, marginRight: 5 }}>
                 {selectedItem.owningAccountUsername}
               </Text>
-              <Icon color={Theme.colors.secondaryText} size={16} type={"user-alt"} />
+              <Icon color={theme.colors.grey2} size={16} type={"user-alt"} />
             </View>
             <View style={{ flexDirection: "row" }}>
-              <Text style={{ color: Theme.colors.secondaryText, fontSize: 14, marginRight: 5 }}>{stalenessLine}</Text>
-              <Icon color={Theme.colors.secondaryText} size={16} type={"clock"} />
+              <Text style={{ color: theme.colors.grey2, fontSize: 14, marginRight: 5 }}>{stalenessLine}</Text>
+              <Icon color={theme.colors.grey2} size={16} type={"clock"} />
             </View>
           </View>
         </View>
-        <Button onPress={onConnect}>Connect</Button>
+        <Button onPress={onConnect} title={"Connect"} />
       </View>
       <IconButton
         onPress={onCancel}
-        color={Theme.colors.surface}
+        color={theme.colors.background}
         style={{ position: "absolute", backgroundColor: "rgba(0, 0, 0, 0.5)", right: 0 }}
         type={"times"}
+        size={24}
       />
     </View>
   )

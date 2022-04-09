@@ -19,7 +19,6 @@ export const ProduceGridItem: React.FC<Props> = (props) => {
         height: 200,
         marginBottom: 15,
         minWidth: 140,
-        marginHorizontal: 10,
         flex: 1,
       }}
       onPress={onPress}
