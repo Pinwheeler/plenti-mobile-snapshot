@@ -6,6 +6,7 @@ import { LoadingIndicator } from "../../components/LoadingIndicator"
 import { handleUnauthenticatedRequest, URLS } from "../../lib/DatabaseHelpers"
 import { AccountContext } from "../../contexts/AccountContext"
 import { AccountEntity } from "../../api/models/Account"
+import { InventoryContext } from "../../contexts/InventoryContext"
 
 interface Props {
   connection: Connection
@@ -17,15 +18,18 @@ interface IConverstaionContext {
   connection: Connection
   shareLocationOpen: boolean
   partnerAccount: AccountEntity
+  offendingAccout?: AccountEntity
   shareLocation(sharing: boolean): void
   setShareLocationOpen(value: boolean): void
+  setOffendingAccount(account?: AccountEntity): void
 }
 
 export const ConversationContext = React.createContext({} as IConverstaionContext)
 
 export const ConversationProvider: React.FC<Props> = (props) => {
   const { connection } = props
-  const { loggedInAccount } = useContext(AccountContext)
+  const { myInventory } = useContext(InventoryContext)
+  const [offendingAccount, setOffendingAccount] = useState<AccountEntity>()
   const [conversation, setConversation] = useState<Conversation>()
   const [shareLocationOpen, setShareLocationOpen] = useState(false)
   const theirConnectionPath = `/connections/${connection.partnerUid}/${connection.myUid}`
@@ -40,13 +44,13 @@ export const ConversationProvider: React.FC<Props> = (props) => {
   }, [connection])
 
   const shareLocation = (sharing: boolean) => {
-    if (loggedInAccount && loggedInAccount.pickupAddress && loggedInAccount.latitude && loggedInAccount.longitude) {
+    if (myInventory) {
       const myConnectionUpdate: Partial<Connection> = { iHaveSharedLocation: sharing }
       const theirConnectionUpdate: Partial<Connection> = {
         theirPickupLocation: {
-          address: loggedInAccount.pickupAddress,
-          latitude: loggedInAccount.latitude,
-          longitude: loggedInAccount.longitude,
+          address: myInventory.address,
+          latitude: myInventory.latitude,
+          longitude: myInventory.longitude,
         },
       }
       return Promise.all([
@@ -65,9 +69,11 @@ export const ConversationProvider: React.FC<Props> = (props) => {
     conversation,
     connection,
     shareLocationOpen,
+    partnerAccount: props.partnerAccount,
+    offendingAccount,
     shareLocation,
     setShareLocationOpen,
-    partnerAccount: props.partnerAccount,
+    setOffendingAccount,
   }
 
   return <ConversationContext.Provider value={value}>{props.children}</ConversationContext.Provider>

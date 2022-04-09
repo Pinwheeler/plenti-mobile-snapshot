@@ -1,30 +1,17 @@
-import React, { useContext, useEffect, useMemo, useState } from "react"
+import React, { useContext, useMemo } from "react"
 import { View } from "react-native"
 import openMap, { ShowOptions } from "react-native-open-maps"
-import { Button, Surface, Text } from "react-native-paper"
-import { AccountEntity } from "../../api/models/Account"
-import { ChatContext } from "../../contexts/ChatContext"
 import { ConversationContext } from "./ConversationContext"
-import database from "@react-native-firebase/database"
-import { URLS } from "../../lib/DatabaseHelpers"
 import { LoadingIndicator } from "../../components/LoadingIndicator"
 import Theme from "../../lib/Theme"
 import { IconButton } from "../../components/IconButton"
+import { Button, Text } from "@rneui/themed"
 
 const ChatInfoBar: React.FC = (props) => {
-  const { refresh, shareLocation, setShareLocationModalOpen, setOffendingAccount } = useContext(ChatContext)
-  const { conversation, connection } = useContext(ConversationContext)
+  const { setOffendingAccount } = useContext(ConversationContext)
+  const { connection, shareLocation, setShareLocationOpen, partnerAccount } = useContext(ConversationContext)
   const iHaveSharedPickupLocation = connection.iHaveSharedLocation
-  const [partnerAccount, setPartnerAccount] = useState<AccountEntity>()
   const theirPickupLocation = connection.theirPickupLocation
-
-  useEffect(() => {
-    const path = `/accounts/${connection.partnerUid}`
-    const partnerChange = database()
-      .ref(path)
-      .on("value", (snapshot) => setPartnerAccount(new AccountEntity(snapshot.val())))
-    return () => database().ref(path).off("value", partnerChange)
-  }, [connection])
 
   if (!partnerAccount) {
     return <LoadingIndicator thingThatIsLoading="Partner information" />
@@ -52,7 +39,6 @@ const ChatInfoBar: React.FC = (props) => {
           {!!theirPickupLocation && (
             <Button
               style={{ marginTop: 15 }}
-              mode="outlined"
               onPress={() => {
                 const options: ShowOptions = {
                   end: theirPickupLocation.address,
@@ -70,7 +56,7 @@ const ChatInfoBar: React.FC = (props) => {
             type={"gps"}
             onPress={() => {
               if (!iHaveSharedPickupLocation) {
-                setShareLocationModalOpen(true)
+                setShareLocationOpen(true)
               } else {
                 shareLocation(false)
               }
@@ -83,7 +69,7 @@ const ChatInfoBar: React.FC = (props) => {
   }
 
   return (
-    <Surface
+    <View
       style={{
         padding: 5,
         alignContent: "center",
@@ -92,7 +78,7 @@ const ChatInfoBar: React.FC = (props) => {
       }}
     >
       <InnerComponent />
-    </Surface>
+    </View>
   )
 }
 
