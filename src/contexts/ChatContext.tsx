@@ -53,7 +53,7 @@ export const ChatProvider: React.FC = (props) => {
           partnerUid: inventoryItem.accountUid,
           conversationUid: conversation.uid,
           iHaveSharedLocation: false,
-          theyHaveSharedLocation: false,
+          theirPickupLocation: undefined,
           unreadMessageCount: 0,
         }
         const theirConnection: Connection = {
@@ -61,7 +61,7 @@ export const ChatProvider: React.FC = (props) => {
           partnerUid: loggedInAccount.uid,
           conversationUid: conversation.uid,
           iHaveSharedLocation: false,
-          theyHaveSharedLocation: false,
+          theirPickupLocation: undefined,
           unreadMessageCount: 0,
         }
         return Promise.all([

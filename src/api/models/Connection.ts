@@ -3,6 +3,10 @@ export interface Connection {
   myUid: string
   partnerUid: string
   iHaveSharedLocation: boolean
-  theyHaveSharedLocation: boolean
+  theirPickupLocation?: {
+    address: string
+    latitude: number
+    longitude: number
+  }
   unreadMessageCount: number
 }

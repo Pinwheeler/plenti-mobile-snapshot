@@ -24,7 +24,7 @@ export const URLS = {
 
 const logPath = (path: string) => {
   if (__DEV__) {
-    console.log(path)
+    //console.log(path)
   }
   return path
 }

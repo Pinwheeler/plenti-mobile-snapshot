@@ -3,6 +3,7 @@ import React, { useContext } from "react"
 import { PremiumContext } from "../contexts/PremiumContext"
 import Theme from "../lib/Theme"
 import { AddInventoryItemScreen } from "../screens/add_inventory/AddInventoryItemScreen"
+import { ChatScreen } from "../screens/chat/ChatScreen"
 import { UpdateProfileScreen } from "../screens/update_profile/UpdateProfileScreen"
 import { TabNav } from "./TabNav"
 
@@ -22,11 +23,7 @@ const HomeStack = () => {
       }}
     >
       <Stack.Screen name="Plenti" component={TabNav} options={{ headerTitleAlign: "left", headerTitle: headerTitle }} />
-      {/* <Stack.Screen
-        name="Chat"
-        component={ChatScreen}
-        options={{ title: "Chat", headerRight: () => <ConnectionStatus /> }}
-      /> */}
+      <Stack.Screen name="Chat" component={ChatScreen} options={{ title: "Chat" }} />
       <Stack.Screen
         name="AddInventoryItem"
         component={AddInventoryItemScreen}

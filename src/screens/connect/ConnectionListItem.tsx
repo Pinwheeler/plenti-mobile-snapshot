@@ -1,11 +1,13 @@
-import { NavigationContext, useNavigation } from "@react-navigation/native"
-import React, { useContext, useRef, useState } from "react"
-import { TouchableHighlight } from "react-native-gesture-handler"
-import { Text } from "react-native-paper"
+import { CommonActions, useNavigation } from "@react-navigation/native"
+import React, { useContext, useEffect, useState } from "react"
+import { Text, TouchableRipple } from "react-native-paper"
+import { AccountEntity } from "../../api/models/Account"
 import { Connection } from "../../api/models/Connection"
 import { AccountContext } from "../../contexts/AccountContext"
 import { ChatContext } from "../../contexts/ChatContext"
 import Theme from "../../lib/Theme"
+import database from "@react-native-firebase/database"
+import { LoadingIndicator } from "../../components/LoadingIndicator"
 
 interface Props {
   connection: Connection
@@ -17,12 +19,18 @@ export const ConnectionListItem: React.FC<Props> = (props) => {
   const { loggedInAccount } = useContext(AccountContext)
   const { deleteConnection } = useContext(ChatContext)
   const [isDeleting, setIsDeleting] = useState(false)
+  const [partnerAccount, setPartnerAccount] = useState<AccountEntity>()
   const myId = loggedInAccount?.uid || -1
-  const owned = connection?.partnerB.id === myId // should be false if no account
-  const matchName = owned ? connection.partnerA.username : connection.partnerB.username
   const unread = false
-  const ref = useRef<SwipeRow<ConnectionEntity>>(null)
   // TODO: show images of all of the user's inventory items
+
+  useEffect(() => {
+    const path = `/accounts/${connection.partnerUid}`
+    const partnerChange = database()
+      .ref(path)
+      .on("value", (snapshot) => setPartnerAccount(new AccountEntity(snapshot.val())))
+    return () => database().ref(path).off("value", partnerChange)
+  }, [connection])
 
   const onDelete = () => {
     setIsDeleting(true)
@@ -31,23 +39,27 @@ export const ConnectionListItem: React.FC<Props> = (props) => {
     })
   }
 
+  if (!partnerAccount) {
+    return <LoadingIndicator thingThatIsLoading="Partner info" />
+  }
+
   return (
     <>
-      <TouchableHighlight
+      <TouchableRipple
         style={{
           flexDirection: "row",
           padding: 15,
         }}
         underlayColor={Theme.colors.primary}
         onPress={() => {
-          navigate("Chat", { connection })
+          navigation.dispatch(CommonActions.navigate({ name: "Chat", params: { connection, partnerAccount } }))
         }}
       >
         <Text style={{ textAlign: "left", flex: 6 }}>
           <Text style={{ color: Theme.colors.notification }}>{unread ? "⬤\t" : ""}</Text>
-          <Text style={{ textAlign: "left" }}>{matchName}</Text>
+          <Text style={{ textAlign: "left" }}>{partnerAccount.username}</Text>
         </Text>
-      </TouchableHighlight>
+      </TouchableRipple>
     </>
   )
 }
