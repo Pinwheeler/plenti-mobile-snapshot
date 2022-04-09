@@ -55,7 +55,7 @@ export const AccountProvider: React.FC = (props) => {
         prefersMetric: true,
         maxDistance: -1,
         iapId: "NOT_YET_IMPLEMENTED",
-        blockedUsers: [],
+        blockedUsers: {},
       })
       database().ref(URLS.account.public(account)).set(account)
       database().ref(URLS.account.secure(loggedInAccount)).set(loggedInAccount)
@@ -82,10 +82,10 @@ export const AccountProvider: React.FC = (props) => {
     return handleUnauthenticatedRequest("updateAccount")
   }
 
-  const blockUser = (targetUser: AccountEntity, reason?: string) => {
+  const blockUser = (targetUser: AccountEntity, reason: string) => {
     if (loggedInAccount) {
       const update = { ...loggedInAccount }
-      update.blockedUsers.push({ blockedUserId: targetUser.uid, reason })
+      update.blockedUsers[targetUser.uid] = { uid: targetUser.uid, reason }
       return Promise.all([
         database().ref(URLS.account.public(loggedInAccount)).update(update),
         database().ref(URLS.reportsTargetingUser(targetUser)).set({ reportingUser: loggedInAccount.uid, reason }),

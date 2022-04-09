@@ -1,5 +1,5 @@
 import React from "react"
-import { View } from "react-native"
+import { ActivityIndicator, View } from "react-native"
 import { H3 } from "./typography"
 
 interface Props {

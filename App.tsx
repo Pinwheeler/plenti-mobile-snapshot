@@ -1,4 +1,5 @@
 import { NavigationContainer } from "@react-navigation/native"
+import { ThemeProvider } from "@rneui/themed"
 import * as Location from "expo-location"
 import React from "react"
 
@@ -14,9 +15,9 @@ export default function App() {
     <NavigationContainer>
       <ErrorBoundary>
         <ContextStack>
-          <Provider theme={Theme}>
+          <ThemeProvider>
             <RootNavigator />
-          </Provider>
+          </ThemeProvider>
         </ContextStack>
       </ErrorBoundary>
     </NavigationContainer>

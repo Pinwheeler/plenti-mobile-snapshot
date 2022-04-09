@@ -1,26 +1,27 @@
-import React from 'react'
-import {View} from 'react-native'
-import {ActivityIndicator, Title} from 'react-native-paper'
+import { Text } from "@rneui/themed"
+import React from "react"
+import { ActivityIndicator, View } from "react-native"
 
 interface Props {
   loadingMessage?: string
 }
 
-const ActivityOverlay: React.FC<Props> = props => {
-  const {loadingMessage} = props
+const ActivityOverlay: React.FC<Props> = (props) => {
+  const { loadingMessage } = props
   return (
     <View
       style={{
-        position: 'absolute',
+        position: "absolute",
         left: 0,
         right: 0,
         top: 0,
         bottom: 0,
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}>
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
       <ActivityIndicator size="large" />
-      {loadingMessage && <Title>{loadingMessage}</Title>}
+      {loadingMessage && <Text h1>{loadingMessage}</Text>}
     </View>
   )
 }

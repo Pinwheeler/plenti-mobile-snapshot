@@ -1,12 +1,12 @@
+import { Text } from "@rneui/themed"
 import React, { useContext } from "react"
-import { ChatMessageEntity } from "plenti-api"
-import { Text } from "react-native-paper"
 import { View } from "react-native"
-import AccountContext from "src/account/AccountContext"
-import Theme from "src/lib/Theme"
+import { ChatMessage } from "../../api/models/ChatMessage"
+import { AccountContext } from "../../contexts/AccountContext"
+import Theme from "../../lib/Theme"
 
 interface Props {
-  message: ChatMessageEntity
+  message: ChatMessage
 }
 
 const chatItemStyle = {
@@ -16,9 +16,12 @@ const chatItemStyle = {
 }
 
 const ChatItem: React.FC<Props> = (props) => {
-  const { account } = useContext(AccountContext)
+  const { loggedInAccount } = useContext(AccountContext)
   const { message } = props
-  const fromMe = account.id === message.fromAccountId
+  if (!loggedInAccount) {
+    return null
+  }
+  const fromMe = loggedInAccount.uid === message.fromAccountUid
   if (fromMe) {
     return (
       <View style={{ flexDirection: "row-reverse" }}>

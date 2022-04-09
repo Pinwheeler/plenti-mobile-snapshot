@@ -3,8 +3,10 @@ import { ScrollView, View } from "react-native"
 
 import { AllPlentiItems, PlentiItem, ProduceType } from "../../assets/PlentiItemsIndex"
 import Theme from "../../lib/Theme"
+import { Accordion } from "../Accordion"
 import { ProduceGrid } from "../produce_grid/ProduceGrid"
 import { ProduceGridItem } from "../produce_grid/ProduceGridItem"
+import { SearchBar } from "@rneui/themed"
 
 interface Props {
   onItemSelect(item: PlentiItem): void
@@ -52,22 +54,20 @@ const ItemSelector: React.FC<Props> = (props) => {
       const categoryArray = Array.from(categories)
       return (
         <ScrollView>
-          <List.Section>
-            {categoryArray.map(([type, items]) => (
-              <List.Accordion title={type.charAt(0).toUpperCase() + type.slice(1)} key={`list_accordion_${type}`}>
-                <ProduceGrid>
-                  {items.map((item) => (
-                    <ProduceGridItem
-                      onPress={() => onItemSelect(item)}
-                      plentiItem={item}
-                      key={`selector-grid-item-${item.name}`}
-                    />
-                  ))}
-                </ProduceGrid>
-              </List.Accordion>
-            ))}
-            <View style={{ height: 300 }} />
-          </List.Section>
+          {categoryArray.map(([type, items]) => (
+            <Accordion title={type} key={`list_accordion_${type}`}>
+              <ProduceGrid>
+                {items.map((item) => (
+                  <ProduceGridItem
+                    onPress={() => onItemSelect(item)}
+                    plentiItem={item}
+                    key={`selector-grid-item-${item.name}`}
+                  />
+                ))}
+              </ProduceGrid>
+            </Accordion>
+          ))}
+          <View style={{ height: 300 }} />
         </ScrollView>
       )
     }
@@ -75,11 +75,11 @@ const ItemSelector: React.FC<Props> = (props) => {
 
   return (
     <View>
-      <Searchbar
-        clearIcon={"close"}
+      <SearchBar
+        // cancelIcon={"close"}
         onChangeText={setSearchText}
         value={searchText}
-        theme={Theme}
+        // theme={Theme}
         style={{ marginVertical: 10, borderRadius: 30, marginHorizontal: 10 }}
       />
       <InnerContent />

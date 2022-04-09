@@ -1,4 +1,5 @@
 import { CommonActions, useNavigation } from "@react-navigation/native"
+import { Overlay } from "@rneui/base"
 import React, { useContext, useState } from "react"
 
 import { Quantity } from "../../api/models/Quantity"
@@ -32,19 +33,17 @@ export const AddInventoryItemScreen = () => {
     <>
       <TopInfoBar text="What kind of produce?" />
       <ItemSelector onItemSelect={setSelectedItem} />
-      <Portal>
-        <Modal style={{ margin: 20 }} visible={!!selectedItem} onDismiss={() => setSelectedItem(undefined)}>
-          <LoggedInGate onClose={() => setSelectedItem(undefined)} account={loggedInAccount} goToAccount={goToAccount}>
-            <ProduceItemDetails
-              upcertItem={handleAddItem}
-              uploadNewProduceImage={uploadNewProduceImage}
-              loggedInAccount={loggedInAccount!}
-              selectedItem={selectedItem}
-              onClose={() => setSelectedItem(undefined)}
-            />
-          </LoggedInGate>
-        </Modal>
-      </Portal>
+      <Overlay style={{ margin: 20 }} isVisible={!!selectedItem} onDismiss={() => setSelectedItem(undefined)}>
+        <LoggedInGate onClose={() => setSelectedItem(undefined)} account={loggedInAccount} goToAccount={goToAccount}>
+          <ProduceItemDetails
+            upcertItem={handleAddItem}
+            uploadNewProduceImage={uploadNewProduceImage}
+            loggedInAccount={loggedInAccount!}
+            selectedItem={selectedItem}
+            onClose={() => setSelectedItem(undefined)}
+          />
+        </LoggedInGate>
+      </Overlay>
     </>
   )
 }
