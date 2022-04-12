@@ -80,6 +80,7 @@ const ItemSelector: React.FC<Props> = (props) => {
         onChangeText={setSearchText}
         value={searchText}
         theme={theme}
+        lightTheme
         style={{ marginVertical: 10, borderRadius: 30, marginHorizontal: 10 }}
       />
       <InnerContent />

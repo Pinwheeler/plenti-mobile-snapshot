@@ -30,9 +30,14 @@ export const HomeScreen: React.FC = () => {
 
   if (hasPremium) {
     return (
-      <Tab.Navigator>
-        <Tab.Screen options={{ swipeEnabled: false }} name="Nearby" component={Nearby} />
-        <Tab.Screen options={{ swipeEnabled: false }} name="Search" component={Wants} />
+      <Tab.Navigator
+        screenOptions={{
+          swipeEnabled: false,
+          tabBarIndicatorStyle: { backgroundColor: theme.colors.success },
+        }}
+      >
+        <Tab.Screen name="Nearby" component={Nearby} />
+        <Tab.Screen name="Search" component={Wants} />
       </Tab.Navigator>
     )
   } else {

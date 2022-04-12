@@ -22,6 +22,10 @@ const FontAweseome5Types = [
   "chevron-down",
   "pencil",
   "map-marked-alt",
+  "chevron-left",
+  "chevron-right",
+  "chevron-up",
+  "chevron-down",
 ]
 
 const MaterialIconTypes = ["gps-fixed", "gps-not-fixed"]
