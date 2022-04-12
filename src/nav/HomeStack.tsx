@@ -8,6 +8,7 @@ import { AddInventoryItemScreen } from "../screens/add_inventory/AddInventoryIte
 import CatalogRequestScreen from "../screens/catalog_request/CatalogRequestScreen"
 import { ChatScreen } from "../screens/chat/ChatScreen"
 import { ForgotPasswordForm } from "../screens/forgot_password/ForgotPasswordForm"
+import PremiumScreen from "../screens/premium/PremiumScreen"
 import { UpdateProfileScreen } from "../screens/update_profile/UpdateProfileScreen"
 import { TabNav } from "./TabNav"
 
@@ -54,11 +55,7 @@ const HomeStack = () => {
       />
       <Stack.Screen name="CatalogRequest" component={CatalogRequestScreen} options={{ title: "Catalog Request" }} />
       <Stack.Screen name="ForgotPassword" component={ForgotPasswordForm} options={{ title: "Forgot Password" }} />
-      {/* <Stack.Screen
-        name="Store"
-        component={PremiumScreen}
-        options={{ title: "Plenti-Full" }}
-      /> */}
+      <Stack.Screen name="Store" component={PremiumScreen} options={{ title: "Plenti-Full" }} />
     </Stack.Navigator>
   )
 }
