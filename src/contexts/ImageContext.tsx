@@ -29,8 +29,8 @@ export const ImageProvider: React.FC = (props) => {
     [profilePicture],
   )
 
-  const resizeImage = (imageUri: string) =>
-    ImageResizer.createResizedImage(imageUri, 200, 200, "PNG", 100, undefined, undefined, false, { mode: "cover" })
+  const resizeImage = (imageUri: string, size = 200) =>
+    ImageResizer.createResizedImage(imageUri, size, size, "PNG", 100, undefined, undefined, false, { mode: "cover" })
 
   const uploadNewProfilePicture = (imageUri: string, account: LoggedInAccountEntity) =>
     resizeImage(imageUri).then((resized) =>
@@ -44,7 +44,7 @@ export const ImageProvider: React.FC = (props) => {
     )
 
   const uploadNewProduceImage = (imageUri: string, plentiItem: PlentiItem, account: LoggedInAccountEntity) =>
-    resizeImage(imageUri).then((resized) => {
+    resizeImage(imageUri, 400).then((resized) => {
       storage()
         .ref(URLS.images.produceItem(account, plentiItem))
         .putFile(resized.uri)
