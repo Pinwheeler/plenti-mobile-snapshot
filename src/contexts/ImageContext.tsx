@@ -1,5 +1,6 @@
 import storage from "@react-native-firebase/storage"
 import React, { useCallback, useContext } from "react"
+import ImageResizer from "react-native-image-resizer"
 import { AccountEntity } from "../api/models/Account"
 import { isLoggedInAccount, LoggedInAccountEntity } from "../api/models/LoggedInAccount"
 import { PlentiItem } from "../assets/PlentiItemsIndex"
@@ -28,20 +29,27 @@ export const ImageProvider: React.FC = (props) => {
     [profilePicture],
   )
 
+  const resizeImage = (imageUri: string) =>
+    ImageResizer.createResizedImage(imageUri, 200, 200, "PNG", 100, undefined, undefined, false, { mode: "cover" })
+
   const uploadNewProfilePicture = (imageUri: string, account: LoggedInAccountEntity) =>
-    storage()
-      .ref(URLS.images.profile(account))
-      .putFile(imageUri)
-      .catch((error) => {
-        Logger.error(error)
-      })
-      .finally(() => refreshProfilePicture())
+    resizeImage(imageUri).then((resized) =>
+      storage()
+        .ref(URLS.images.profile(account))
+        .putFile(resized.uri)
+        .catch((error) => {
+          Logger.error(error)
+        })
+        .finally(() => refreshProfilePicture()),
+    )
 
   const uploadNewProduceImage = (imageUri: string, plentiItem: PlentiItem, account: LoggedInAccountEntity) =>
-    storage()
-      .ref(URLS.images.produceItem(account, plentiItem))
-      .putFile(imageUri)
-      .catch((error) => Logger.error(error))
+    resizeImage(imageUri).then((resized) => {
+      storage()
+        .ref(URLS.images.produceItem(account, plentiItem))
+        .putFile(resized.uri)
+        .catch((error) => Logger.error(error))
+    })
 
   const value = { imageUriForAccount, uploadNewProfilePicture, uploadNewProduceImage }
 
