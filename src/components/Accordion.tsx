@@ -1,3 +1,4 @@
+import { Text } from "@rneui/themed"
 import React, { useState } from "react"
 import { LayoutAnimation, View } from "react-native"
 import { TouchableOpacity } from "react-native-gesture-handler"
@@ -18,7 +19,9 @@ export const Accordion: React.FC<Props> = (props) => {
 
   return (
     <>
-      <TouchableOpacity onPress={toggleExpand}>{titleText}</TouchableOpacity>
+      <TouchableOpacity onPress={toggleExpand}>
+        <Text>{titleText}</Text>
+      </TouchableOpacity>
       {expanded && <View>{props.children}</View>}
     </>
   )

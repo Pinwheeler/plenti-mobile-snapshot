@@ -8,7 +8,7 @@ import { AddInventoryItemScreen } from "../screens/add_inventory/AddInventoryIte
 import CatalogRequestScreen from "../screens/catalog_request/CatalogRequestScreen"
 import { ChatScreen } from "../screens/chat/ChatScreen"
 import { ForgotPasswordForm } from "../screens/forgot_password/ForgotPasswordForm"
-import PremiumScreen from "../screens/premium/PremiumScreen"
+import { PremiumScreen } from "../screens/premium/PremiumScreen"
 import { UpdateProfileScreen } from "../screens/update_profile/UpdateProfileScreen"
 import { TabNav } from "./TabNav"
 

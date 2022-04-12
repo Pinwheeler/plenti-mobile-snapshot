@@ -5,7 +5,6 @@ export type DeviceType = "iOS" | "Android"
 interface IDeviceContext {
   deviceType: DeviceType
   deviceIdentifier: string
-  // isEmulator: boolean
   shellVersion: string
   version: string
 }
@@ -13,7 +12,6 @@ interface IDeviceContext {
 export const DeviceContext = React.createContext<IDeviceContext>({} as IDeviceContext)
 
 export const DeviceProvider: React.FC = (props) => {
-  const [isEmulator, setIsEmulator] = useState<boolean | undefined>()
   const systemName = DeviceInfo.getSystemName()
   const deviceType: DeviceType = systemName === "Android" ? "Android" : "iOS"
 
@@ -22,10 +20,6 @@ export const DeviceProvider: React.FC = (props) => {
 
   const shellVersion = `${version}(${buildNumber})`
 
-  // DeviceInfo.isEmulator().then((value) => {
-  //   setIsEmulator(value)
-  // })
-
   const deviceIdentifier = useMemo(() => {
     return DeviceInfo.getUniqueId()
   }, [])
@@ -33,7 +27,6 @@ export const DeviceProvider: React.FC = (props) => {
   const value = {
     deviceType,
     deviceIdentifier,
-    isEmulator,
     shellVersion,
     version,
   }

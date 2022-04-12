@@ -1,14 +1,14 @@
 import React from "react"
 import { ScrollView } from "react-native"
 import { Button } from "react-native-paper"
-import { useNavigation } from "@react-navigation/native"
+import { CommonActions, useNavigation } from "@react-navigation/native"
 import { PremiumAdCopy } from "./PremiumAdCopy"
 
 export const StorePageNotLoggedIn = () => {
   const navigation = useNavigation()
 
   const navigateToAccount = () => {
-    navigation.navigate("Profile")
+    navigation.dispatch(CommonActions.navigate({ name: "Profile" }))
   }
 
   return (

@@ -1,9 +1,9 @@
 import React, { useContext, useMemo } from "react"
 import { Surface, Text, TouchableRipple } from "react-native-paper"
 import { IapHubProductInformation } from "react-native-iaphub"
-import Theme from "src/lib/Theme"
 import { View } from "react-native"
-import PremiumContext from "./PremiumContext"
+import { useTheme } from "@rneui/themed"
+import { PremiumContext } from "../../contexts/PremiumContext"
 
 interface Props {
   subscription: IapHubProductInformation
@@ -13,6 +13,7 @@ interface Props {
 export const SubscriptionBlock: React.FC<Props> = (props) => {
   const { subscription, monthlySubscription } = props
   const { purchaseProduct } = useContext(PremiumContext)
+  const { theme } = useTheme()
 
   const durationLine = useMemo(() => {
     switch (subscription.subscriptionDuration) {
@@ -30,11 +31,14 @@ export const SubscriptionBlock: React.FC<Props> = (props) => {
   }, [subscription])
 
   return (
-    <TouchableRipple style={{ flex: 1, marginHorizontal: 8 }} onPress={() => purchaseProduct(subscription)}>
-      <Surface style={{ padding: 10, elevation: 3.5, borderColor: Theme.colors.accent, borderLeftWidth: 3 }}>
+    <TouchableRipple
+      style={{ flex: 1, marginHorizontal: 8, minWidth: 162, marginVertical: 10 }}
+      onPress={() => purchaseProduct(subscription)}
+    >
+      <Surface style={{ padding: 10, elevation: 3.5, borderColor: theme.colors.secondary, borderLeftWidth: 3 }}>
         <Text
           style={{
-            color: Theme.colors.primary,
+            color: theme.colors.primary,
             fontWeight: "900",
             marginBottom: 5,
             textAlign: "center",
@@ -42,7 +46,7 @@ export const SubscriptionBlock: React.FC<Props> = (props) => {
         >
           {durationLine}
         </Text>
-        <Text style={{ fontSize: 45, fontWeight: "200", color: Theme.colors.onSurface, textAlign: "center" }}>
+        <Text style={{ fontSize: 45, fontWeight: "200", color: theme.colors.grey4, textAlign: "center" }}>
           {subscription.price}
         </Text>
         <DiscountView subscription={subscription} monthlySubscription={monthlySubscription} />
@@ -58,6 +62,7 @@ interface DiscountViewProps {
 
 const DiscountView: React.FC<DiscountViewProps> = (props) => {
   const { subscription, monthlySubscription } = props
+  const { theme } = useTheme()
   const monthlyPrice = `${monthlySubscription.price}/month`
   const discountPrice = useMemo(() => {
     let p: number = 0
@@ -90,14 +95,14 @@ const DiscountView: React.FC<DiscountViewProps> = (props) => {
           justifyContent: "center",
         }}
       >
-        <Text style={{ textAlign: "center", color: Theme.colors.secondaryText }}>{monthlyPrice}</Text>
+        <Text style={{ textAlign: "center", color: theme.colors.grey3 }}>{monthlyPrice}</Text>
       </View>
     )
   } else {
     return (
       <View style={{ justifyContent: "center", alignContent: "center", alignItems: "center" }}>
-        <Text style={{ color: Theme.colors.secondaryText, textDecorationLine: "line-through" }}>{monthlyPrice}</Text>
-        <Text style={{ color: Theme.colors.primary }}>{discountPrice}</Text>
+        <Text style={{ color: theme.colors.grey3, textDecorationLine: "line-through" }}>{monthlyPrice}</Text>
+        <Text style={{ color: theme.colors.primary }}>{discountPrice}</Text>
       </View>
     )
   }

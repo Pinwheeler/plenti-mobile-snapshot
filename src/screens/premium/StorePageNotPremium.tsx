@@ -1,7 +1,7 @@
 import React, { useContext } from "react"
 import { ScrollView, View } from "react-native"
+import { PremiumContext } from "../../contexts/PremiumContext"
 import { PremiumAdCopy } from "./PremiumAdCopy"
-import PremiumContext from "./PremiumContext"
 import { SubscriptionBlock } from "./SubscriptionBlock"
 
 export const StorePageNotPremium = () => {
@@ -13,10 +13,15 @@ export const StorePageNotPremium = () => {
   return (
     <ScrollView style={{ padding: 15 }}>
       <PremiumAdCopy />
-      <View style={{ flexDirection: "row", marginTop: 30, justifyContent: "space-evenly" }}>
-        <SubscriptionBlock subscription={monthlySubscription} monthlySubscription={monthlySubscription} />
-        <SubscriptionBlock subscription={yearlySubscription} monthlySubscription={monthlySubscription} />
+      <View style={{ flexDirection: "row", marginTop: 30, justifyContent: "space-evenly", flexWrap: "wrap" }}>
+        {monthlySubscription && (
+          <SubscriptionBlock subscription={monthlySubscription} monthlySubscription={monthlySubscription} />
+        )}
+        {yearlySubscription && monthlySubscription && (
+          <SubscriptionBlock subscription={yearlySubscription} monthlySubscription={monthlySubscription} />
+        )}
       </View>
+      <View style={{ height: 50, width: "100%" }} />
     </ScrollView>
   )
 }
