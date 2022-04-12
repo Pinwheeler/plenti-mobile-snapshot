@@ -56,7 +56,15 @@ export const ProfileInformation: React.FC = () => {
         }}
       >
         <View style={{ flexDirection: "row" }}>
-          <Text style={{ paddingTop: 8, flex: 2 }}>Pickup Location</Text>
+          {myInventory?.address ? (
+            <Text style={{ paddingTop: 8, flex: 2 }}>Pickup Location</Text>
+          ) : (
+            <Text style={{ paddingTop: 8 }}>
+              Press the gear icon to set your pickup location. This is the address that other users will use to navigate
+              to your farm stand.
+            </Text>
+          )}
+
           {myInventory?.address && (
             <Button
               onPress={() => {

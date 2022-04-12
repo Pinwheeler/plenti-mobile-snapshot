@@ -1,28 +1,25 @@
-import { useNavigation } from "@react-navigation/native"
 import { Formik } from "formik"
-import React, { useContext, useState } from "react"
-import { Text, View } from "react-native"
+import React, { useState } from "react"
+import { View } from "react-native"
 import * as yup from "yup"
 import auth from "@react-native-firebase/auth"
-import { Button, useTheme } from "@rneui/themed"
+import { Button, Text } from "@rneui/themed"
 import { TextField } from "../../components/TextField"
+import { ReactNativeFirebase } from "@react-native-firebase/app"
 
 export const ForgotPasswordForm: React.FC = () => {
   const [serverError, setServerError] = useState<string>()
   const [emailSent, setEmailSent] = useState<string>()
-  const [loadig, setLoading] = useState(false)
-  const navigation = useNavigation()
-  const { theme } = useTheme()
+  const [loading, setLoading] = useState(false)
   const handleSendEmailPressed = (form: { email: string }) => {
     setServerError(undefined)
     setLoading(true)
     auth()
       .sendPasswordResetEmail(form.email)
       .then(() => setEmailSent(form.email))
-      .catch((reason) => setServerError(reason))
+      .catch((reason: ReactNativeFirebase.NativeFirebaseError) => setServerError(reason.message))
       .finally(() => setLoading(false))
   }
-  const handleSubmitReset = (form: { code: string; newPassword: string; newPasswordConfirm: string }) => {}
 
   if (!emailSent) {
     return (
@@ -39,8 +36,8 @@ export const ForgotPasswordForm: React.FC = () => {
         {({ handleSubmit }) => (
           <View style={{ padding: 15 }}>
             <Text style={{ paddingBottom: 15 }}>
-              Enter the email you used to create your account and we'll send you a code you can use to reset your
-              password on the app.
+              Enter the email you used to create your account and we'll send you an email you can use to reset your
+              password.
             </Text>
             <TextField
               textContentType="emailAddress"
@@ -51,7 +48,7 @@ export const ForgotPasswordForm: React.FC = () => {
               error={serverError}
             />
             <View style={{ height: 15 }} />
-            <Button onPress={handleSubmit} title="Submit" />
+            <Button onPress={handleSubmit} title="Submit" loading={loading} />
           </View>
         )}
       </Formik>
@@ -59,36 +56,14 @@ export const ForgotPasswordForm: React.FC = () => {
   }
 
   return (
-    <Formik
-      onSubmit={handleSubmitReset}
-      initialValues={{ code: "", newPassword: "", newPasswordConfirm: "" }}
-      validateOnBlur={false}
-      validateOnChange={false}
-      validateOnMount={false}
-      validationSchema={yup.object().shape({
-        code: yup.string().required(),
-        newPassword: yup.string().required(),
-        newPasswordConfirm: yup.string().required(),
-      })}
-    >
-      {({ handleSubmit }) => (
-        <View style={{ padding: 15 }}>
-          <Text style={{ paddingBottom: 15 }}>{`Enter the code sent to\n ${emailSent}`}</Text>
-          <TextField name="code" label="Code" autoCapitalize="none" error={serverError} />
-          <View style={{ height: 15 }} />
-          <TextField
-            textContentType="password"
-            label="New Password"
-            name="newPassword"
-            secureTextEntry={true}
-            blurOnSubmit={false}
-          />
-          <View style={{ height: 15 }} />
-          <TextField label="Confirm Password" name="newPasswordConfirm" secureTextEntry={true} blurOnSubmit={false} />
-          <View style={{ height: 15 }} />
-          <Button onPress={handleSubmit} title="Reset Password" />
-        </View>
-      )}
-    </Formik>
+    <View style={{ padding: 20 }}>
+      <Text style={{ paddingBottom: 15, textAlign: "center" }}>Password reset email successfully sent to</Text>
+      <Text style={{ marginBottom: 15 }} h4>
+        {emailSent}
+      </Text>
+      <Text style={{ paddingBottom: 15, textAlign: "center" }}>
+        Please follow the instructions in the email to reset your password
+      </Text>
+    </View>
   )
 }
