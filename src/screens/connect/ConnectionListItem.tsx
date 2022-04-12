@@ -9,6 +9,8 @@ import database from "@react-native-firebase/database"
 import { LoadingIndicator } from "../../components/LoadingIndicator"
 import { Text, useTheme } from "@rneui/themed"
 import { TouchableOpacity } from "react-native-gesture-handler"
+import { ActivityIndicator } from "react-native-paper"
+import { HomeNavProp, RootStackParams } from "../../nav/HomeStack"
 
 interface Props {
   connection: Connection
@@ -16,7 +18,7 @@ interface Props {
 
 export const ConnectionListItem: React.FC<Props> = (props) => {
   const { connection } = props
-  const navigation = useNavigation()
+  const navigation = useNavigation<HomeNavProp>()
   const { loggedInAccount } = useContext(AccountContext)
   const { deleteConnection } = useContext(ChatContext)
   const [isDeleting, setIsDeleting] = useState(false)
@@ -42,7 +44,7 @@ export const ConnectionListItem: React.FC<Props> = (props) => {
   }
 
   if (!partnerAccount) {
-    return <LoadingIndicator thingThatIsLoading="Partner info" />
+    return <ActivityIndicator />
   }
 
   return (
@@ -54,7 +56,7 @@ export const ConnectionListItem: React.FC<Props> = (props) => {
         }}
         // underlayColor={Theme.colors.primary}
         onPress={() => {
-          navigation.dispatch(CommonActions.navigate({ name: "Chat", params: { connection, partnerAccount } }))
+          navigation.navigate("Chat", { connection, partnerAccount })
         }}
       >
         <Text style={{ textAlign: "left", flex: 6 }}>

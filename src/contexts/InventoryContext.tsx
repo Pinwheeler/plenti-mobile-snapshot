@@ -49,7 +49,7 @@ export const InventoryProvider: React.FC = (props) => {
         .on("value", (snapshot) => setMyWatchers(StringMapFromObj(snapshot.val())))
       return () => database().ref(path).off("value", onWatchersChange)
     }
-  })
+  }, [loggedInAccount])
 
   const addWatcher = (item: PlentiItem, quantity: Quantity) => {
     if (loggedInAccount) {

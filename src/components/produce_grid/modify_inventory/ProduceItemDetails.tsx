@@ -109,6 +109,7 @@ export const ProduceItemDetails: React.FC<Props> = (props) => {
       />
       <View style={{ flexDirection: "row" }}>
         <Button
+          type="outline"
           containerStyle={{ flex: 1, marginRight: 10 }}
           onPress={() => {
             onClose()
@@ -125,8 +126,13 @@ export const ProduceItemDetails: React.FC<Props> = (props) => {
       {itsAnInventoryItem && (
         <Button
           onPress={handleDeletePressed}
-          type={confirmingDelete ? "outline" : "solid"}
-          buttonStyle={{ marginTop: 15, backgroundColor: confirmingDelete ? undefined : theme.colors.error }}
+          type={confirmingDelete ? "solid" : "outline"}
+          buttonStyle={{
+            marginTop: 15,
+            backgroundColor: confirmingDelete ? theme.colors.error : undefined,
+            borderColor: confirmingDelete ? undefined : theme.colors.error,
+          }}
+          titleStyle={{ color: confirmingDelete ? theme.colors.white : theme.colors.error }}
           title={confirmingDelete ? "Confirm" : "Delete Listing"}
         />
       )}

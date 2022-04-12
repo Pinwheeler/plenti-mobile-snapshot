@@ -1,19 +1,32 @@
-import { createStackNavigator } from "@react-navigation/stack"
+import { createStackNavigator, StackNavigationProp } from "@react-navigation/stack"
 import { useTheme } from "@rneui/themed"
 import React, { useContext } from "react"
+import { AccountEntity } from "../api/models/Account"
+import { Connection } from "../api/models/Connection"
 import { PremiumContext } from "../contexts/PremiumContext"
 import { AddInventoryItemScreen } from "../screens/add_inventory/AddInventoryItemScreen"
 import { ChatScreen } from "../screens/chat/ChatScreen"
 import { UpdateProfileScreen } from "../screens/update_profile/UpdateProfileScreen"
 import { TabNav } from "./TabNav"
 
-const Stack = createStackNavigator()
+export type RootStackParams = {
+  Plenti: undefined
+  Chat: { connection: Connection; partnerAccount: AccountEntity }
+  AddInventoryItem: undefined
+  UpdateProfile: undefined
+  CatalogRequest: undefined
+  ForgotPassword: undefined
+  Store: undefined
+}
+
+const Stack = createStackNavigator<RootStackParams>()
+
+export type HomeNavProp = StackNavigationProp<RootStackParams>
 
 const HomeStack = () => {
   const { hasPremium } = useContext(PremiumContext)
   const { theme } = useTheme()
   const headerTitle = hasPremium ? "★ Plenti-Full" : "Plenti"
-  // unclear why the type system doesn't recognize this function
 
   return (
     <Stack.Navigator

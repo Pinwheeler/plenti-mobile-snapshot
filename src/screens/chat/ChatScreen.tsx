@@ -5,15 +5,10 @@ import { AccountContext } from "../../contexts/AccountContext"
 import ChatInfoBar from "./ChatInfoBar"
 import { ChatMain } from "./ChatMain"
 import { ConversationProvider } from "./ConversationContext"
+import type { NativeStackScreenProps } from "@react-navigation/native-stack"
+import { RootStackParams } from "../../nav/HomeStack"
 
-interface Props {
-  route: {
-    params: {
-      connection: Connection
-      partnerAccount: AccountEntity
-    }
-  }
-}
+type Props = NativeStackScreenProps<RootStackParams, "Chat">
 
 export const ChatScreen: React.FC<Props> = (props) => {
   const { loggedInAccount } = useContext(AccountContext)

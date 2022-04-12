@@ -69,7 +69,7 @@ export const ChatProvider: React.FC = (props) => {
           database()
             .ref(URLS.connectionsForAccount(loggedInAccount) + `/${inventoryItem.accountUid}`)
             .set(myConnection),
-          database().ref(`/connections/${inventoryItem.uid}/${loggedInAccount.uid}`).set(theirConnection),
+          database().ref(`/connections/${inventoryItem.accountUid}/${loggedInAccount.uid}`).set(theirConnection),
           database().ref(`conversations/${conversation.uid}`).set(conversation),
         ])
       }

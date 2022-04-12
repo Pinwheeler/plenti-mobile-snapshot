@@ -58,7 +58,7 @@ export const ConversationProvider: React.FC<Props> = (props) => {
       .ref(path)
       .on("value", (snapshot) => setMessages(StringMapFromObj(snapshot.val())))
     return () => database().ref(path).off("value", onMessagesUpdate)
-  })
+  }, [connection])
 
   const sendMessage = (message: string) => {
     if (loggedInAccount) {

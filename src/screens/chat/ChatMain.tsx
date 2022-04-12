@@ -108,6 +108,7 @@ export const ChatMain = () => {
           <InputBar onChangeText={setChatMessage} value={chatMessage} onPress={send} />
         </View>
         <Overlay
+          overlayStyle={{ marginHorizontal: 15 }}
           isVisible={shareLocationOpen}
           onBackdropPress={() => setShareLocationOpen(false)}
           style={{ backgroundColor: theme.colors.background, padding: 15, margin: 15 }}
@@ -121,7 +122,7 @@ export const ChatMain = () => {
               <View style={{ width: "40%" }}>
                 <Button
                   onPress={() => setShareLocationOpen(false)}
-                  style={{ backgroundColor: theme.colors.error }}
+                  buttonStyle={{ backgroundColor: theme.colors.error }}
                   title="Cancel"
                 />
               </View>
@@ -141,7 +142,7 @@ export const ChatMain = () => {
         <Overlay
           isVisible={offendingAccount !== undefined}
           onBackdropPress={() => setOffendingAccount(undefined)}
-          style={{ backgroundColor: theme.colors.background, padding: 15, margin: 15 }}
+          overlayStyle={{ backgroundColor: theme.colors.background, padding: 15, margin: 15 }}
         >
           <Text style={{ textAlign: "center" }}>{`Report ${offendingAccount?.username ?? "chat partner"}?`}</Text>
           <View style={{ height: 18 }} />
@@ -150,20 +151,23 @@ export const ChatMain = () => {
             <Text style={{ fontWeight: "bold" }}>Warning: </Text>After your report you will no longer see content from
             this user, nor will you be able to chat with them.
           </Text>
-          <Input
-            onChangeText={(text) => setReportReason(text)}
-            value={reportReason}
-            placeholder="Reson for report"
-            multiline={true}
-            shake={() => {}}
-          />
+          <View style={{ marginTop: 10 }}>
+            <Input
+              onChangeText={(text) => setReportReason(text)}
+              value={reportReason}
+              placeholder="Reson for report"
+              multiline={true}
+              shake={() => {}}
+            />
+          </View>
           <View style={{ height: 18 }} />
           <View>
             <View style={{ flexDirection: "row", alignContent: "space-between" }}>
               <View style={{ width: "40%" }}>
                 <Button
                   onPress={() => setOffendingAccount(undefined)}
-                  style={{ backgroundColor: theme.colors.error }}
+                  buttonStyle={{ backgroundColor: theme.colors.error }}
+                  title="Cancel"
                 />
               </View>
               <View style={{ width: "20%" }} />

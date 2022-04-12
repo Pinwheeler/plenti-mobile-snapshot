@@ -30,9 +30,7 @@ const ChatInfoBar: React.FC = (props) => {
     const { theme } = useTheme()
     return (
       <View style={{ flexDirection: "row" }}>
-        <View>
-          <IconButton size={24} type={"flag"} onPress={() => setOffendingAccount(partnerAccount)} />
-        </View>
+        <IconButton size={24} type={"flag"} onPress={() => setOffendingAccount(partnerAccount)} />
         <View style={{ flex: 9 }}>
           <Text style={{ textAlign: "center" }}>{partnerNameLine}</Text>
           <Text style={{ textAlign: "center", fontSize: 12 }}>{locationLine}</Text>
@@ -49,20 +47,19 @@ const ChatInfoBar: React.FC = (props) => {
             />
           )}
         </View>
-        <View>
-          <IconButton
-            size={24}
-            type="gps-fixed"
-            onPress={() => {
-              if (!iHaveSharedPickupLocation) {
-                setShareLocationOpen(true)
-              } else {
-                shareLocation(false)
-              }
-            }}
-            style={{ backgroundColor: iHaveSharedPickupLocation ? theme.colors.primary : "transparent" }}
-          />
-        </View>
+        <IconButton
+          size={24}
+          type="gps-fixed"
+          onPress={() => {
+            console.log("location buttin pressed")
+            if (!iHaveSharedPickupLocation) {
+              setShareLocationOpen(true)
+            } else {
+              shareLocation(false)
+            }
+          }}
+          style={{ backgroundColor: iHaveSharedPickupLocation ? theme.colors.primary : "transparent" }}
+        />
       </View>
     )
   }
