@@ -63,7 +63,13 @@ export const AuthProvider: React.FC = (props) => {
         return u
       })
 
-  const value = { user, signedInAnonymously, logout, login, signup }
+  const value = {
+    user,
+    signedInAnonymously,
+    logout,
+    login,
+    signup,
+  }
 
   if (initializing) {
     return <LoadingScreen loadingMessage="Authenticating..." loading />

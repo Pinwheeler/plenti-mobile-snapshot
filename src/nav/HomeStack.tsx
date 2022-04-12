@@ -5,7 +5,9 @@ import { AccountEntity } from "../api/models/Account"
 import { Connection } from "../api/models/Connection"
 import { PremiumContext } from "../contexts/PremiumContext"
 import { AddInventoryItemScreen } from "../screens/add_inventory/AddInventoryItemScreen"
+import CatalogRequestScreen from "../screens/catalog_request/CatalogRequestScreen"
 import { ChatScreen } from "../screens/chat/ChatScreen"
+import { ForgotPasswordForm } from "../screens/forgot_password/ForgotPasswordForm"
 import { UpdateProfileScreen } from "../screens/update_profile/UpdateProfileScreen"
 import { TabNav } from "./TabNav"
 
@@ -50,16 +52,8 @@ const HomeStack = () => {
           title: "Update Profile",
         })}
       />
-      {/* <Stack.Screen
-        name="CatalogRequest"
-        component={CatalogRequestScreen}
-        options={{ title: "Catalog Request" }}
-      /> */}
-      {/* <Stack.Screen
-        name="ForgotPassword"
-        component={ForgotPasswordForm}
-        options={{ title: "Forgot Password" }}
-      /> */}
+      <Stack.Screen name="CatalogRequest" component={CatalogRequestScreen} options={{ title: "Catalog Request" }} />
+      <Stack.Screen name="ForgotPassword" component={ForgotPasswordForm} options={{ title: "Forgot Password" }} />
       {/* <Stack.Screen
         name="Store"
         component={PremiumScreen}
