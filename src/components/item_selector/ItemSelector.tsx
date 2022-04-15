@@ -77,11 +77,11 @@ const ItemSelector: React.FC<Props> = (props) => {
     <View>
       <SearchBar
         // cancelIcon={"close"}
+        placeholder="Produce name..."
         onChangeText={setSearchText}
         value={searchText}
         theme={theme}
         lightTheme
-        style={{ marginVertical: 10, borderRadius: 30, marginHorizontal: 10 }}
       />
       <InnerContent />
     </View>

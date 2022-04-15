@@ -11,6 +11,7 @@ import { itemForName, PlentiItem } from "../../../assets/PlentiItemsIndex"
 import { URLS } from "../../../lib/DatabaseHelpers"
 import { Logger } from "../../../lib/Logger"
 import { capitalize } from "../../../lib/StringHelpers"
+import { QuantitySelectorItem } from "../../QuantitySelectorItem"
 import { ProduceImageSelector } from "./ProduceImageSelector"
 
 function isInventoryItem(item: PlentiItem | InventoryItem | undefined): item is InventoryItem {
@@ -137,24 +138,5 @@ export const ProduceItemDetails: React.FC<Props> = (props) => {
         />
       )}
     </View>
-  )
-}
-
-interface ItemProps {
-  quantity: Quantity
-  currentQuantity?: Quantity
-  quantitySelected: (quantity: Quantity) => void
-}
-
-const QuantitySelectorItem: React.FC<ItemProps> = (props) => {
-  const { quantitySelected, quantity, currentQuantity } = props
-  const selected = quantity === currentQuantity
-  const { theme } = useTheme()
-  return (
-    <Button
-      onPress={() => quantitySelected(quantity)}
-      buttonStyle={{ marginVertical: 5, backgroundColor: selected ? theme.colors.secondary : theme.colors.grey4 }}
-      title={props.quantity}
-    />
   )
 }

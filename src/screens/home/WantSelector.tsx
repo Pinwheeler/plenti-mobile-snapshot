@@ -11,6 +11,7 @@ import { WantStatusModal } from "./WantStatusModal"
 const WantSelector: React.FC = () => {
   const navigator = useNavigation()
   const [selectedItem, setSelectedItem] = useState<PlentiItem>()
+  const [requestPanelVisible, setRequestPanelVisible] = useState(true)
 
   const handleClose = () => {
     setSelectedItem(undefined)
@@ -21,11 +22,16 @@ const WantSelector: React.FC = () => {
     <>
       <ItemSelectorProvider>
         <ItemSelector onItemSelect={setSelectedItem} />
-        <Overlay isVisible={!!selectedItem}>
+        <Overlay overlayStyle={{ margin: 20 }} isVisible={!!selectedItem}>
           {selectedItem ? <WantStatusModal item={selectedItem} onClose={handleClose} /> : null}
         </Overlay>
       </ItemSelectorProvider>
-      <CatalogRequestButton style={{ position: "absolute", bottom: 100 }} />
+      {requestPanelVisible && (
+        <CatalogRequestButton
+          onClose={() => setRequestPanelVisible(false)}
+          style={{ position: "absolute", bottom: 100 }}
+        />
+      )}
     </>
   )
 }

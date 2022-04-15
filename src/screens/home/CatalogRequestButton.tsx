@@ -2,8 +2,13 @@ import { CommonActions, useNavigation } from "@react-navigation/native"
 import { Button, Text, useTheme } from "@rneui/themed"
 import React from "react"
 import { View, ViewProps } from "react-native"
+import { IconButton } from "../../components/IconButton"
 
-export const CatalogRequestButton: React.FC<ViewProps> = (props) => {
+interface Props extends ViewProps {
+  onClose(): void
+}
+
+export const CatalogRequestButton: React.FC<Props> = (props) => {
   const navigation = useNavigation()
   const { theme } = useTheme()
 
@@ -39,6 +44,7 @@ export const CatalogRequestButton: React.FC<ViewProps> = (props) => {
           onPress={() => navigation.dispatch(CommonActions.navigate({ name: "CatalogRequest" }))}
         />
       </View>
+      <IconButton type="times" onPress={props.onClose} style={{ position: "absolute" }} />
     </View>
   )
 }

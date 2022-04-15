@@ -23,7 +23,9 @@ export const WantStatusModal: React.FC<Props> = (props) => {
     if (quantity) {
       setLoading(true)
       if (!currentWatcher) {
-        addWatcher(item, quantity).finally(() => setLoading(false))
+        addWatcher(item, quantity).finally(() => {
+          setLoading(false)
+        })
       } else {
         removeWatcher(item).finally(() => setLoading(false))
       }
@@ -36,11 +38,11 @@ export const WantStatusModal: React.FC<Props> = (props) => {
     : `Stop getting notified for ${item.name}`
 
   return (
-    <View style={{ backgroundColor: "white", padding: 15, margin: 15 }}>
+    <View style={{ padding: 10 }}>
       <Text h1 style={{ marginBottom: 15, textDecorationLine: "underline" }}>
         {titleText}
       </Text>
-      <QuantitySelector quantitySelected={setQuantity} selectedItem={item} />
+      <QuantitySelector currentQuantity={quantity} onQuantitySelect={setQuantity} item={item} />
       <Text style={{ paddingBottom: 30 }}>{detailText}</Text>
       <Button
         disabled={!quantity}
