@@ -1,16 +1,7 @@
 {
   "expo": {
     "name": "Plenti",
-    "plugins": [
-      "@config-plugins/android-jsc-intl",
-      "@react-native-firebase/crashlytics",
-      [
-        "expo-image-picker",
-        {
-          "photosPermission": "Plenti lets you share pictures of your produce with your neighbors"
-        }
-      ]
-    ],
+    "plugins": ["@config-plugins/android-jsc-intl", "@react-native-firebase/crashlytics"],
     "slug": "plentimobile",
     "scheme": "plentimobile",
     "version": "1.0.0",
@@ -24,9 +15,7 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "dev.plenti.plenti"
@@ -37,9 +26,7 @@
         "backgroundColor": "#FFFFFF"
       },
       "package": "dev.plenti.plenti",
-      "permissions": [
-        "ACCESS_BACKGROUND_LOCATION"
-      ]
+      "permissions": ["ACCESS_BACKGROUND_LOCATION"]
     },
     "web": {
       "favicon": "./assets/favicon.png"

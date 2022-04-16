@@ -1,8 +1,7 @@
 import { Text } from "@rneui/themed"
-import * as ImagePicker from "expo-image-picker"
 import React, { useContext, useState } from "react"
 import { TouchableOpacity } from "react-native-gesture-handler"
-
+import { launchImageLibrary } from "react-native-image-picker"
 import { LoadingIndicator } from "../../components/LoadingIndicator"
 import { AccountContext } from "../../contexts/AccountContext"
 import { ImageContext } from "../../contexts/ImageContext"
@@ -19,16 +18,18 @@ export const UpdateProfilePicture: React.FC = () => {
 
   const selectImage = async () => {
     // No permissions request is necessary for launching the image library
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [1, 1],
-      quality: 1,
+    let result = await launchImageLibrary({
+      mediaType: "photo",
     })
 
-    if (!result.cancelled) {
-      setLoading(true)
-      uploadNewProfilePicture(result.uri, loggedInAccount).finally(() => setLoading(false))
+    if (!result.didCancel) {
+      if (result.assets && result.assets.length > 0) {
+        const asset = result.assets[0]
+        if (asset.uri) {
+          setLoading(true)
+          uploadNewProfilePicture(asset.uri, loggedInAccount).finally(() => setLoading(false))
+        }
+      }
     }
   }
 
