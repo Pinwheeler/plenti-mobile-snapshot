@@ -1,7 +1,6 @@
 import { Button, Text } from "@rneui/themed"
 import React, { useContext, useState } from "react"
 import { View } from "react-native"
-
 import { Quantity } from "../../api/models/Quantity"
 import { PlentiItem } from "../../assets/PlentiItemsIndex"
 import { QuantitySelector } from "../../components/produce_grid/QuantitySelector"
@@ -23,11 +22,15 @@ export const WantStatusModal: React.FC<Props> = (props) => {
     if (quantity) {
       setLoading(true)
       if (!currentWatcher) {
-        addWatcher(item, quantity).finally(() => {
-          setLoading(false)
-        })
+        addWatcher(item, quantity)
+          .then(() => onClose())
+          .finally(() => {
+            setLoading(false)
+          })
       } else {
-        removeWatcher(item).finally(() => setLoading(false))
+        removeWatcher(item)
+          .then(() => onClose)
+          .finally(() => setLoading(false))
       }
     }
   }

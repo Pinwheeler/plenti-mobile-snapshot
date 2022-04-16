@@ -1,9 +1,8 @@
 import database from "@react-native-firebase/database"
 import React, { useContext, useEffect, useMemo, useState } from "react"
 import { AccountEntity } from "../../api/models/Account"
-import { ChatMessage } from "../../api/models/ChatMessage"
 import { Connection } from "../../api/models/Connection"
-import { Conversation } from "../../api/models/Conversation"
+import { Conversation, Message } from "../../api/models/Conversation"
 import { BlockedUsers } from "../../api/models/LoggedInAccount"
 import { LoadingIndicator } from "../../components/LoadingIndicator"
 import { AccountContext } from "../../contexts/AccountContext"
@@ -24,7 +23,8 @@ interface IConverstaionContext {
   shareLocationOpen: boolean
   partnerAccount: AccountEntity
   offendingAccount?: AccountEntity
-  sequentialMessages: ChatMessage[]
+  sequentialMessages: Message[]
+  readAllMyMessages(): Promise<any>
   sendMessage(messageText: string): Promise<any>
   reportOffendingAccount(reason: string): Promise<any>
   shareLocation(sharing: boolean): void
@@ -40,7 +40,7 @@ export const ConversationProvider: React.FC<Props> = (props) => {
   const { loggedInAccount } = useContext(AccountContext)
   const [offendingAccount, setOffendingAccount] = useState<AccountEntity>()
   const [conversation, setConversation] = useState<Conversation>()
-  const [messageMap, setMessageMap] = useState(new Map<string, ChatMessage>())
+  const [messageMap, setMessageMap] = useState(new Map<string, Message>())
   const [shareLocationOpen, setShareLocationOpen] = useState(false)
   const theirConnectionPath = `/connections/${connection.partnerUid}/${connection.myUid}`
   const myConnectionPath = `/connections/${connection.myUid}/${connection.partnerUid}`
@@ -68,16 +68,26 @@ export const ConversationProvider: React.FC<Props> = (props) => {
     return () => database().ref(path).off("value", onMessagesUpdate)
   }, [connection])
 
+  const readAllMyMessages = () => database().ref(myConnectionPath).update({ unreadMessageCount: 0 })
+
   const sendMessage = (message: string) => {
     if (loggedInAccount) {
-      const sentDate = toISOTime(new Date())
-      const messageModel: ChatMessage = {
+      const sendDate = toISOTime(new Date())
+      const messageModel: Message = {
         fromAccountUid: loggedInAccount.uid,
         text: message,
-        read: false,
-        sentDate,
+        sendDate,
       }
-      return database().ref(`/conversations/${connection.conversationUid}/messages/${sentDate}`).set(messageModel)
+      return Promise.all([
+        database()
+          .ref(theirConnectionPath)
+          .transaction((connection: object) => {
+            const copy: Partial<Connection> = { ...connection }
+            copy.unreadMessageCount = (copy.unreadMessageCount ?? 0) + 1
+            return copy
+          }),
+        database().ref(`/conversations/${connection.conversationUid}/messages/${sendDate}`).set(messageModel),
+      ])
     }
     return handleUnauthenticatedRequest("sendMessage")
   }
@@ -137,6 +147,7 @@ export const ConversationProvider: React.FC<Props> = (props) => {
     partnerAccount: props.partnerAccount,
     offendingAccount,
     sequentialMessages,
+    readAllMyMessages,
     shareLocation,
     setShareLocationOpen,
     setOffendingAccount,

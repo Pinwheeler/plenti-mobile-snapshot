@@ -1,16 +1,13 @@
-import { CommonActions, useNavigation } from "@react-navigation/native"
-import React, { useContext, useEffect, useState } from "react"
-
-import { AccountEntity } from "../../api/models/Account"
-import { Connection } from "../../api/models/Connection"
-import { AccountContext } from "../../contexts/AccountContext"
-import { ChatContext } from "../../contexts/ChatContext"
 import database from "@react-native-firebase/database"
-import { LoadingIndicator } from "../../components/LoadingIndicator"
+import { useNavigation } from "@react-navigation/native"
 import { Text, useTheme } from "@rneui/themed"
+import React, { useContext, useEffect, useState } from "react"
 import { TouchableOpacity } from "react-native-gesture-handler"
 import { ActivityIndicator } from "react-native-paper"
-import { HomeNavProp, RootStackParams } from "../../nav/HomeStack"
+import { AccountEntity } from "../../api/models/Account"
+import { Connection } from "../../api/models/Connection"
+import { ChatContext } from "../../contexts/ChatContext"
+import { HomeNavProp } from "../../nav/HomeStack"
 
 interface Props {
   connection: Connection
@@ -19,12 +16,9 @@ interface Props {
 export const ConnectionListItem: React.FC<Props> = (props) => {
   const { connection } = props
   const navigation = useNavigation<HomeNavProp>()
-  const { loggedInAccount } = useContext(AccountContext)
   const { deleteConnection } = useContext(ChatContext)
-  const [isDeleting, setIsDeleting] = useState(false)
   const [partnerAccount, setPartnerAccount] = useState<AccountEntity>()
-  const myId = loggedInAccount?.uid || -1
-  const unread = false
+  const unread = connection.unreadMessageCount > 0
   const { theme } = useTheme()
   // TODO: show images of all of the user's inventory items
 
@@ -35,13 +29,6 @@ export const ConnectionListItem: React.FC<Props> = (props) => {
       .on("value", (snapshot) => setPartnerAccount(new AccountEntity(snapshot.val())))
     return () => database().ref(path).off("value", partnerChange)
   }, [connection])
-
-  const onDelete = () => {
-    setIsDeleting(true)
-    deleteConnection(connection).finally(() => {
-      setIsDeleting(false)
-    })
-  }
 
   if (!partnerAccount) {
     return <ActivityIndicator />

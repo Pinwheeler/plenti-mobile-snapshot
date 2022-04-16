@@ -17,6 +17,8 @@ export const ChatMain = () => {
     reportOffendingAccount,
     sequentialMessages,
     sendMessage,
+    connection,
+    readAllMyMessages,
   } = useContext(ConversationContext)
   const [reportReason, setReportReason] = useState("")
   const { deviceType } = useContext(DeviceContext)
@@ -30,6 +32,12 @@ export const ChatMain = () => {
     sendMessage(chatMessage)
     setChatMessage("")
   }
+
+  useEffect(() => {
+    if (connection.unreadMessageCount > 0) {
+      readAllMyMessages()
+    }
+  }, [connection.unreadMessageCount])
 
   useEffect(() => {
     scrollView?.scrollToEnd()
@@ -88,7 +96,7 @@ export const ChatMain = () => {
         >
           <>
             {sequentialMessages.map((message) => (
-              <ChatItem message={message} key={`message_from_${message.sentDate}`} />
+              <ChatItem message={message} key={`message_from_${message.sendDate}`} />
             ))}
           </>
         </ScrollView>

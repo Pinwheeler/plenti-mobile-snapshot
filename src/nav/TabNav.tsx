@@ -1,12 +1,12 @@
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs"
-import { useTheme, Overlay } from "@rneui/themed"
+import { Overlay, useTheme } from "@rneui/themed"
 import React, { useContext, useEffect, useState } from "react"
-
 import { HardwareNotification } from "../api/models/HardwareNotification"
 import { HardwareNotificationContent } from "../api/models/HardwareNotificationContent"
 import { AdBanner } from "../components/AdBanner"
 import { Icon } from "../components/Icon"
 import { AdContext } from "../contexts/AdContext"
+import { ChatContext } from "../contexts/ChatContext"
 import { NotificationContext } from "../contexts/NotificationContext"
 import { Logger } from "../lib/Logger"
 import ConnectScreen from "../screens/connect/ConnectScreen"
@@ -21,6 +21,7 @@ export const TabNav = () => {
   const { acknowledgeHN, nextUnreadHN } = useContext(NotificationContext)
   const { theme } = useTheme()
   const [currentHN, setCurrentHN] = useState<HardwareNotification>()
+  const { unreadCount } = useContext(ChatContext)
 
   useEffect(() => {
     setCurrentHN(nextUnreadHN)
@@ -34,7 +35,7 @@ export const TabNav = () => {
     }
   }
 
-  const hasUnreads = false
+  const hasUnreads = unreadCount > 0
 
   return (
     <>
