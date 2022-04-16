@@ -1,7 +1,6 @@
 import { Button, Text, useTheme } from "@rneui/themed"
 import React from "react"
 import { View } from "react-native"
-
 import { Icon } from "../../components/Icon"
 import { HardwareNotification } from "./HardwareNotification"
 
@@ -14,8 +13,18 @@ export const HardwareNotificationContent: React.FC<Props> = (props) => {
   const { notification } = props
   const { theme } = useTheme()
   return (
-    <View style={{ position: "relative", justifyContent: "center", paddingTop: 10 }}>
-      <Text h1>{notification.title}</Text>
+    <View
+      style={{
+        position: "relative",
+        marginHorizontal: 20,
+        paddingBottom: 15,
+        justifyContent: "center",
+        paddingTop: 10,
+      }}
+    >
+      <Text style={{ marginVertical: 10 }} h3>
+        {notification.title}
+      </Text>
       {notification.iconName && (
         <View
           style={{
@@ -25,7 +34,7 @@ export const HardwareNotificationContent: React.FC<Props> = (props) => {
             alignItems: "center",
             justifyContent: "center",
             position: "absolute",
-            top: -74,
+            top: -70,
             left: "36%",
             backgroundColor: theme.colors.background,
           }}
@@ -45,7 +54,7 @@ export const HardwareNotificationContent: React.FC<Props> = (props) => {
           </View>
         </View>
       )}
-      <Text>{notification.description}</Text>
+      <Text style={{ marginBottom: 10 }}>{notification.description}</Text>
       {!notification.blocking && <Button style={{ marginTop: 20 }} onPress={props.onAcknowledge} title="Okay!" />}
     </View>
   )

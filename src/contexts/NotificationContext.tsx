@@ -2,6 +2,7 @@ import database from "@react-native-firebase/database"
 import React, { useContext, useEffect, useMemo, useState } from "react"
 import { HardwareNotification } from "../api/models/HardwareNotification"
 import { StringMapFromObj, URLS } from "../lib/DatabaseHelpers"
+import { AuthContext } from "./AuthContext"
 import { DeviceContext } from "./DeviceContext"
 
 interface INotificationContext {
@@ -14,6 +15,7 @@ export const NotificationContext = React.createContext({} as INotificationContex
 
 export const NotificationProvider: React.FC = (props) => {
   const { deviceIdentifier } = useContext(DeviceContext)
+  const { user } = useContext(AuthContext)
   const [notifications, setNotifications] = useState(new Map<string, HardwareNotification>())
   const [acknowledgedSlugs, setAcknowledgedSlugs] = useState<string[]>([])
 
@@ -24,10 +26,12 @@ export const NotificationProvider: React.FC = (props) => {
   }, [])
 
   useEffect(() => {
-    database()
-      .ref(URLS.acknowledgedNotifications(deviceIdentifier))
-      .once("value", (snapshot) => setAcknowledgedSlugs(Array.from(StringMapFromObj(snapshot.val()).keys())))
-  }, [])
+    if (user) {
+      database()
+        .ref(URLS.acknowledgedNotifications(deviceIdentifier))
+        .once("value", (snapshot) => setAcknowledgedSlugs(Array.from(StringMapFromObj(snapshot.val()).keys())))
+    }
+  }, [user])
 
   const acknowledgeHN = (arg: HardwareNotification) => {
     const update: { [key: string]: HardwareNotification } = {}
