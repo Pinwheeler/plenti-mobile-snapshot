@@ -1,5 +1,6 @@
 {
   "expo": {
+    "sdkVersion": "44.0.0",
     "name": "Plenti",
     "plugins": [
       "@config-plugins/android-jsc-intl",
