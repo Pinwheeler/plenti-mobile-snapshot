@@ -1,6 +1,5 @@
 {
   "expo": {
-    "sdkVersion": "44.0.0",
     "name": "Plenti",
     "plugins": [
       "@config-plugins/android-jsc-intl",
@@ -25,7 +24,9 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "dev.plenti.plenti"
@@ -36,7 +37,9 @@
         "backgroundColor": "#FFFFFF"
       },
       "package": "dev.plenti.plenti",
-      "permissions": ["ACCESS_BACKGROUND_LOCATION"]
+      "permissions": [
+        "ACCESS_BACKGROUND_LOCATION"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
