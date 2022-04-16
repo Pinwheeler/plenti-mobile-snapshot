@@ -24,18 +24,18 @@ export const LoginSignupSelector: React.FC = () => {
   return (
     <>
       <ScrollView>
-        <Text h1 style={{ marginBottom: 15, textDecorationLine: "underline" }}>
+        <Text h2 style={{ marginBottom: 15, textDecorationLine: "underline" }}>
           {title}
         </Text>
         <InnerComponent />
         <Button
           title={cta}
-          style={{ marginTop: 15, backgroundColor: theme.colors.secondary }}
+          buttonStyle={{ marginTop: 15, backgroundColor: theme.colors.secondary }}
           onPress={() => setIsSigningUp(!isSigningUp)}
         />
         <Button
           title="Forgot Password?"
-          style={{ marginTop: 15, backgroundColor: theme.colors.secondary }}
+          buttonStyle={{ marginTop: 15, backgroundColor: theme.colors.secondary }}
           onPress={() => navigate?.dispatch(CommonActions.navigate({ name: "ForgotPassword" }))}
         />
         <View style={{ height: 150 }} />

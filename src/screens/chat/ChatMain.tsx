@@ -1,10 +1,9 @@
 import { useNavigation } from "@react-navigation/native"
-import { Button, Input, useTheme, Overlay } from "@rneui/themed"
+import { Button, Input, Overlay, useTheme } from "@rneui/themed"
 import React, { useContext, useEffect, useState } from "react"
 import { Dimensions, Keyboard, KeyboardEventListener, SafeAreaView, ScrollView, Text, View } from "react-native"
 import { IconButton } from "../../components/IconButton"
 import { DeviceContext } from "../../contexts/DeviceContext"
-
 import ChatItem from "./ChatItem"
 import { ConversationContext } from "./ConversationContext"
 
@@ -17,7 +16,7 @@ export const ChatMain = () => {
     setOffendingAccount,
     reportOffendingAccount,
   } = useContext(ConversationContext)
-  const { messages, sendMessage } = useContext(ConversationContext)
+  const { sequentialMessages, sendMessage } = useContext(ConversationContext)
   const [reportReason, setReportReason] = useState("")
   const { deviceType } = useContext(DeviceContext)
   const [chatMessage, setChatMessage] = useState("")
@@ -33,7 +32,7 @@ export const ChatMain = () => {
 
   useEffect(() => {
     scrollView?.scrollToEnd()
-  }, [messages])
+  }, [sequentialMessages])
 
   const handleKeyboardWillShow: KeyboardEventListener = (event) => {
     const keyboardHeight = event.endCoordinates.height
@@ -87,9 +86,9 @@ export const ChatMain = () => {
           }}
         >
           <>
-            {Array.from(messages.entries()).map(([isoKey, message]) => {
-              return <ChatItem message={message} key={`message_from_${isoKey}`} />
-            })}
+            {sequentialMessages.map((message) => (
+              <ChatItem message={message} key={`message_from_${message.sentDate}`} />
+            ))}
           </>
         </ScrollView>
         <View

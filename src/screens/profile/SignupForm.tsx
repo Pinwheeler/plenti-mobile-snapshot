@@ -93,7 +93,7 @@ const SignupForm: React.FC = () => {
             <ActivityIndicator />
           ) : (
             <Button
-              style={{ backgroundColor: theme.colors.secondary, marginTop: 15 }}
+              buttonStyle={{ backgroundColor: theme.colors.secondary, marginTop: 15 }}
               onPress={() => {
                 handleSubmit()
               }}

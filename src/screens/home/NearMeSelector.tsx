@@ -1,16 +1,17 @@
+import database from "@react-native-firebase/database"
 import { CommonActions, useNavigation } from "@react-navigation/native"
 import { Overlay, Text, useTheme } from "@rneui/themed"
 import React, { useContext, useEffect, useMemo, useState } from "react"
 import { TouchableOpacity, View } from "react-native"
-
+import { AccountEntity } from "../../api/models/Account"
 import { IconButton } from "../../components/IconButton"
 import LoggedInGate from "../../components/LoggedInGate"
 import { ProduceGrid } from "../../components/produce_grid/ProduceGrid"
 import { AccountContext } from "../../contexts/AccountContext"
-import { AppContext } from "../../contexts/AppContext"
 import { ChatContext } from "../../contexts/ChatContext"
 import { LocationContext } from "../../contexts/LocationContext"
 import { PremiumContext } from "../../contexts/PremiumContext"
+import { HomeNavProp } from "../../nav/HomeStack"
 import { ConfirmNearbyRequest } from "./ConfirmNearbyRequest"
 import { NearMeContext } from "./NearMeContext"
 import { NearMeGridItem } from "./NearMeGridItem"
@@ -22,7 +23,7 @@ export const NearMeSelector: React.FC = () => {
   const [removeUpgradeAdRequested, setRemoveUpgradeAdRequested] = useState(false)
   const { distanceInPreferredUnits } = useContext(LocationContext)
   const { loggedInAccount } = useContext(AccountContext)
-  const navigation = useNavigation()
+  const navigation = useNavigation<HomeNavProp>()
   const { theme } = useTheme()
 
   useEffect(() => {
@@ -44,9 +45,14 @@ export const NearMeSelector: React.FC = () => {
 
   const onConnect = () => {
     if (selectedItem) {
-      createConnection(selectedItem.inventoryItem).then(() =>
-        navigation.dispatch(CommonActions.navigate({ name: "Chat" })),
-      )
+      createConnection(selectedItem.inventoryItem).then((connection) => {
+        database()
+          .ref(`/accounts/${connection.partnerUid}`)
+          .once("value", (snapshot) => {
+            const partnerAccount = new AccountEntity(snapshot.val())
+            navigation.navigate("Chat", { connection, partnerAccount })
+          })
+      })
     }
   }
 

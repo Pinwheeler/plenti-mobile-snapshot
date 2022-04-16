@@ -126,7 +126,7 @@ export const UpdateProfileScreen = () => {
             {loading ? (
               <ActivityIndicator />
             ) : (
-              <Button disabled={!editsMade} style={{ marginBottom: 20 }} onPress={handleSubmit} title="Submit" />
+              <Button disabled={!editsMade} buttonStyle={{ marginBottom: 20 }} onPress={handleSubmit} title="Submit" />
             )}
             <View style={{ height: 40 }} />
           </ScrollView>

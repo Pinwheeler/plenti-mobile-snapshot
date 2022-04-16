@@ -42,10 +42,6 @@ export const NearMeProvider: React.FC = (props) => {
     }
   }, [loggedInAccount, lastKnownPosition])
 
-  // database()
-  //   .ref("/inventories")
-  //   .once("value", (snapshot) => console.log(snapshot.val()))
-
   useEffect(() => {
     if (lastKnownPosition && latRange && user) {
       const onLatBoundChange = database()

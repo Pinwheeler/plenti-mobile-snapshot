@@ -118,8 +118,8 @@ export const InventoryList = () => {
           </Text>
           <Text style={{ marginTop: 15, textAlign: "center" }}>You can set this up on the</Text>
           <Text style={{ textAlign: "center" }}>Profile Screen</Text>
-          <Button onPress={goToProfile} style={{ marginTop: 15 }} title="Go To Profile Screen" />
-          <Button style={{ marginTop: 20 }} onPress={onClose} title="Close" />
+          <Button onPress={goToProfile} buttonStyle={{ marginTop: 15 }} title="Go To Profile Screen" />
+          <Button buttonStyle={{ marginTop: 20 }} onPress={onClose} title="Close" />
         </View>
       </Overlay>
       <Overlay isVisible={loginGateVisible} onBackdropPress={onClose}>
@@ -128,7 +128,7 @@ export const InventoryList = () => {
           <Text style={{ marginVertical: 15, textAlign: "center" }}>
             You must have an account to add to your Inventory.
           </Text>
-          <Button onPress={goToAccount} style={{ marginBottom: 15 }} title="Go To Login" />
+          <Button onPress={goToAccount} buttonStyle={{ marginBottom: 15 }} title="Go To Login" />
           <Button onPress={onClose} title="Close" />
         </View>
       </Overlay>

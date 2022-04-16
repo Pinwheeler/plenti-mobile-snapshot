@@ -1,6 +1,5 @@
 import { Button, Text } from "@rneui/themed"
 import React from "react"
-
 import { View } from "react-native"
 import { LoggedInAccountEntity } from "../api/models/LoggedInAccount"
 
@@ -22,7 +21,7 @@ const LoggedInGate: React.FC<Props> = (props) => {
       <Text h1>Error</Text>
       <Text style={{ marginVertical: 20, textAlign: "center" }}>You have to log in before you can do this</Text>
       <Button onPress={goToAccount} title="Go To Login" />
-      <Button onPress={onClose} style={{ marginTop: 20 }} title="Close" />
+      <Button onPress={onClose} buttonStyle={{ marginTop: 20 }} title="Close" />
     </View>
   )
 }

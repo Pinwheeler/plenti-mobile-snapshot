@@ -1,7 +1,6 @@
 import { Card, Text } from "@rneui/themed"
 import React from "react"
 import { TouchableOpacity } from "react-native"
-
 import { PlentiItem } from "../../assets/PlentiItemsIndex"
 import { capitalize } from "../../lib/StringHelpers"
 import { ProduceItemImage } from "../ProduceItemImage"
@@ -20,6 +19,7 @@ export const ProduceGridItem: React.FC<Props> = (props) => {
         height: 200,
         marginBottom: 15,
         minWidth: 170,
+        marginTop: 10,
         flex: 1,
       }}
       onPress={onPress}

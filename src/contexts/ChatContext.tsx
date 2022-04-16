@@ -1,7 +1,6 @@
 import database from "@react-native-firebase/database"
 import React, { useContext, useEffect, useState } from "react"
 import uuid from "react-native-uuid"
-import { ChatMessage } from "../api/models/ChatMessage"
 import { Connection } from "../api/models/Connection"
 import { Conversation } from "../api/models/Conversation"
 import { InventoryItem } from "../api/models/InventoryItem"
@@ -12,7 +11,7 @@ interface IChatContext {
   unreadCount: number
   myConnections: Map<string, Connection>
   deleteConnection(connection: Connection): Promise<any>
-  createConnection(inventoryItem: InventoryItem): Promise<any>
+  createConnection(inventoryItem: InventoryItem): Promise<Connection>
 }
 
 export const ChatContext = React.createContext({} as IChatContext)
@@ -71,7 +70,7 @@ export const ChatProvider: React.FC = (props) => {
             .set(myConnection),
           database().ref(`/connections/${inventoryItem.accountUid}/${loggedInAccount.uid}`).set(theirConnection),
           database().ref(`conversations/${conversation.uid}`).set(conversation),
-        ])
+        ]).then(() => myConnection)
       }
       return handleUnauthenticatedRequest("createConnection")
     },

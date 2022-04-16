@@ -55,7 +55,7 @@ export const HardwareNotificationContent: React.FC<Props> = (props) => {
         </View>
       )}
       <Text style={{ marginBottom: 10 }}>{notification.description}</Text>
-      {!notification.blocking && <Button style={{ marginTop: 20 }} onPress={props.onAcknowledge} title="Okay!" />}
+      {!notification.blocking && <Button buttonStyle={{ marginTop: 20 }} onPress={props.onAcknowledge} title="Okay!" />}
     </View>
   )
 }

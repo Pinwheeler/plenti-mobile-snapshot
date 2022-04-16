@@ -1,10 +1,10 @@
+import { Button, Text, useTheme } from "@rneui/themed"
 import React, { useContext, useMemo } from "react"
 import { View } from "react-native"
 import openMap, { ShowOptions } from "react-native-open-maps"
-import { ConversationContext } from "./ConversationContext"
-import { LoadingIndicator } from "../../components/LoadingIndicator"
 import { IconButton } from "../../components/IconButton"
-import { Button, Text, useTheme } from "@rneui/themed"
+import { LoadingIndicator } from "../../components/LoadingIndicator"
+import { ConversationContext } from "./ConversationContext"
 
 const ChatInfoBar: React.FC = (props) => {
   const { setOffendingAccount } = useContext(ConversationContext)
@@ -36,7 +36,7 @@ const ChatInfoBar: React.FC = (props) => {
           <Text style={{ textAlign: "center", fontSize: 12 }}>{locationLine}</Text>
           {!!theirPickupLocation && (
             <Button
-              style={{ marginTop: 15 }}
+              buttonStyle={{ marginTop: 15 }}
               onPress={() => {
                 const options: ShowOptions = {
                   end: theirPickupLocation.address,
@@ -51,7 +51,6 @@ const ChatInfoBar: React.FC = (props) => {
           size={24}
           type="gps-fixed"
           onPress={() => {
-            console.log("location buttin pressed")
             if (!iHaveSharedPickupLocation) {
               setShareLocationOpen(true)
             } else {

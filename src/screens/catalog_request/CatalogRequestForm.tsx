@@ -55,7 +55,7 @@ const CatalogRequestForm = () => {
               <ActivityIndicator />
             ) : (
               <Button
-                style={{ backgroundColor: theme.colors.secondary }}
+                buttonStyle={{ backgroundColor: theme.colors.secondary }}
                 onPress={() => {
                   handleSubmit()
                 }}

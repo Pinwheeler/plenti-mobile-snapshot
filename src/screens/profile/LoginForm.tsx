@@ -3,7 +3,6 @@ import { Button, useTheme } from "@rneui/themed"
 import { Formik } from "formik"
 import React, { useContext, useState } from "react"
 import { ActivityIndicator, View } from "react-native"
-
 import { AccountLoginForm } from "../../api/forms/AccountLoginForm"
 import { TextField } from "../../components/TextField"
 import { AuthContext } from "../../contexts/AuthContext"
@@ -76,7 +75,7 @@ const LoginForm: React.FC = () => {
             <ActivityIndicator />
           ) : (
             <Button
-              style={{ backgroundColor: theme.colors.secondary, marginTop: 15 }}
+              buttonStyle={{ backgroundColor: theme.colors.secondary, marginTop: 15 }}
               onPress={() => {
                 handleSubmit()
               }}
