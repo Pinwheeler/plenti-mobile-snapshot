@@ -7,6 +7,6 @@ export interface Connection {
     address: string
     latitude: number
     longitude: number
-  }
+  } | null
   unreadMessageCount: number
 }

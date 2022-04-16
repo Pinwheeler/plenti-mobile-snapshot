@@ -51,6 +51,7 @@ const ChatInfoBar: React.FC = (props) => {
           size={24}
           type="gps-fixed"
           onPress={() => {
+            console.log("gps pressed")
             if (!iHaveSharedPickupLocation) {
               setShareLocationOpen(true)
             } else {

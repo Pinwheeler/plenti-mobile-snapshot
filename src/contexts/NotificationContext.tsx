@@ -27,9 +27,11 @@ export const NotificationProvider: React.FC = (props) => {
 
   useEffect(() => {
     if (user) {
-      database()
-        .ref(URLS.acknowledgedNotifications(deviceIdentifier))
-        .once("value", (snapshot) => setAcknowledgedSlugs(Array.from(StringMapFromObj(snapshot.val()).keys())))
+      user.getIdToken().then(() => {
+        database()
+          .ref(URLS.acknowledgedNotifications(deviceIdentifier))
+          .once("value", (snapshot) => setAcknowledgedSlugs(Array.from(StringMapFromObj(snapshot.val()).keys())))
+      })
     }
   }, [user])
 

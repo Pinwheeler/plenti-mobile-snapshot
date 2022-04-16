@@ -10,6 +10,7 @@ import { AccountContext } from "../../contexts/AccountContext"
 import { InventoryContext } from "../../contexts/InventoryContext"
 import { handleUnauthenticatedRequest, StringMapFromObj, URLS } from "../../lib/DatabaseHelpers"
 import { fromISOTime, toISOTime } from "../../lib/DateHelper"
+import { useEffectDebugger } from "../../lib/DebugHelpers"
 import { Logger } from "../../lib/Logger"
 
 interface Props {
@@ -34,7 +35,7 @@ interface IConverstaionContext {
 export const ConversationContext = React.createContext({} as IConverstaionContext)
 
 export const ConversationProvider: React.FC<Props> = (props) => {
-  const { connection } = props
+  const [connection, setConnection] = useState(props.connection)
   const { myInventory } = useContext(InventoryContext)
   const { loggedInAccount } = useContext(AccountContext)
   const [offendingAccount, setOffendingAccount] = useState<AccountEntity>()
@@ -43,6 +44,13 @@ export const ConversationProvider: React.FC<Props> = (props) => {
   const [shareLocationOpen, setShareLocationOpen] = useState(false)
   const theirConnectionPath = `/connections/${connection.partnerUid}/${connection.myUid}`
   const myConnectionPath = `/connections/${connection.myUid}/${connection.partnerUid}`
+
+  useEffectDebugger(() => {
+    const onConnectionUpdate = database()
+      .ref(myConnectionPath)
+      .on("value", (snapshot) => setConnection(snapshot.val()))
+    return () => database().ref(myConnectionPath).off("value", onConnectionUpdate)
+  }, [myConnectionPath])
 
   useEffect(() => {
     const path = `/conversations/${connection.conversationUid}`
@@ -94,11 +102,13 @@ export const ConversationProvider: React.FC<Props> = (props) => {
     if (myInventory) {
       const myConnectionUpdate: Partial<Connection> = { iHaveSharedLocation: sharing }
       const theirConnectionUpdate: Partial<Connection> = {
-        theirPickupLocation: {
-          address: myInventory.address,
-          latitude: myInventory.latitude,
-          longitude: myInventory.longitude,
-        },
+        theirPickupLocation: sharing
+          ? {
+              address: myInventory.address,
+              latitude: myInventory.latitude,
+              longitude: myInventory.longitude,
+            }
+          : null,
       }
       return Promise.all([
         database().ref(myConnectionPath).update(myConnectionUpdate),
@@ -115,8 +125,6 @@ export const ConversationProvider: React.FC<Props> = (props) => {
         .map(([_key, value]) => value),
     [messageMap],
   )
-
-  console.log("messageMap", messageMap)
 
   if (!conversation) {
     return <LoadingIndicator thingThatIsLoading="Conversation" />

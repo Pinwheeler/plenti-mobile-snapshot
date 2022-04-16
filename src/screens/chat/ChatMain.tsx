@@ -15,8 +15,9 @@ export const ChatMain = () => {
     offendingAccount,
     setOffendingAccount,
     reportOffendingAccount,
+    sequentialMessages,
+    sendMessage,
   } = useContext(ConversationContext)
-  const { sequentialMessages, sendMessage } = useContext(ConversationContext)
   const [reportReason, setReportReason] = useState("")
   const { deviceType } = useContext(DeviceContext)
   const [chatMessage, setChatMessage] = useState("")

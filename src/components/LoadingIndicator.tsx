@@ -10,7 +10,7 @@ export const LoadingIndicator: React.FC<Props> = (props) => {
   return (
     <View style={{ flexDirection: "row" }}>
       <ActivityIndicator />
-      <Text h3>{`Loading ${props.thingThatIsLoading}`}</Text>
+      <Text h4>{`Loading ${props.thingThatIsLoading}`}</Text>
     </View>
   )
 }
