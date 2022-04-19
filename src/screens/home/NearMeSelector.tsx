@@ -1,10 +1,11 @@
 import database from "@react-native-firebase/database"
 import { CommonActions, useNavigation } from "@react-navigation/native"
-import { Overlay, Text, useTheme } from "@rneui/themed"
+import { Button, Overlay, Text, useTheme } from "@rneui/themed"
 import React, { useContext, useEffect, useMemo, useState } from "react"
 import { TouchableOpacity, View } from "react-native"
 import { AccountEntity } from "../../api/models/Account"
 import { IconButton } from "../../components/IconButton"
+import { LoadingIndicator } from "../../components/LoadingIndicator"
 import LoggedInGate from "../../components/LoggedInGate"
 import { ProduceGrid } from "../../components/produce_grid/ProduceGrid"
 import { AccountContext } from "../../contexts/AccountContext"
@@ -17,7 +18,7 @@ import { NearMeContext } from "./NearMeContext"
 import { NearMeGridItem } from "./NearMeGridItem"
 
 export const NearMeSelector: React.FC = () => {
-  const { items, selectedItem, setSelectedItem } = useContext(NearMeContext)
+  const { selectedItem, setSelectedItem } = useContext(NearMeContext)
   const { createConnection } = useContext(ChatContext)
   const { hasPremium } = useContext(PremiumContext)
   const [removeUpgradeAdRequested, setRemoveUpgradeAdRequested] = useState(false)
@@ -58,11 +59,7 @@ export const NearMeSelector: React.FC = () => {
 
   return (
     <>
-      <ProduceGrid>
-        {items.map((item) => (
-          <NearMeGridItem item={item} key={`near-me-item-${item.inventoryItem.uid}`} />
-        ))}
-      </ProduceGrid>
+      <InnerComponent />
       <Overlay
         overlayStyle={{ marginHorizontal: 15, paddingHorizontal: 15 }}
         isVisible={!!selectedItem}
@@ -125,5 +122,83 @@ export const NearMeSelector: React.FC = () => {
         </View>
       )}
     </>
+  )
+}
+
+const InnerComponent: React.FC = () => {
+  const { items } = useContext(NearMeContext)
+  const { loggedInAccount } = useContext(AccountContext)
+  const navigation = useNavigation<HomeNavProp>()
+  const { theme } = useTheme()
+
+  if (!items) {
+    return (
+      <View
+        style={{
+          alignContent: "center",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100%",
+        }}
+      >
+        <LoadingIndicator thingThatIsLoading="items near you" />
+      </View>
+    )
+  }
+
+  if (items.length === 0) {
+    const maxDistanceString =
+      loggedInAccount?.maxDistance === -1
+        ? "anywhere"
+        : `within ${loggedInAccount?.maxDistance} ${loggedInAccount?.prefersMetric ? "km" : "mi"}`
+
+    return (
+      <View
+        style={{
+          flexDirection: "column",
+          alignContent: "center",
+          justifyContent: "center",
+          height: "100%",
+        }}
+      >
+        <Text style={{ textAlign: "center" }}>Couldn't find any items</Text>
+        <Text
+          style={{
+            textAlign: "center",
+            color: theme.colors.success,
+            fontWeight: "bold",
+            fontSize: 20,
+            marginBottom: 20,
+          }}
+        >
+          {maxDistanceString}
+        </Text>
+        {loggedInAccount?.maxDistance && loggedInAccount.maxDistance > -1 && (
+          <View>
+            <Button
+              type="outline"
+              onPress={() => navigation.dispatch(CommonActions.navigate({ name: "Profile" }))}
+              buttonStyle={{ marginHorizontal: 20 }}
+              title="Increase your max search range to look farther afield"
+            />
+            <Text>Or</Text>
+          </View>
+        )}
+        <Button
+          type="outline"
+          onPress={() => navigation.navigate("AddInventoryItem")}
+          buttonStyle={{ marginHorizontal: 20 }}
+          title="Be the first by adding to your inventory"
+        />
+      </View>
+    )
+  }
+
+  return (
+    <ProduceGrid>
+      {items.map((item) => (
+        <NearMeGridItem item={item} key={`near-me-item-${item.inventoryItem.uid}`} />
+      ))}
+    </ProduceGrid>
   )
 }

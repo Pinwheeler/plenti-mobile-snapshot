@@ -10,7 +10,7 @@ import { StringMapFromObj } from "../../lib/DatabaseHelpers"
 const APPRX_KM_IN_DEG = 111
 
 export interface INearMeContext {
-  items: DistancedInventoryItem[]
+  items?: DistancedInventoryItem[]
   selectedItem?: DistancedInventoryItem
   setSelectedItem: (item?: DistancedInventoryItem) => void
 }
@@ -25,7 +25,7 @@ export const NearMeProvider: React.FC = (props) => {
   const [inventoriesWithinLatBounds, setInventoryWithinLatBounds] = useState(new Map<string, Inventory>())
   const [inventoriesWithinLngBounds, setInventoryWithinLngBounds] = useState(new Map<string, Inventory>())
 
-  const maxDistance = loggedInAccount?.maxDistance ?? 1000
+  const maxDistance = useMemo(() => loggedInAccount?.maxDistance ?? -1, [loggedInAccount])
   const maxDegDiff = maxDistance / APPRX_KM_IN_DEG
 
   const latRange = useMemo(() => {
@@ -44,26 +44,22 @@ export const NearMeProvider: React.FC = (props) => {
 
   useEffect(() => {
     if (lastKnownPosition && latRange && user) {
-      const onLatBoundChange = database()
-        .ref("/inventories")
-        .orderByChild("latitude")
-        // .startAt(latRange.minLat)
-        // .endAt(latRange.maxLat)
-        .on("value", (snapshot) => setInventoryWithinLatBounds(StringMapFromObj(snapshot.val())))
-
+      const base = database().ref("/inventories").orderByChild("latitude")
+      const modified = maxDistance > -1 ? base.startAt(latRange.minLat).endAt(latRange.maxLat) : base
+      const onLatBoundChange = modified.on("value", (snapshot) =>
+        setInventoryWithinLatBounds(StringMapFromObj(snapshot.val())),
+      )
       return () => database().ref("/inventories").off("value", onLatBoundChange)
     }
   }, [lastKnownPosition, user])
 
   useEffect(() => {
     if (lastKnownPosition && lngRange && user) {
-      const onLngBoundChange = database()
-        .ref("/inventories")
-        .orderByChild("longitude")
-        // .startAt(lngRange.minLng)
-        // .endAt(lngRange.maxLng)
-        .on("value", (snapshot) => setInventoryWithinLngBounds(StringMapFromObj(snapshot.val())))
-
+      const base = database().ref("/inventories").orderByChild("longitude")
+      const modified = maxDistance > -1 ? base.startAt(lngRange.minLng).endAt(lngRange.maxLng) : base
+      const onLngBoundChange = modified.on("value", (snapshot) =>
+        setInventoryWithinLngBounds(StringMapFromObj(snapshot.val())),
+      )
       return () => database().ref("/inventories").off("value", onLngBoundChange)
     }
   }, [lastKnownPosition, user])
@@ -81,26 +77,28 @@ export const NearMeProvider: React.FC = (props) => {
       })
       return temp
     }
-    return []
+    return undefined
   }, [inventoriesWithinLatBounds, inventoriesWithinLngBounds])
 
   const items = useMemo(() => {
     const val: DistancedInventoryItem[] = []
-    inventoriesWithinBounds.forEach((inv) => {
-      const distanceToInventory = distanceInKMToPoint(inv.latitude, inv.longitude)
-      const map = StringMapFromObj(inv.items)
-      Array.from(map.values()).forEach((item) => {
-        const distanced: DistancedInventoryItem = {
-          owningAccountUsername: inv.accountUsername,
-          inventoryItem: item,
-          distance: distanceToInventory,
-          referenceLat: inv.latitude,
-          referenceLng: inv.longitude,
-        }
-        val.push(distanced)
+    if (inventoriesWithinBounds) {
+      inventoriesWithinBounds.forEach((inv) => {
+        const distanceToInventory = distanceInKMToPoint(inv.latitude, inv.longitude)
+        const map = StringMapFromObj(inv.items)
+        Array.from(map.values()).forEach((item) => {
+          const distanced: DistancedInventoryItem = {
+            owningAccountUsername: inv.accountUsername,
+            inventoryItem: item,
+            distance: distanceToInventory,
+            referenceLat: inv.latitude,
+            referenceLng: inv.longitude,
+          }
+          val.push(distanced)
+        })
       })
-    })
-    return val
+      return val
+    }
   }, [inventoriesWithinBounds])
 
   const value: INearMeContext = {
