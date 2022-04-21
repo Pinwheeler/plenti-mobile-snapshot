@@ -78,7 +78,7 @@ export const MaxDistanceAdjustor: React.FC<Props> = (props) => {
 
   return (
     <View style={{ marginBottom: 15 }}>
-      <Text h3 style={{ marginBottom: 10 }}>
+      <Text h4 style={{ marginBottom: 10 }}>
         Maximum Distance
       </Text>
       <View
@@ -103,7 +103,7 @@ export const MaxDistanceAdjustor: React.FC<Props> = (props) => {
             marginLeft: 10,
             marginRight: 10,
             width: "12%",
-            color: theme.colors.background,
+            color: theme.colors.black,
           }}
           placeholder="Max"
           value={textValue()}

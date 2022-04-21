@@ -36,8 +36,8 @@ export const UpdateProfileScreen = () => {
     username: loggedInAccount.username,
     firstname: loggedInAccount.firstname || "",
     pickupAddress: myInventory?.address ?? "",
-    latitude: myInventory?.latitude ? `${myInventory.latitude}` : "",
-    longitude: myInventory?.longitude ? `${myInventory.longitude}` : "",
+    latitude: myInventory?.latitude,
+    longitude: myInventory?.longitude,
     prefersMetric: loggedInAccount.prefersMetric,
     maxDistance: loggedInAccount.maxDistance ?? -1,
   }
@@ -53,8 +53,8 @@ export const UpdateProfileScreen = () => {
     setLoading(true)
     const geocoordinates = localForm.pickupAddress ? await geocode(localForm.pickupAddress) : undefined
     if (geocoordinates) {
-      localForm.latitude = geocoordinates.position.coords.latitude.toString()
-      localForm.longitude = geocoordinates.position.coords.longitude.toString()
+      localForm.latitude = geocoordinates.position.coords.latitude
+      localForm.longitude = geocoordinates.position.coords.longitude
     }
     updateAccount(localForm)
       .then(() => setSuccessModalVisible(true))
@@ -119,7 +119,7 @@ export const UpdateProfileScreen = () => {
             )}
 
             <View style={{ marginBottom: 15 }}>
-              <Text h3>Distance Unit</Text>
+              <Text h4>Distance Unit</Text>
               <PreferredDistanceUnitSelector onChange={() => setEditsMade(true)} />
             </View>
             <MaxDistanceAdjustor prefersMetric={values.prefersMetric ?? true} onChange={() => setEditsMade(true)} />
@@ -135,10 +135,10 @@ export const UpdateProfileScreen = () => {
       <Overlay
         isVisible={successModalVisible}
         onBackdropPress={handleDismiss}
-        style={{ backgroundColor: theme.colors.background, padding: 15, margin: 15 }}
+        overlayStyle={{ backgroundColor: theme.colors.background, padding: 20, margin: 15 }}
       >
         <Text
-          h2
+          h4
           style={{
             marginBottom: 15,
             alignItems: "center",

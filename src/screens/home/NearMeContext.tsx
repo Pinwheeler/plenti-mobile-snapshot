@@ -8,11 +8,13 @@ import { LocationContext } from "../../contexts/LocationContext"
 import { StringMapFromObj } from "../../lib/DatabaseHelpers"
 
 const APPRX_KM_IN_DEG = 111
+const KM_PER_MILE = 1.60934
 
 export interface INearMeContext {
   items?: DistancedInventoryItem[]
   selectedItem?: DistancedInventoryItem
   setSelectedItem: (item?: DistancedInventoryItem) => void
+  loading: boolean
 }
 
 export const NearMeContext = React.createContext({} as INearMeContext)
@@ -24,23 +26,34 @@ export const NearMeProvider: React.FC = (props) => {
   const [selectedItem, setSelectedItem] = useState<DistancedInventoryItem>()
   const [inventoriesWithinLatBounds, setInventoryWithinLatBounds] = useState(new Map<string, Inventory>())
   const [inventoriesWithinLngBounds, setInventoryWithinLngBounds] = useState(new Map<string, Inventory>())
+  const [loading, setLoading] = useState(true)
 
-  const maxDistance = useMemo(() => loggedInAccount?.maxDistance ?? -1, [loggedInAccount])
-  const maxDegDiff = maxDistance / APPRX_KM_IN_DEG
+  const maxDistance = useMemo(() => {
+    setLoading(true)
+    if (!loggedInAccount?.maxDistance) {
+      return -1
+    }
+    if (!loggedInAccount.prefersMetric) {
+      return loggedInAccount.maxDistance * KM_PER_MILE
+    }
+    return loggedInAccount.maxDistance
+  }, [loggedInAccount])
+  const maxDegDiff = useMemo(() => maxDistance / APPRX_KM_IN_DEG, [maxDistance])
+  console.log("maxDistance", maxDistance)
 
   const latRange = useMemo(() => {
     if (lastKnownPosition) {
       const latitude = lastKnownPosition.coords.latitude
       return { minLat: latitude - maxDegDiff, maxLat: latitude + maxDegDiff }
     }
-  }, [loggedInAccount, lastKnownPosition])
+  }, [lastKnownPosition, maxDegDiff])
 
   const lngRange = useMemo(() => {
     if (lastKnownPosition) {
       const longitude = lastKnownPosition.coords.longitude
       return { minLng: longitude - maxDegDiff, maxLng: longitude + maxDegDiff }
     }
-  }, [loggedInAccount, lastKnownPosition])
+  }, [lastKnownPosition, maxDegDiff])
 
   useEffect(() => {
     if (lastKnownPosition && latRange && user) {
@@ -51,7 +64,7 @@ export const NearMeProvider: React.FC = (props) => {
       )
       return () => database().ref("/inventories").off("value", onLatBoundChange)
     }
-  }, [lastKnownPosition, user])
+  }, [lastKnownPosition, user, maxDistance])
 
   useEffect(() => {
     if (lastKnownPosition && lngRange && user) {
@@ -62,7 +75,7 @@ export const NearMeProvider: React.FC = (props) => {
       )
       return () => database().ref("/inventories").off("value", onLngBoundChange)
     }
-  }, [lastKnownPosition, user])
+  }, [lastKnownPosition, user, maxDistance])
 
   const inventoriesWithinBounds = useMemo(() => {
     if (inventoriesWithinLatBounds && inventoriesWithinLngBounds) {
@@ -97,11 +110,16 @@ export const NearMeProvider: React.FC = (props) => {
           val.push(distanced)
         })
       })
-      return val
+      const filtered = val
+        .filter((item) => (maxDistance === -1 ? true : item.distance < maxDistance))
+        .sort((a, b) => a.distance - b.distance)
+      setLoading(false)
+      return filtered
     }
   }, [inventoriesWithinBounds])
 
   const value: INearMeContext = {
+    loading,
     items,
     selectedItem,
     setSelectedItem,

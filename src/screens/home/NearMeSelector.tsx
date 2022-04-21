@@ -126,12 +126,12 @@ export const NearMeSelector: React.FC = () => {
 }
 
 const InnerComponent: React.FC = () => {
-  const { items } = useContext(NearMeContext)
+  const { items, loading } = useContext(NearMeContext)
   const { loggedInAccount } = useContext(AccountContext)
   const navigation = useNavigation<HomeNavProp>()
   const { theme } = useTheme()
 
-  if (!items) {
+  if (!items || (items.length === 0 && loading)) {
     return (
       <View
         style={{
@@ -173,15 +173,15 @@ const InnerComponent: React.FC = () => {
         >
           {maxDistanceString}
         </Text>
+        <Text style={{ textAlign: "center" }}>Try one of the following:</Text>
         {loggedInAccount?.maxDistance && loggedInAccount.maxDistance > -1 && (
           <View>
             <Button
               type="outline"
               onPress={() => navigation.dispatch(CommonActions.navigate({ name: "Profile" }))}
-              buttonStyle={{ marginHorizontal: 20 }}
+              buttonStyle={{ margin: 20 }}
               title="Increase your max search range to look farther afield"
             />
-            <Text>Or</Text>
           </View>
         )}
         <Button
