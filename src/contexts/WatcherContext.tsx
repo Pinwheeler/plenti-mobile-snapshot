@@ -12,6 +12,7 @@ import { PremiumContext } from "./PremiumContext"
 
 interface IWatcherContext {
   myWatchedItems: string[]
+  myWatchers: PlentiWatcher[]
   addWatcher(item: PlentiItem, quantity: Quantity): Promise<any>
   removeWatcher(item: PlentiItem): Promise<any>
   notifyWatchersInRange(item: InventoryItem): Promise<any>
@@ -24,6 +25,7 @@ export const WatcherProvider: React.FC = (props) => {
   const { hasPremium } = useContext(PremiumContext)
   const { lastKnownPosition, distanceInKMToPoint } = useContext(LocationContext)
   const [myWatchedItems, setMyWatchedItems] = useState<string[]>([])
+  const [myWatchers, setMyWatchers] = useState<PlentiWatcher[]>([])
 
   useEffect(() => {
     if (loggedInAccount && hasPremium) {
@@ -34,6 +36,16 @@ export const WatcherProvider: React.FC = (props) => {
       return () => database().ref(path).off("value", myWatchedItemsChange)
     }
   }, [loggedInAccount, hasPremium])
+
+  useEffect(() => {
+    if (loggedInAccount && hasPremium && myWatchedItems.length > 0) {
+      Promise.all(
+        myWatchedItems.map((item) => database().ref(`/watchers/${item}/${loggedInAccount.uid}`).once("value")),
+      ).then((snapshots) => {
+        setMyWatchers(snapshots.map((snapshot) => snapshot.val()))
+      })
+    }
+  }, [loggedInAccount, myWatchedItems, hasPremium])
 
   const addWatcher = (item: PlentiItem, quantity: Quantity) => {
     if (loggedInAccount && lastKnownPosition) {

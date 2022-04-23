@@ -2,12 +2,12 @@ import { CommonActions, useNavigation } from "@react-navigation/native"
 import { Button, Overlay, Text, useTheme } from "@rneui/themed"
 import React, { useContext, useState } from "react"
 import { ScrollView, View } from "react-native"
-
 import { InventoryItem } from "../../api/models/InventoryItem"
 import { Quantity } from "../../api/models/Quantity"
 import { IconButton } from "../../components/IconButton"
 import { ProduceItemDetails } from "../../components/produce_grid/modify_inventory/ProduceItemDetails"
 import { ProduceGrid } from "../../components/produce_grid/ProduceGrid"
+import { TopInfoBar } from "../../components/TopInfoBar"
 import { AccountContext } from "../../contexts/AccountContext"
 import { ImageContext } from "../../contexts/ImageContext"
 import { InventoryContext } from "../../contexts/InventoryContext"
@@ -92,6 +92,7 @@ export const InventoryList = () => {
 
   return (
     <View style={{ flex: 1 }}>
+      <TopInfoBar text="Your Listed Produce" />
       <Content />
       <IconButton
         type={"plus"}
