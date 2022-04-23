@@ -1,9 +1,8 @@
 import { ReactNativeFirebase } from "@react-native-firebase/app"
 import storage from "@react-native-firebase/storage"
-import { Button, Text, ThemeConsumer, useTheme } from "@rneui/themed"
+import { Button, Text, useTheme } from "@rneui/themed"
 import React, { useState } from "react"
 import { Dimensions, View } from "react-native"
-
 import { InventoryItem } from "../../../api/models/InventoryItem"
 import { LoggedInAccountEntity } from "../../../api/models/LoggedInAccount"
 import { Quantity } from "../../../api/models/Quantity"
@@ -88,6 +87,7 @@ export const ProduceItemDetails: React.FC<Props> = (props) => {
     if (confirmingDelete && onDelete) {
       onDelete()
       setConfirmingDelete(false)
+      onClose()
     } else {
       setConfirmingDelete(true)
     }

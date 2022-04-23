@@ -3,8 +3,8 @@ import React, { useState } from "react"
 import { PlentiItem } from "../../assets/PlentiItemsIndex"
 import ItemSelector from "../../components/item_selector/ItemSelector"
 import { ItemSelectorProvider } from "../../components/item_selector/ItemSelectorContext"
+import { AddWatcherModal } from "./AddWatcherModal"
 import { CatalogRequestButton } from "./CatalogRequestButton"
-import { WantStatusModal } from "./WantStatusModal"
 
 const WantSelector: React.FC = () => {
   const [selectedItem, setSelectedItem] = useState<PlentiItem>()
@@ -19,7 +19,7 @@ const WantSelector: React.FC = () => {
       <ItemSelectorProvider>
         <ItemSelector onItemSelect={setSelectedItem} />
         <Overlay overlayStyle={{ margin: 20 }} isVisible={!!selectedItem}>
-          {selectedItem ? <WantStatusModal item={selectedItem} onClose={handleClose} /> : null}
+          {selectedItem ? <AddWatcherModal item={selectedItem} onClose={handleClose} /> : null}
         </Overlay>
       </ItemSelectorProvider>
       {requestPanelVisible && (

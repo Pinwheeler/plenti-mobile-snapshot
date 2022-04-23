@@ -6,9 +6,7 @@ import { AccountContext } from "../../contexts/AccountContext"
 import { AuthContext } from "../../contexts/AuthContext"
 import { LocationContext } from "../../contexts/LocationContext"
 import { StringMapFromObj } from "../../lib/DatabaseHelpers"
-
-const APPRX_KM_IN_DEG = 111
-const KM_PER_MILE = 1.60934
+import { APPRX_KM_IN_DEG, DEFAULT_MAX_KM_DIST } from "../../lib/DistanceHelpers"
 
 export interface INearMeContext {
   items?: DistancedInventoryItem[]
@@ -30,16 +28,12 @@ export const NearMeProvider: React.FC = (props) => {
 
   const maxDistance = useMemo(() => {
     setLoading(true)
-    if (!loggedInAccount?.maxDistance) {
-      return -1
+    if (loggedInAccount) {
+      return loggedInAccount?.maxDistanceInKM
     }
-    if (!loggedInAccount.prefersMetric) {
-      return loggedInAccount.maxDistance * KM_PER_MILE
-    }
-    return loggedInAccount.maxDistance
+    return DEFAULT_MAX_KM_DIST
   }, [loggedInAccount])
   const maxDegDiff = useMemo(() => maxDistance / APPRX_KM_IN_DEG, [maxDistance])
-  console.log("maxDistance", maxDistance)
 
   const latRange = useMemo(() => {
     if (lastKnownPosition) {
@@ -57,22 +51,24 @@ export const NearMeProvider: React.FC = (props) => {
 
   useEffect(() => {
     if (lastKnownPosition && latRange && user) {
-      const base = database().ref("/inventories").orderByChild("latitude")
-      const modified = maxDistance > -1 ? base.startAt(latRange.minLat).endAt(latRange.maxLat) : base
-      const onLatBoundChange = modified.on("value", (snapshot) =>
-        setInventoryWithinLatBounds(StringMapFromObj(snapshot.val())),
-      )
+      const onLatBoundChange = database()
+        .ref("/inventories")
+        .orderByChild("latitude")
+        .startAt(latRange.minLat)
+        .endAt(latRange.maxLat)
+        .on("value", (snapshot) => setInventoryWithinLatBounds(StringMapFromObj(snapshot.val())))
       return () => database().ref("/inventories").off("value", onLatBoundChange)
     }
   }, [lastKnownPosition, user, maxDistance])
 
   useEffect(() => {
     if (lastKnownPosition && lngRange && user) {
-      const base = database().ref("/inventories").orderByChild("longitude")
-      const modified = maxDistance > -1 ? base.startAt(lngRange.minLng).endAt(lngRange.maxLng) : base
-      const onLngBoundChange = modified.on("value", (snapshot) =>
-        setInventoryWithinLngBounds(StringMapFromObj(snapshot.val())),
-      )
+      const onLngBoundChange = database()
+        .ref("/inventories")
+        .orderByChild("longitude")
+        .startAt(lngRange.minLng)
+        .endAt(lngRange.maxLng)
+        .on("value", (snapshot) => setInventoryWithinLngBounds(StringMapFromObj(snapshot.val())))
       return () => database().ref("/inventories").off("value", onLngBoundChange)
     }
   }, [lastKnownPosition, user, maxDistance])

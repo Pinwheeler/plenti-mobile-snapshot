@@ -13,6 +13,7 @@ import { LocationProvider } from "./LocationContext"
 import { NotificationProvider } from "./NotificationContext"
 import { PremiumProvider } from "./PremiumContext"
 import { SecretsProvider } from "./SecretsContext"
+import { WatcherProvider } from "./WatcherContext"
 
 export const ContextStack: React.FC = (props) => {
   return (
@@ -27,11 +28,13 @@ export const ContextStack: React.FC = (props) => {
                     <PremiumProvider>
                       <AdProvider>
                         <GeocodingProvider>
-                          <InventoryProvider>
-                            <NearMeProvider>
-                              <ChatProvider>{props.children}</ChatProvider>
-                            </NearMeProvider>
-                          </InventoryProvider>
+                          <WatcherProvider>
+                            <InventoryProvider>
+                              <NearMeProvider>
+                                <ChatProvider>{props.children}</ChatProvider>
+                              </NearMeProvider>
+                            </InventoryProvider>
+                          </WatcherProvider>
                         </GeocodingProvider>
                       </AdProvider>
                     </PremiumProvider>
