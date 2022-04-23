@@ -119,7 +119,7 @@ export const WatcherProvider: React.FC = (props) => {
     console.log("watchers to notify", dedupedAndFiltered)
   }
 
-  const value = { myWatchedItems, addWatcher, removeWatcher, notifyWatchersInRange }
+  const value = { myWatchedItems, myWatchers, addWatcher, removeWatcher, notifyWatchersInRange }
 
   return <WatcherContext.Provider value={value}>{props.children}</WatcherContext.Provider>
 }
