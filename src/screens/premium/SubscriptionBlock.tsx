@@ -1,8 +1,8 @@
-import React, { useContext, useMemo } from "react"
-import { Surface, Text, TouchableRipple } from "react-native-paper"
-import { IapHubProductInformation } from "react-native-iaphub"
-import { View } from "react-native"
 import { useTheme } from "@rneui/themed"
+import React, { useContext, useMemo } from "react"
+import { View } from "react-native"
+import { IapHubProductInformation } from "react-native-iaphub"
+import { Surface, Text, TouchableRipple } from "react-native-paper"
 import { PremiumContext } from "../../contexts/PremiumContext"
 
 interface Props {
@@ -35,7 +35,9 @@ export const SubscriptionBlock: React.FC<Props> = (props) => {
       style={{ flex: 1, marginHorizontal: 8, minWidth: 162, marginVertical: 10 }}
       onPress={() => purchaseProduct(subscription)}
     >
-      <Surface style={{ padding: 10, elevation: 3.5, borderColor: theme.colors.secondary, borderLeftWidth: 3 }}>
+      <Surface
+        style={{ padding: 10, elevation: 3.5, borderColor: theme.colors.secondary, borderLeftWidth: 3, minHeight: 145 }}
+      >
         <Text
           style={{
             color: theme.colors.primary,

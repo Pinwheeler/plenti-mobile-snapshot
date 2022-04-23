@@ -43,6 +43,8 @@ export const WatcherProvider: React.FC = (props) => {
       ).then((snapshots) => {
         setMyWatchers(snapshots.map((snapshot) => snapshot.val()))
       })
+    } else {
+      setMyWatchers([])
     }
   }, [loggedInAccount, myWatchedItems, hasPremium])
 

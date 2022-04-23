@@ -32,7 +32,7 @@ export const EditWatcherModal: React.FC<Props> = (props) => {
     } else {
       setLoading(true)
       removeWatcher(watcher.plentiItemName)
-        .then(() => onClose)
+        .then(() => onClose())
         .catch(() => setLoading(false))
     }
   }
