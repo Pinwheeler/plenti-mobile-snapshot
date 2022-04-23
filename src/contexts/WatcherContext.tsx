@@ -3,7 +3,6 @@ import React, { useContext, useEffect, useState } from "react"
 import { InventoryItem } from "../api/models/InventoryItem"
 import { PlentiWatcher } from "../api/models/PlentiWatcher"
 import { Quantity } from "../api/models/Quantity"
-import { PlentiItem } from "../assets/PlentiItemsIndex"
 import { handleUnauthenticatedRequest, StringMapFromObj, URLS } from "../lib/DatabaseHelpers"
 import { APPRX_KM_IN_DEG, DEFAULT_MAX_KM_DIST } from "../lib/DistanceHelpers"
 import { AccountContext } from "./AccountContext"
@@ -13,8 +12,8 @@ import { PremiumContext } from "./PremiumContext"
 interface IWatcherContext {
   myWatchedItems: string[]
   myWatchers: PlentiWatcher[]
-  addWatcher(item: PlentiItem, quantity: Quantity): Promise<any>
-  removeWatcher(item: PlentiItem): Promise<any>
+  addWatcher(itemName: string, quantity: Quantity): Promise<any>
+  removeWatcher(itemName: string): Promise<any>
   notifyWatchersInRange(item: InventoryItem): Promise<any>
 }
 
@@ -47,10 +46,10 @@ export const WatcherProvider: React.FC = (props) => {
     }
   }, [loggedInAccount, myWatchedItems, hasPremium])
 
-  const addWatcher = (item: PlentiItem, quantity: Quantity) => {
+  const addWatcher = (itemName: string, quantity: Quantity) => {
     if (loggedInAccount && lastKnownPosition) {
       const watcher: PlentiWatcher = {
-        plentiItemName: item.name,
+        plentiItemName: itemName,
         quantity,
         latitude: lastKnownPosition.coords.latitude,
         longitude: lastKnownPosition.coords.longitude,
@@ -58,9 +57,9 @@ export const WatcherProvider: React.FC = (props) => {
         maxDistanceInKM: loggedInAccount.maxDistanceInKM,
       }
       const itemWedge: { [key: string]: string } = {}
-      itemWedge[item.name] = item.name
+      itemWedge[itemName] = itemName
       return Promise.all([
-        database().ref(URLS.watcherForAccountItem(loggedInAccount, item)).set(watcher),
+        database().ref(URLS.watcherForAccountItem(loggedInAccount, itemName)).set(watcher),
         database()
           .ref(`${URLS.account.secure(loggedInAccount)}/myWatchedItems`)
           .update(itemWedge),
@@ -69,12 +68,12 @@ export const WatcherProvider: React.FC = (props) => {
     return handleUnauthenticatedRequest("addWatcher")
   }
 
-  const removeWatcher = (item: PlentiItem) => {
+  const removeWatcher = (itemName: string) => {
     if (loggedInAccount) {
       return Promise.all([
-        database().ref(URLS.watcherForAccountItem(loggedInAccount, item)).remove(),
+        database().ref(URLS.watcherForAccountItem(loggedInAccount, itemName)).remove(),
         database()
-          .ref(`${URLS.account.secure(loggedInAccount)}/myWatchedItems/${item.name}`)
+          .ref(`${URLS.account.secure(loggedInAccount)}/myWatchedItems/${itemName}`)
           .remove(),
       ])
     }

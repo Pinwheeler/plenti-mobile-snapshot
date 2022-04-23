@@ -16,8 +16,8 @@ export const URLS = {
 
   connectionsForAccount: (account: AccountEntity) => logPath(`/connections/${account.uid}`),
 
-  watcherForAccountItem: (account: LoggedInAccountEntity, item: PlentiItem) =>
-    logPath(`/watchers/${item.name}/${account.uid}`),
+  watcherForAccountItem: (account: LoggedInAccountEntity, itemName: string) =>
+    logPath(`/watchers/${itemName}/${account.uid}`),
 
   notification: (notification: HardwareNotification) => logPath(`/notifications/${notification.slug}`),
 

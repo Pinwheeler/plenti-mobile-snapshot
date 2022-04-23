@@ -2,23 +2,20 @@ import { Text } from "@rneui/themed"
 import React from "react"
 import { View } from "react-native"
 import { Quantity } from "../../api/models/Quantity"
-import { PlentiItem } from "../../assets/PlentiItemsIndex"
 import { QuantitySelectorItem } from "../QuantitySelectorItem"
 
 interface Props {
   onQuantitySelect: (quantity: Quantity) => void
   currentQuantity?: Quantity
-  item: PlentiItem
+  itemName: string
 }
 
 export const QuantitySelector: React.FC<Props> = (props) => {
-  const { onQuantitySelect, currentQuantity, item } = props
-
-  const displayName = item.name
+  const { onQuantitySelect, currentQuantity, itemName } = props
 
   return (
     <View style={{ backgroundColor: "white" }}>
-      <Text h3 style={{ marginBottom: 15 }}>{`How many ${displayName}?`}</Text>
+      <Text h3 style={{ marginBottom: 15 }}>{`How many ${itemName}?`}</Text>
       <QuantitySelectorItem
         currentQuantity={currentQuantity}
         quantity={"A Little"}

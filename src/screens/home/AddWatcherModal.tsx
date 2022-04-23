@@ -20,7 +20,7 @@ export const AddWatcherModal: React.FC<Props> = (props) => {
   const handleButtonPress = () => {
     if (quantity) {
       setLoading(true)
-      addWatcher(item, quantity)
+      addWatcher(item.name, quantity)
         .then(() => onClose())
         .finally(() => {
           setLoading(false)
@@ -36,7 +36,7 @@ export const AddWatcherModal: React.FC<Props> = (props) => {
       <Text h3 style={{ marginBottom: 15, textDecorationLine: "underline" }}>
         {titleText}
       </Text>
-      <QuantitySelector currentQuantity={quantity} onQuantitySelect={setQuantity} item={item} />
+      <QuantitySelector currentQuantity={quantity} onQuantitySelect={setQuantity} itemName={item.name} />
       <Text style={{ paddingBottom: 30 }}>{detailText}</Text>
       <Button disabled={!quantity} loading={loading} onPress={handleButtonPress} title={"Add Watcher"} />
     </View>
