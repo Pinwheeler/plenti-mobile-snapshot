@@ -22,7 +22,7 @@ export const LOCATION_SLUG = "LOCATION"
 export const LocationProvider: React.FC = (props) => {
   const [lastKnownPosition, setLastKnownPosition] = useState<Location.LocationObject>()
   const { loggedInAccount } = useContext(AccountContext)
-  const { hasSlugBeenAck } = useContext(NotificationContext)
+  const { hasSlugBeenAck, clearNotificationBlockFlag } = useContext(NotificationContext)
   const { setAppwideError } = useContext(AppContext)
 
   const acceptedLocationCheck = useMemo(() => {
@@ -33,6 +33,7 @@ export const LocationProvider: React.FC = (props) => {
     ;(async () => {
       if (acceptedLocationCheck) {
         let foreground = await Location.requestForegroundPermissionsAsync()
+        clearNotificationBlockFlag(LOCATION_SLUG)
         if (foreground.status !== "granted") {
           setAppwideError(new Error("Permission to access location was denied"))
           return

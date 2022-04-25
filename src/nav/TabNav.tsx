@@ -18,7 +18,7 @@ const Tab = createMaterialBottomTabNavigator()
 
 export const TabNav = () => {
   const { shouldShowAds } = useContext(AdContext)
-  const { acknowledgeHN, nextUnreadHN } = useContext(NotificationContext)
+  const { acknowledgeHN, nextUnreadHN, shouldShowNextNotification } = useContext(NotificationContext)
   const { theme } = useTheme()
   const [currentHN, setCurrentHN] = useState<HardwareNotification>()
   const { unreadCount } = useContext(ChatContext)
@@ -72,7 +72,7 @@ export const TabNav = () => {
       </Tab.Navigator>
       {shouldShowAds && <AdBanner />}
       <Overlay
-        isVisible={!!currentHN}
+        isVisible={shouldShowNextNotification}
         style={{
           backgroundColor: theme.colors.background,
           padding: 15,

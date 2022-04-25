@@ -28,7 +28,7 @@ const FontAweseome5Types = [
   "chevron-down",
 ]
 
-const MaterialIconTypes = ["gps-fixed", "gps-not-fixed"]
+const MaterialIconTypes = ["gps-fixed", "gps-not-fixed", "notifications"]
 
 type FontAweseome5Type = typeof FontAweseome5Types[number]
 type MaterialIconType = typeof MaterialIconTypes[number]

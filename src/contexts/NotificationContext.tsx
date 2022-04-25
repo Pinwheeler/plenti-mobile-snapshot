@@ -4,11 +4,15 @@ import { HardwareNotification } from "../api/models/HardwareNotification"
 import { StringMapFromObj, URLS } from "../lib/DatabaseHelpers"
 import { AuthContext } from "./AuthContext"
 import { DeviceContext } from "./DeviceContext"
+import { PremiumContext } from "./PremiumContext"
 
 interface INotificationContext {
-  acknowledgeHN(arg: HardwareNotification): Promise<void>
   nextUnreadHN?: HardwareNotification
+  shouldShowNextNotification: boolean
+  acknowledgeHN(arg: HardwareNotification): Promise<void>
   hasSlugBeenAck(slug: string): boolean
+  addNotificationBlockFlag(flag: string): void
+  clearNotificationBlockFlag(flag: string): void
 }
 
 export const NotificationContext = React.createContext({} as INotificationContext)
@@ -16,8 +20,10 @@ export const NotificationContext = React.createContext({} as INotificationContex
 export const NotificationProvider: React.FC = (props) => {
   const { deviceIdentifier } = useContext(DeviceContext)
   const { user } = useContext(AuthContext)
+  const { hasPremium } = useContext(PremiumContext)
   const [notifications, setNotifications] = useState(new Map<string, HardwareNotification>())
   const [acknowledgedSlugs, setAcknowledgedSlugs] = useState<string[]>([])
+  const [notificationBlocks, setNotificationBlocks] = useState<string[]>([])
 
   useEffect(() => {
     database()
@@ -35,7 +41,13 @@ export const NotificationProvider: React.FC = (props) => {
     }
   }, [user])
 
+  const addNotificationBlockFlag = (flag: string) => setNotificationBlocks((old) => [...old, flag])
+  const clearNotificationBlockFlag = (flag: string) => setNotificationBlocks((old) => old.filter((f) => f !== flag))
+
   const acknowledgeHN = (arg: HardwareNotification) => {
+    if (arg.systemPopup) {
+      addNotificationBlockFlag(arg.slug)
+    }
     const update: { [key: string]: HardwareNotification } = {}
     update[arg.slug] = arg
     return database()
@@ -62,12 +74,22 @@ export const NotificationProvider: React.FC = (props) => {
 
   const nextUnreadHN = useMemo(() => {
     if (unacknowledgedHNs.length > 0) {
-      return unacknowledgedHNs[0]
+      if (hasPremium) {
+        return unacknowledgedHNs[0]
+      }
+      return unacknowledgedHNs.find((val) => !val.premiumOnly)
     }
     return undefined
-  }, [unacknowledgedHNs])
+  }, [unacknowledgedHNs, hasPremium])
 
-  const value = { acknowledgeHN, nextUnreadHN, hasSlugBeenAck }
+  const value = {
+    nextUnreadHN,
+    shouldShowNextNotification: notificationBlocks.length === 0 && !!nextUnreadHN,
+    acknowledgeHN,
+    hasSlugBeenAck,
+    addNotificationBlockFlag,
+    clearNotificationBlockFlag,
+  }
 
   return <NotificationContext.Provider value={value}>{props.children}</NotificationContext.Provider>
 }
