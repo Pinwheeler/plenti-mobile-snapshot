@@ -13,6 +13,7 @@ export interface INearMeContext {
   selectedItem?: DistancedInventoryItem
   setSelectedItem: (item?: DistancedInventoryItem) => void
   loading: boolean
+  calculatedMaxDistance: number
 }
 
 export const NearMeContext = React.createContext({} as INearMeContext)
@@ -75,6 +76,7 @@ export const NearMeProvider: React.FC = (props) => {
 
   const inventoriesWithinBounds = useMemo(() => {
     if (inventoriesWithinLatBounds && inventoriesWithinLngBounds) {
+      console.log(inventoriesWithinLatBounds, inventoriesWithinLngBounds)
       const keys = Array.from(inventoriesWithinLatBounds.keys())
       const temp = Array.from(inventoriesWithinLatBounds.values()).filter(
         (value) => value.accountUid !== loggedInAccount?.uid,
@@ -118,6 +120,7 @@ export const NearMeProvider: React.FC = (props) => {
     loading,
     items,
     selectedItem,
+    calculatedMaxDistance: maxDistance,
     setSelectedItem,
   }
 

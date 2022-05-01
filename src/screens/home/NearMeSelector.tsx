@@ -126,7 +126,8 @@ export const NearMeSelector: React.FC = () => {
 }
 
 const InnerComponent: React.FC = () => {
-  const { items, loading } = useContext(NearMeContext)
+  const { items, loading, calculatedMaxDistance } = useContext(NearMeContext)
+  const { lastKnownPosition } = useContext(LocationContext)
   const { loggedInAccount } = useContext(AccountContext)
   const navigation = useNavigation<HomeNavProp>()
   const { theme } = useTheme()
@@ -149,8 +150,8 @@ const InnerComponent: React.FC = () => {
   if (items.length === 0) {
     const maxDistanceString =
       loggedInAccount?.maxDistance === -1
-        ? "anywhere"
-        : `within ${loggedInAccount?.maxDistance} ${loggedInAccount?.prefersMetric ? "km" : "mi"}`
+        ? "within max radius (1000 km)"
+        : `within ${calculatedMaxDistance} ${loggedInAccount?.prefersMetric || !loggedInAccount ? "km" : "mi"}`
 
     return (
       <View
